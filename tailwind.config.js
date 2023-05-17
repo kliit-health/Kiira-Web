@@ -1,12 +1,22 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{ts,tsx}",
-  ],
+import withMT from '@material-tailwind/react/utils/withMT';
+
+export default withMT({
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        kiiraBlue: '#3F84FF',
+        kiiraGradient: 'linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)',
+        kiiraDark: '#000B1E',
+        kiiraText: '#6F7888',
+        kiiraBg: '#F1F5FF'
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif']
+      }
+    }
   },
-  plugins: [],
-};
+  important: true,
+  plugins: []
+});
