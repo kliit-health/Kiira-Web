@@ -7,9 +7,10 @@ export default withMT({
     extend: {
       colors: {
         kiiraBlue: '#3F84FF',
-        kiiraGradient: 'linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)',
+        kiiraGradient: 'linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)',
         kiiraDark: '#000B1E',
         kiiraText: '#6F7888',
+        kiiraBlackText: '#252539',
         kiiraBg: '#F1F5FF'
       },
       fontFamily: {

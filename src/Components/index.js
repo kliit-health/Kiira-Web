@@ -1,3 +1,4 @@
-import NavBar from './NavBar/NavBar';
+import AppNavBar from './NavBar/NavBar';
+import AppPasswordInput from './shared/AppPasswordInput/AppPasswordInput';
 
-export { NavBar };
+export { AppNavBar, AppPasswordInput };

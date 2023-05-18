@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Navbar, MobileNav, Button, IconButton } from '@material-tailwind/react';
+import { Navbar, MobileNav, IconButton } from '@material-tailwind/react';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { AppButton, AppLink, AppLinkExternal } from '../shared/styledComponents';
 import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg';
 
-export default function Example() {
+export default function AppNavBar() {
   const [openNav, setOpenNav] = useState(false);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Example() {
   );
 
   return (
-    <Navbar className="px-1 py-2 mx-auto bg-transparent border-transparent shadow-none md:py-2">
+    <Navbar className="sticky inset-0 z-10 block max-w-full px-1 py-2 mx-auto bg-transparent border-transparent shadow-none h-max backdrop-blur-2xl backdrop-saturate-200">
       <div className="container flex items-center justify-between mx-auto text-blue-gray-900">
         <Link to={ROUTES.INDEX}>
           <KiiraLogoSvg className="w-24 text-md" />
@@ -54,7 +54,7 @@ export default function Example() {
               className="hidden w-auto p-0 lg:inline-block">
               <GlobeIconSvg className="w-4 h-4" />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               variant="text"
               ripple={false}
               className="w-6 h-6 ml-auto text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
@@ -79,12 +79,12 @@ export default function Example() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
-            </IconButton>
+            </IconButton> */}
           </div>
         </div>
       </div>
 
-      <MobileNav open={openNav}>
+      {/* <MobileNav open={openNav}>
         <div className="container mx-auto">
           {navList}
           <AppButton
@@ -94,7 +94,7 @@ export default function Example() {
             Join Kiira
           </AppButton>
         </div>
-      </MobileNav>
+      </MobileNav> */}
     </Navbar>
   );
 }
