@@ -10,7 +10,7 @@ import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { useNavigate } from 'react-router-dom';
 import useAuth from 'src/hooks/useAuth';
 
-const ForgotPassword = () => {
+const ResetPassword = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   return (
@@ -21,26 +21,25 @@ const ForgotPassword = () => {
             <Button
               variant="text"
               size="small"
-              // onClick={() => navigate(-1)}
               onClick={() => navigate(ROUTES.LOGIN)}
               className="flex items-center gap-2 text-kiiraText font-medium hover:bg-transparent normal-case px-1 py-2 ">
               <i class="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
           <Typography variant="h2" className="text-[#252539] font-medium -mt-5">
-            Forgot password?
+            Set Password
           </Typography>
-          <Typography variant="small" className="text-kiiraText text-lg">
-            Don’t worry, happens to all of us. Enter your email <br /> below to recover your
-            password
+          <Typography variant="small" className="text-kiiraText text-base">
+            Your previous password has been reseted. Please set a new password for your account.
           </Typography>
 
-          <Input autoFocus label="Email" size="lg" className="ring-transparent ring-0" />
+          <AppPasswordInput label="Create Password" size="lg" className="" />
+          <AppPasswordInput label="Re-enter Password" size="lg" className="" />
 
           <AppButton
             size="md"
             background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
-            className="text-sm font-medium text-white capitalize shadow-transparent"
+            className="text-sm font-medium text-white capitalize shadow-transparent mt-6"
             fullWidth
             onClick={() => {
               login();
@@ -48,32 +47,12 @@ const ForgotPassword = () => {
                 <Navigate to={ROUTES.INDEX} />;
               }, 500);
             }}>
-            Submit
+            Set password
           </AppButton>
-
-          <Divider className="my-4 text-sm text-kiiraText" data-content="Or login with" />
-
-          <div className="flex flex-row justify-between w-full gap-5">
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <FacebookIcon />
-            </Button>
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <GoogleIcon />
-            </Button>
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <AppleIcon />
-            </Button>
-          </div>
         </CardBody>
       </Card>
     </AuthLayout>
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
