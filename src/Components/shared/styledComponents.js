@@ -4,7 +4,7 @@ import tw, { styled, css } from 'twin.macro';
 
 export const LayoutWrapper = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
-  ${tw`flex flex-col w-full h-screen max-h-screen gap-12 p-4 mx-auto overflow-auto max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
+  ${tw`flex flex-col w-full h-screen max-h-screen gap-10 p-4 mx-auto overflow-auto max-w-screen-xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
 `;
 
 export const AppLink = styled(Link)`

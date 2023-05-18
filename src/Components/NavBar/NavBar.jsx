@@ -28,7 +28,7 @@ export default function AppNavBar() {
   );
 
   return (
-    <Navbar className="sticky inset-0 z-10 block max-w-full px-1 py-2 mx-auto bg-transparent border-transparent shadow-none h-max backdrop-blur-2xl backdrop-saturate-200">
+    <Navbar className="sticky inset-0 z-10 block max-w-full px-1 py-3 mx-auto bg-transparent border-transparent rounded-none shadow-none h-max backdrop-blur-2xl backdrop-saturate-200">
       <div className="container flex items-center justify-between mx-auto text-blue-gray-900">
         <Link to={ROUTES.INDEX}>
           <KiiraLogoSvg className="w-24 text-md" />
