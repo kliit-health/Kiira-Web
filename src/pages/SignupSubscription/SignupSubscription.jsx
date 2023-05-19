@@ -1,26 +1,39 @@
 import { Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { AppPasswordInput } from 'src/components';
+import { useNavigate } from 'react-router-dom';
 import { AppButton, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as Visa } from 'src/assets/icons/visa.svg';
 import useAuth from 'src/hooks/useAuth';
+import { SubscriptionPlans } from 'src/components';
+import { kiiraSubscriptions } from 'src/data';
 
 const SignupSubscription = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   return (
     <AuthLayout hideScroll>
-      <ContentContainer className="flex flex-row w-full h-full gap-6 2xl:gap-2 mb-2 flex-wrap 2xl:flex-nowrap">
+      <ContentContainer
+        className="flex flex-row w-full h-full gap-6 2xl:gap-2 mb-2 flex-wrap lg:flex-nowrap"
+        hideScroll>
         {/* Payment Plan  */}
-        <Card className="w-full h-auto 2xl:h-full shadow-none bg-transparent">
-          <CardBody className="flex flex-col h-full gap-6 px-8 py-4">
-            <Typography variant="h2" className="text-[#252539] font-medium">
-              Select a plan
-            </Typography>
-          </CardBody>
-        </Card>
+        <ContentContainer
+          className="flex flex-row w-full h-full gap-4 overflow-hidden overflow-x-auto"
+          hideScroll>
+          <Card className="w-full h-auto 2xl:h-full shadow-none bg-transparent">
+            <CardBody className="flex flex-col h-full gap-4 p-0">
+              <Typography variant="h2" className="text-[#252539] font-medium text-2xl lg:text-3xl ">
+                Select a plan
+              </Typography>
+
+              <ContentContainer className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5">
+                {kiiraSubscriptions.map((plan, index) => {
+                  return <SubscriptionPlans plan={plan} key={index?.toString()} />;
+                })}
+              </ContentContainer>
+            </CardBody>
+          </Card>
+        </ContentContainer>
 
         {/* Payment Form */}
         <Card className="w-full h-auto 2xl:h-full shadow-none">

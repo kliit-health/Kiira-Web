@@ -2,6 +2,7 @@ import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
 import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
 import { ReactComponent as OvalPlan1 } from 'src/assets/icons/oval.svg';
+import { ReactComponent as OvalPlan2 } from 'src/assets/icons/oval2.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
 
@@ -24,7 +25,8 @@ export const userData = {
 export const kiiraSubscriptions = [
   {
     cycle: 'Monthly',
-    planAccent: '#E2EDFF',
+    colorCode: '#E2EDFF',
+    colorCodeBold: '#3F84FF',
     planIcon: OvalPlan1,
     amount: '15',
     currency: 'USD',
@@ -40,8 +42,9 @@ export const kiiraSubscriptions = [
   },
   {
     cycle: 'Yearly',
-    planAccent: '#DFE5FF',
-    planIcon: OvalPlan1,
+    colorCode: '#DFE5FF',
+    colorCodeBold: '#777AFF',
+    planIcon: OvalPlan2,
     amount: '150',
     currency: 'USD',
     currencyCode: '$',
