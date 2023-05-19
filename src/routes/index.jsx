@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
-
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { ROUTES } from './Paths';
 import { ProtectedRoute } from './ProtectedRoute';
 import {
@@ -8,22 +7,26 @@ import {
   ForgotPassword,
   Login,
   ResetPassword,
-  Signup
+  Signup,
+  SignupSubscription
 } from 'src/pages';
 
 export const Router = () => {
   return (
-    <Routes>
-      <Route path={ROUTES.LOGIN} element={<Login />} />
-      <Route path={ROUTES.SIGINUP} element={<Signup />} />
-      <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-      <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-      <Route path={ROUTES.CODE_VERIFICATION} element={<CodeVerification />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.SIGINUP} element={<Signup />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+        <Route path={ROUTES.CODE_VERIFICATION} element={<CodeVerification />} />
+        <Route path={ROUTES.SIGINUP_SUBSCRIPTION} element={<SignupSubscription />} />
 
-      {/* Authenticated Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route index exact path={ROUTES.INDEX} element={<BookAppointment />} />
-      </Route>
-    </Routes>
+        {/* Authenticated Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route index exact path={ROUTES.INDEX} element={<BookAppointment />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };

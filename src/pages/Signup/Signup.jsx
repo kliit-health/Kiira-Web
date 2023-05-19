@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
 import { AppButton, ContentContainer, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
@@ -10,6 +10,7 @@ import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import useAuth from 'src/hooks/useAuth';
 
 const Signup = () => {
+  const navigate = useNavigate()
   const { login } = useAuth();
   return (
     <AuthLayout showSlider hideScroll>
@@ -55,7 +56,7 @@ const Signup = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                <Navigate to={ROUTES.INDEX} />;
+                navigate(ROUTES.SIGINUP_SUBSCRIPTION);
               }, 500);
             }}>
             Create Account

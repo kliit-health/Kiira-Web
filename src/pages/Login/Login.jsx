@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
 import { AppButton, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
@@ -10,6 +10,7 @@ import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import useAuth from 'src/hooks/useAuth';
 
 const Login = () => {
+  const navigate = useNavigate();
   const { login } = useAuth();
   return (
     <AuthLayout showSlider hideScroll>
@@ -47,7 +48,7 @@ const Login = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                <Navigate to={ROUTES.INDEX} />;
+                navigate(ROUTES.INDEX);
               }, 500);
             }}>
             Login

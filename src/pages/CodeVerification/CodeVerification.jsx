@@ -49,7 +49,7 @@ const CodeVerification = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                <Navigate to={ROUTES.INDEX} />;
+                navigate(ROUTES.INDEX);
               }, 500);
             }}>
             Verify

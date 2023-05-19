@@ -23,7 +23,7 @@ const ResetPassword = () => {
               size="small"
               onClick={() => navigate(ROUTES.LOGIN)}
               className="flex items-center gap-2 text-kiiraText font-medium hover:bg-transparent normal-case px-1 py-2 ">
-              <i class="fa fa-angle-left" aria-hidden="true"></i>Back to login
+              <i className="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
           <Typography variant="h2" className="text-[#252539] font-medium -mt-5">
@@ -44,7 +44,7 @@ const ResetPassword = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                <Navigate to={ROUTES.INDEX} />;
+                navigate(ROUTES.INDEX);
               }, 500);
             }}>
             Set password
