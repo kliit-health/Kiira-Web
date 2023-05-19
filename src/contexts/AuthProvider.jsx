@@ -12,17 +12,17 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(userData);
 
   const login = () => {
-    Auth.setToken('tokenAvailable')
-    Auth.fetchUser( userData)
+    Auth?.setToken('tokenAvailable')
+    Auth?.fetchUser( userData)
     setUser(userData)
   };
 
   const logout = () => {
-    Auth.destroyToken()
+    Auth?.destroyToken()
     setUser(null)
   };
 
-  const isAuthenticated = Auth.isAuthenticated()
+  const isAuthenticated = Auth?.isAuthenticated()
   console.log("🚀 ~ file: AuthProvider.jsx:26 ~ AuthProvider ~ isAuthenticated:", isAuthenticated)
   
 
