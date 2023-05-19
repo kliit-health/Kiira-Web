@@ -8,8 +8,8 @@
 import axios from "axios";
 import { BASE_URL } from "src/utils/constants";
 import isEmpty from "src/utils/isEmpty";
-import Auth from "../storage";
 import Api from ".";
+import Auth from "../storage";
 
 const axiosApiInstance = axios.create();
 
