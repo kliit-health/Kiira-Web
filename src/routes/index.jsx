@@ -5,10 +5,12 @@ import {
   BookAppointment,
   CodeVerification,
   ForgotPassword,
+  Home,
   Login,
   ResetPassword,
   Signup,
-  SignupSubscription
+  SignupSubscription,
+  Subscription
 } from 'src/pages';
 
 export const Router = () => {
@@ -24,7 +26,8 @@ export const Router = () => {
 
         {/* Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route index exact path={ROUTES.INDEX} element={<BookAppointment />} />
+          <Route index exact path={ROUTES.INDEX} element={<Home />} />
+          <Route exact path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
         </Route>
       </Routes>
     </BrowserRouter>

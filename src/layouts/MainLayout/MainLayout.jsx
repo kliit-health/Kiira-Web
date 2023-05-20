@@ -31,8 +31,8 @@ const MainLayout = ({ children, hideScroll }) => {
           </Typography>
           <InnerNavBar />
         </ContentContainer>
-        <ContentContainer className="min-h-[58vh] w-full">
-          <Card className="p-1 md:p-2 h-full w-full  overflow-hidden overflow-y-auto shadow-none">
+        <ContentContainer className="min-h-[58vh] w-full h-full">
+          <Card className="p-1 md:px-8 md:py-4 h-full w-full  overflow-hidden overflow-y-auto shadow-none">
             {children}
           </Card>
         </ContentContainer>

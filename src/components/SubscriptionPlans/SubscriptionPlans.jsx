@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppButton, ContentContainer } from '../shared/styledComponents';
 import { ReactComponent as Badge } from 'src/assets/icons/check-badge.svg';
 import propTypes from 'prop-types';
-import { Button, IconButton, Typography } from '@material-tailwind/react';
+import { Typography } from '@material-tailwind/react';
+import useAuth from 'src/hooks/useAuth';
 
 const SubscriptionPlans = ({ plan }) => {
-  const Icon = plan.planIcon;
-  console.log('🚀 ~ file: SubscriptionPlans.jsx:6 ~ SubscriptionPlans ~ plan:', plan);
+  const { isAuthenticated } = useAuth();
+  const Icon = plan?.planIcon;
+
   return (
     <ContentContainer className="flex flex-col w-full h-auto min-h-[459px] max-w-max min-w-[285px] max-h-max overflow-hidden">
       <ContentContainer
@@ -17,19 +19,22 @@ const SubscriptionPlans = ({ plan }) => {
           className={`flex rounded-lg bg-white w-24 h-8 items-center text-xs justify-center font-semibold my-auto`}>
           {plan?.cycle}
         </ContentContainer>
-        <Typography
-          variant="lead"
-          className="text-[#AFB6C0] font-bold text-4xl flex flex-row items-center justify-center text-center my-auto">
+        <div className="text-[#AFB6C0] font-bold text-4xl flex flex-row items-center justify-center text-center my-auto">
           {plan?.currencyCode}
-          <span className="text-kiiraDark">{plan.amount}</span>
+          <span className="text-kiiraDark">{plan?.amount}</span>
           <span className="text-[#AFB6C0] text-sm">{plan?.currency}</span>
-        </Typography>
+        </div>
 
         <span className="absolute -bottom-6">
           <Icon className="h-12 w-20" />
         </span>
       </ContentContainer>
-      <ContentContainer className="bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl">
+      <ContentContainer
+        className={[
+          plan?.cycle === 'Monthly'
+            ? 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl border border-kiiraBlue/20'
+            : 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl'
+        ]}>
         <Typography className="text-kiiraText text-xs min-h-[36px]" variant="small">
           {plan?.description}
         </Typography>
@@ -61,10 +66,16 @@ const SubscriptionPlans = ({ plan }) => {
           fullWidth
           className={
             (['px-4 py-2 text-white capitalize text-[10px] shadow-transparent mt-auto'],
-            plan.cycle === 'Monthly' ? 'bg-kiiraBlue' : 'bg-kiiraText')
+            plan?.cycle === 'Monthly' ? 'bg-kiiraBlue' : 'bg-kiiraText')
           }>
           Choose Plan
         </AppButton>
+
+        {isAuthenticated && plan?.cycle === 'Monthly' ? (
+          <Typography variant="small" className="text-[0.675rem] text-center text-kiiraText">
+            Expires Apr 30th, 2023
+          </Typography>
+        ) : null}
       </ContentContainer>
     </ContentContainer>
   );

@@ -5,6 +5,8 @@ import ForgotPassword from './ForgotPassword/ForgotPassword';
 import ResetPassword from './ResetPassword/ResetPassword';
 import CodeVerification from './CodeVerification/CodeVerification';
 import SignupSubscription from './SignupSubscription/SignupSubscription';
+import Subscription from './Subscription/Subscription';
+import Home from './Home/Home';
 
 export {
   Login,
@@ -13,5 +15,7 @@ export {
   ForgotPassword,
   ResetPassword,
   CodeVerification,
-  SignupSubscription
+  SignupSubscription,
+  Home,
+  Subscription
 };

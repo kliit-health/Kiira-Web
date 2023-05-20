@@ -1,10 +1,10 @@
-import { Button, Input, List, ListItem } from '@material-tailwind/react';
+import { Button, Input, List, ListItem, MenuItem } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 
 export const LayoutWrapper = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
-  ${tw`flex relative flex-col w-full h-screen max-h-screen gap-10 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
+  ${tw`flex relative flex-col w-full h-screen gap-8 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
 `;
 
 export const AppLink = styled(Link)`
@@ -25,7 +25,11 @@ export const NavList = styled(List)`
 `;
 
 export const NavListItem = styled(ListItem)`
-  ${tw`text-kiiraText text-xs font-medium bg-kiiraCardBg1`}
+  ${tw`text-kiiraText text-xs font-medium bg-kiiraBg2`}
+`;
+
+export const MenuListItem = styled(MenuItem)`
+  ${tw`text-kiiraText text-xs font-medium bg-kiiraBg2 flex items-center gap-2 my-2.5`}
 `;
 
 export const AppButton = styled(Button)`

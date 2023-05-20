@@ -12,9 +12,9 @@ export default withMT({
         kiiraText: '#6F7888',
         kiiraBlackText: '#252539',
         kiiraBg: '#F1F5FF',
-        kiiraCardBg1: '#F6F8FC',
-        kiiraCardBg2: '#ECEFF3',
-        kiiraCardB3: '#93939A'
+        kiiraBg2: '#F6F8FC',
+        kiiraBg3: '#ECEFF3',
+        kiiraBg4: '#93939A'
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif']

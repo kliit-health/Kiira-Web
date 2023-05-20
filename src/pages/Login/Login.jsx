@@ -1,12 +1,10 @@
 import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppPasswordInput } from 'src/components';
+import { AppPasswordInput, SocialAuth } from 'src/components';
 import { AppButton, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
-import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
-import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
+
 import useAuth from 'src/hooks/useAuth';
 
 const Login = () => {
@@ -16,7 +14,7 @@ const Login = () => {
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
-        <CardBody className="flex flex-col h-full gap-6 px-8 py-8">
+        <CardBody className="flex flex-col h-full gap-4 lg:gap-6 p-4 lg:p-8 ">
           <Typography variant="h2" className="text-[#252539] font-medium">
             Welcome 👋🏽,
           </Typography>
@@ -49,7 +47,7 @@ const Login = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                navigate(ROUTES.INDEX);
+                navigate(ROUTES.INDEX, { replace: true });
               }, 500);
             }}>
             Login
@@ -62,23 +60,7 @@ const Login = () => {
           </Typography>
           <Divider className="my-6 text-sm text-kiiraText" data-content="Or login with" />
 
-          <div className="flex flex-row justify-between w-full gap-5">
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <FacebookIcon />
-            </Button>
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <GoogleIcon />
-            </Button>
-            <Button
-              variant="text"
-              className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-              <AppleIcon />
-            </Button>
-          </div>
+          <SocialAuth />
         </CardBody>
       </Card>
     </AuthLayout>

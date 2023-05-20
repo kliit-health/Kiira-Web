@@ -1,23 +1,33 @@
 import { useState, useEffect } from 'react';
 import {
-  MobileNav,
   IconButton,
   List,
   Navbar,
   Badge,
   Avatar,
-  Typography
+  Typography,
+  Collapse,
+  Menu,
+  MenuList,
+  MenuHandler,
+  MenuItem
 } from '@material-tailwind/react';
 import { ReactComponent as Hamburger } from 'src/assets/icons/hamburger.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/icons/kiiraBirdie.svg';
 import { ReactComponent as Message } from 'src/assets/icons/Message.svg';
 import { Link, NavLink } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
-import { AppButton, AppLink, ContentContainer, NavListItem } from '../shared/styledComponents';
+import {
+  AppButton,
+  AppLink,
+  ContentContainer,
+  MenuListItem,
+  NavListItem
+} from '../shared/styledComponents';
 import useAuth from 'src/hooks/useAuth';
 
 export default function InnerNavBar() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   console.log('🚀 ~ file: InnerNavBar.jsx:27 ~ InnerNavBar ~ user:', user);
   const [openNav, setOpenNav] = useState(false);
 
@@ -33,7 +43,7 @@ export default function InnerNavBar() {
       <AppLink to="#">
         <NavListItem>Doctors</NavListItem>
       </AppLink>
-      <AppLink to="#">
+      <AppLink to={ROUTES.SUBSCRIPTION}>
         <NavListItem>Subscription Plan</NavListItem>
       </AppLink>
       {isAuthenticated ? (
@@ -45,7 +55,7 @@ export default function InnerNavBar() {
   );
 
   return (
-    <Navbar className="block p-0 max-w-full mx-auto bg-white border-transparent rounded-2xl shadow-none h-max bg-opacity-100">
+    <Navbar className="block p-0 max-w-full mx-auto bg-white border-transparent rounded-2xl shadow-none h-max bg-opacity-100 py-1">
       <div className="flex w-full items-center">
         <ContentContainer className="h-full border-r-2 border-t-0 border-l-0 border-b-0 border-kiiraBg">
           <NavLink
@@ -63,34 +73,49 @@ export default function InnerNavBar() {
           <div className="hidden lg:block">{navList}</div>
           <div className="flex flex-row items-center justify-end gap-4 ml-auto mx-2">
             {isAuthenticated ? (
-              <ContentContainer className="flex flex-row items-center gap-2 bg-kiiraCardBg2 px-3 py-1 rounded-lg">
-                <IconButton variant="text" size="lg" className="bg-kiiraCardBg1 shadow-none">
+              <ContentContainer className="flex flex-row items-center gap-2 bg-kiiraBg3 px-3 py-1 rounded-lg">
+                <IconButton variant="text" size="lg" className="bg-kiiraBg2 shadow-none">
                   <Message className="text-md w-5 h-5" />
                 </IconButton>
 
-                <ContentContainer
-                  row
-                  cursor="pointer"
-                  className="items-center gap-1 hover:opacity-80">
-                  <Badge overlap="circular" placement="bottom-end">
-                    <Avatar
-                      src={user?.photo}
-                      alt="Profile"
-                      variant="rounded-full"
-                      size="md"
-                      className="rounded-full"
-                    />
-                  </Badge>
-                  <Typography
-                    variant="sm"
-                    className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">
-                    {user?.firstName}
-                  </Typography>
-                </ContentContainer>
+                <Menu>
+                  <MenuHandler>
+                    <ContentContainer
+                      row
+                      cursor="pointer"
+                      className="items-center gap-1 hover:opacity-80">
+                      <Badge overlap="circular" placement="bottom-end">
+                        <Avatar
+                          src={user?.photo}
+                          alt="Profile"
+                          variant="circular"
+                          size="md"
+                          className="rounded-full"
+                        />
+                      </Badge>
+                      <Typography
+                        variant="small"
+                        className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">
+                        {user?.firstName}
+                      </Typography>
+                    </ContentContainer>
+                  </MenuHandler>
+                  <MenuList>
+                    <MenuListItem className="bg-transparent">
+                      <Link to="#">Account</Link>
+                    </MenuListItem>
+                    <hr className="my-2 border-blue-gray-50" />
+                    <MenuItem className="flex items-center gap-2" onClick={logout}>
+                      <Typography variant="small" className="text-red-600 font-semibold">
+                        Log Out
+                      </Typography>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
 
                 <IconButton
                   variant="text"
-                  className="ml-auto bg-kiiraCardBg1 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+                  className="ml-auto bg-kiiraBg2 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
                   onClick={() => setOpenNav(!openNav)}>
                   {openNav ? (
                     <svg
@@ -108,19 +133,21 @@ export default function InnerNavBar() {
                 </IconButton>
               </ContentContainer>
             ) : (
-              <AppButton
-                variant="text"
-                className="text-kiiraText bg-kiiraCardBg2 capitalize font-medium">
-                Log in
-              </AppButton>
+              <Link to={ROUTES.LOGIN}>
+                <AppButton
+                  variant="text"
+                  className="text-kiiraText bg-kiiraBg3 capitalize font-medium">
+                  Log in
+                </AppButton>
+              </Link>
             )}
           </div>
         </div>
       </div>
 
-      <MobileNav open={openNav}>
+      <Collapse open={openNav}>
         <div className="container mx-auto my-4">{navList}</div>
-      </MobileNav>
+      </Collapse>
     </Navbar>
   );
 }

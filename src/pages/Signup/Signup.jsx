@@ -15,7 +15,7 @@ const Signup = () => {
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
-        <CardBody className="flex flex-col h-full gap-6 px-8 py-8">
+        <CardBody className="flex flex-col h-full gap-4 lg:gap-6 p-4 lg:p-8">
           <Typography variant="h2" className="text-[#252539] font-medium">
             Hello 👋🏽,
           </Typography>

@@ -1,5 +1,5 @@
 import propTypes from 'prop-types';
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { userData } from 'src/data';
 import Auth from 'src/middleware/storage';
 
@@ -7,17 +7,15 @@ import Auth from 'src/middleware/storage';
 export const AuthContext = createContext();
 
 // create the auth provider component
-export const AuthProvider = ({ children, navigate }) => {
+export const AuthProvider = ({ children }) => {
   // state for storing the authenticated user
   const [user, setUser] = useState(userData);
+  const [isAuthenticated, setIsAuthenticated] = useState(userData);
 
-  const login = (path) => {
+  const login = () => {
     Auth?.setToken('tokenAvailable');
     Auth?.fetchUser(userData);
     setUser(userData);
-    setTimeout(() => {
-      navigate();
-    }, 250);
   };
 
   const logout = () => {
@@ -25,7 +23,14 @@ export const AuthProvider = ({ children, navigate }) => {
     setUser(null);
   };
 
-  const isAuthenticated = Auth?.isAuthenticated();
+  useEffect(() => {
+    const getAuth = async () => {
+      const isAuthenticated = Auth?.isAuthenticated();
+      setIsAuthenticated(isAuthenticated);
+    };
+
+    getAuth();
+  }, []);
   console.log('🚀 ~ file: AuthProvider.jsx:26 ~ AuthProvider ~ isAuthenticated:', isAuthenticated);
 
   const value = {
@@ -43,6 +48,4 @@ AuthProvider.propTypes = {
   navigate: propTypes.func
 };
 
-AuthProvider.defaultPropTypes = {
-  navigate: () => {}
-};
+AuthProvider.defaultPropTypes = {};

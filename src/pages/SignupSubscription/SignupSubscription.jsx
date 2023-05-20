@@ -27,7 +27,7 @@ const SignupSubscription = () => {
               </Typography>
 
               <ContentContainer className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5">
-                {kiiraSubscriptions.map((plan, index) => {
+                {kiiraSubscriptions?.map((plan, index) => {
                   return <SubscriptionPlans plan={plan} key={index?.toString()} />;
                 })}
               </ContentContainer>
