@@ -3,15 +3,19 @@ import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg'
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
 import { ReactComponent as OvalPlan1 } from 'src/assets/icons/oval.svg';
 import { ReactComponent as OvalPlan2 } from 'src/assets/icons/oval2.svg';
+import { ReactComponent as Calender } from 'src/assets/icons/calenderIcon.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
+import MessageProfilePicture from 'src/assets/images/inbox_profile.png';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
   GlobeIconSvg: GlobeIconSvg,
   KiiraLogoSvg: KiiraLogoSvg,
   sliderImg1: sliderImg1,
-  sliderImg2: sliderImg2
+  sliderImg2: sliderImg2,
+  calenderIcon: Calender,
+  inboxImg: MessageProfilePicture
 };
 
 export const userData = {

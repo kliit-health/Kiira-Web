@@ -6,6 +6,7 @@ import {
   CodeVerification,
   ForgotPassword,
   Home,
+  Inbox,
   Login,
   ResetPassword,
   Signup,
@@ -28,6 +29,7 @@ export const Router = () => {
         <Route element={<ProtectedRoute />}>
           <Route index exact path={ROUTES.INDEX} element={<Home />} />
           <Route exact path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
+          <Route exact path={ROUTES.INBOX} element={<Inbox />} />
         </Route>
       </Routes>
     </BrowserRouter>

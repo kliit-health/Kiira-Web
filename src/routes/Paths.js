@@ -6,5 +6,6 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
   CODE_VERIFICATION: '/code-verification',
   SIGINUP_SUBSCRIPTION: '/sign-up-subscription',
-  SUBSCRIPTION: '/subscription'
+  SUBSCRIPTION: '/subscription',
+  INBOX: '/inbox'
 };

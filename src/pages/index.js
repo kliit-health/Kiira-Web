@@ -7,6 +7,7 @@ import CodeVerification from './CodeVerification/CodeVerification';
 import SignupSubscription from './SignupSubscription/SignupSubscription';
 import Subscription from './Subscription/Subscription';
 import Home from './Home/Home';
+import Inbox from './Inbox/Inbox';
 
 export {
   Login,
@@ -17,5 +18,6 @@ export {
   CodeVerification,
   SignupSubscription,
   Home,
-  Subscription
+  Subscription,
+  Inbox
 };

@@ -74,9 +74,11 @@ export default function InnerNavBar() {
           <div className="flex flex-row items-center justify-end gap-4 ml-auto mx-2">
             {isAuthenticated ? (
               <ContentContainer className="flex flex-row items-center gap-2 bg-kiiraBg3 px-3 py-1 rounded-lg">
-                <IconButton variant="text" size="lg" className="bg-kiiraBg2 shadow-none">
-                  <Message className="text-md w-5 h-5" />
-                </IconButton>
+                <Link to={ROUTES.INBOX}>
+                  <IconButton variant="text" size="lg" className="bg-kiiraBg2 shadow-none">
+                    <Message className="text-md w-5 h-5" />
+                  </IconButton>
+                </Link>
 
                 <Menu>
                   <MenuHandler>

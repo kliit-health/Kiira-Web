@@ -17,7 +17,8 @@ export default withMT({
         kiiraBg4: '#93939A'
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif']
+        poppins: ['Poppins', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif']
       }
     }
   },
