@@ -8,14 +8,13 @@ import {
   Avatar,
   Typography
 } from '@material-tailwind/react';
-import { ReactComponent as Hamburger } from 'src/assets/icons/Hamburger.svg';
+import { ReactComponent as Hamburger } from 'src/assets/icons/hamburger.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/icons/kiiraBirdie.svg';
 import { ReactComponent as Message } from 'src/assets/icons/Message.svg';
 import { Link, NavLink } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { AppButton, AppLink, ContentContainer, NavListItem } from '../shared/styledComponents';
 import useAuth from 'src/hooks/useAuth';
-import { IMAGES } from 'src/data';
 
 export default function InnerNavBar() {
   const { user, isAuthenticated } = useAuth();
