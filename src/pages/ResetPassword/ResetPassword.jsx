@@ -1,12 +1,8 @@
-import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
-import { Link, Navigate } from 'react-router-dom';
+import { Button, Card, CardBody, Typography } from '@material-tailwind/react';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import { AppButton, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
-import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
-import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { useNavigate } from 'react-router-dom';
 import useAuth from 'src/hooks/useAuth';
 

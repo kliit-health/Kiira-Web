@@ -12,6 +12,7 @@ import useAuth from 'src/hooks/useAuth';
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">

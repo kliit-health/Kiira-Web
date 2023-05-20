@@ -1,10 +1,10 @@
-import { Button, Input } from '@material-tailwind/react';
+import { Button, Input, List, ListItem } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 
 export const LayoutWrapper = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
-  ${tw`flex flex-col w-full h-screen max-h-screen gap-10 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
+  ${tw`flex relative flex-col w-full h-screen max-h-screen gap-10 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
 `;
 
 export const AppLink = styled(Link)`
@@ -13,10 +13,19 @@ export const AppLink = styled(Link)`
 
 export const AppLinkExternal = styled.a`
   ${tw`text-sm font-medium text-kiiraText`}
+`;
 
-  &:hover {
-    opacity: 0.75;
-  }
+AppLinkExternal.defaultProps = {
+  target: '_blank',
+  rel: 'noopener noreferrer'
+};
+
+export const NavList = styled(List)`
+  ${tw`flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6`}
+`;
+
+export const NavListItem = styled(ListItem)`
+  ${tw`text-kiiraText text-xs font-medium bg-kiiraCardBg1`}
 `;
 
 export const AppButton = styled(Button)`
@@ -62,11 +71,6 @@ export const Divider = styled.hr`
     background-color: #fcfcfa;
   }
 `;
-
-AppLinkExternal.defaultProps = {
-  rel: 'noreferrer',
-  target: '_blank'
-};
 
 export const hideScrollbar = () => css`
   -ms-overflow-style: none !important; /* IE and Edge */

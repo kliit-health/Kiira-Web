@@ -45,7 +45,7 @@ const ForgotPassword = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                navigate(ROUTES.INDEX);
+                navigate(ROUTES.RESET_PASSWORD);
               }, 500);
             }}>
             Submit

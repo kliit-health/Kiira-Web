@@ -1,11 +1,16 @@
-
+import { ContentContainer } from 'src/components/shared/styledComponents';
+import { MainLayout } from 'src/layouts';
 
 const BookAppointment = () => {
   return (
-    <div className='w-full h-screen bg-blue-300'>BookAppointment</div>
-  )
-}
+    <MainLayout>
+      <ContentContainer background="silver" width="100%" height="80vh">
+        HIIIII
+      </ContentContainer>
+    </MainLayout>
+  );
+};
 
-BookAppointment.propTypes = {}
+BookAppointment.propTypes = {};
 
-export default BookAppointment
+export default BookAppointment;

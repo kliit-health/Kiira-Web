@@ -55,6 +55,7 @@ const AuthLayout = ({ children, showSlider, hideScroll }) => {
                   <img
                     src={item.src}
                     alt={item.alt}
+                    loading="lazy"
                     className="object-cover w-full h-full bg-kiiraText"
                   />
                   <div className="absolute bottom-0 w-full h-3/4 flex place-items-end bg-gradient-to-t from-[#15346B] to-black/0 from-10% via-sky-500 via-30%">
