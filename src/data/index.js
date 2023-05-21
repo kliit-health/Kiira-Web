@@ -4,9 +4,15 @@ import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg'
 import { ReactComponent as OvalPlan1 } from 'src/assets/icons/oval.svg';
 import { ReactComponent as OvalPlan2 } from 'src/assets/icons/oval2.svg';
 import { ReactComponent as Calender } from 'src/assets/icons/calenderIcon.svg';
+import { ReactComponent as Location } from 'src/assets/icons/Location.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
 import MessageProfilePicture from 'src/assets/images/inbox_profile.png';
+import cardPic1 from 'src/assets/images/cardPicture1.png';
+import cardPic2 from 'src/assets/images/cardPicture2.png';
+import girl from 'src/assets/images/girl.png';
+import girlBg from 'src/assets/images/girlPurpleBg.png';
+import aid from 'src/assets/images/aid.png';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
@@ -15,7 +21,13 @@ export const IMAGES = {
   sliderImg1: sliderImg1,
   sliderImg2: sliderImg2,
   calenderIcon: Calender,
-  inboxImg: MessageProfilePicture
+  inboxImg: MessageProfilePicture,
+  cardPic1: cardPic1,
+  cardPic2: cardPic2,
+  girlAvatar: girl,
+  girlAvatarBg: girlBg,
+  medicalAid: aid,
+  LocationIcon: Location
 };
 
 export const userData = {
@@ -60,5 +72,35 @@ export const kiiraSubscriptions = [
       'Call in or easily book same/next-day appointments on your desktop or phone. No app needed.',
       'Online access to your health summaries and care plans.'
     ]
+  }
+];
+
+export const kiiraUpdates = [
+  {
+    title: 'New Year, More Self Care',
+    content: 'How to implement a self-care mindset in 2023',
+    author: 'Reem Abdalla',
+    imageSrc: IMAGES?.cardPic1
+  },
+  {
+    title: 'Equitable healthcare for those with',
+    content:
+      'Ensuring equitable healthcare for individuals with disabilities is an important issue that...',
+    author: 'Reem Abdalla',
+    imageSrc: IMAGES?.cardPic2
+  },
+  {
+    title: 'Equitable healthcare for those with',
+    content:
+      'Ensuring equitable healthcare for individuals with disabilities is an important issue that...',
+    author: 'Reem Abdalla',
+    imageSrc: IMAGES?.cardPic2
+  },
+  {
+    title: 'Equitable healthcare for those with',
+    content:
+      'Ensuring equitable healthcare for individuals with disabilities is an important issue that...',
+    author: 'Reem Abdalla',
+    imageSrc: IMAGES?.cardPic2
   }
 ];

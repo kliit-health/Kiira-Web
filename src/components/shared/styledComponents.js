@@ -1,6 +1,7 @@
 import { Button, Input, List, ListItem, MenuItem } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
+import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
 
 export const LayoutWrapper = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
@@ -14,6 +15,8 @@ export const AppLink = styled(Link)`
 export const AppLinkExternal = styled.a`
   ${tw`text-sm font-medium text-kiiraText`}
 `;
+
+export const AddCircleIcon = styled(AddCircle)``;
 
 AppLinkExternal.defaultProps = {
   target: '_blank',
@@ -33,11 +36,16 @@ export const MenuListItem = styled(MenuItem)`
 `;
 
 export const AppButton = styled(Button)`
-  ${tw`p-2 text-sm font-bold`}
+  ${tw`p-2 text-sm font-bold text-sm text-white capitalize shadow-transparent`}
   background: ${(background) =>
-    background || 'linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)'};
+    background ? background : `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)`};
   border-radius: 12px;
 `;
+
+AppButton.defaultProps = {
+  background: `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%);`,
+  size: 'md'
+};
 
 export const Divider = styled.hr`
   line-height: 1em;
@@ -115,4 +123,10 @@ export const ContentContainer = styled.div`
   overflow-y: ${({ overflowY }) => overflowY};
   box-shadow: ${({ boxShadow }) => boxShadow};
   z-index: ${({ zIndex }) => zIndex};
+`;
+
+export const BorderedContainer = styled(ContentContainer)`
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='14' ry='14' stroke='%233F84FFFF' stroke-width='2' stroke-dasharray='14%2c 10' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
+  border-radius: 14px;
+  ${tw`h-32 rounded-2xl min-w-fit flex flex-row items-center border-none justify-center gap-1 flex-wrap hover:opacity-80 hover:cursor-pointer`}
 `;

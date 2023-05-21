@@ -7,5 +7,6 @@ export const ROUTES = {
   CODE_VERIFICATION: '/code-verification',
   SIGINUP_SUBSCRIPTION: '/sign-up-subscription',
   SUBSCRIPTION: '/subscription',
-  INBOX: '/inbox'
+  INBOX: '/inbox',
+  HISTORY: '/history'
 };

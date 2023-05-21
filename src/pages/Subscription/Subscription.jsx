@@ -9,7 +9,7 @@ import {
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { SubscriptionPlans } from 'src/components';
-import { ContentContainer } from 'src/components/shared/styledComponents';
+import { BorderedContainer, ContentContainer } from 'src/components/shared/styledComponents';
 import { kiiraSubscriptions } from 'src/data';
 import { MainLayout } from 'src/layouts';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
@@ -94,7 +94,7 @@ const Subscription = () => {
               </ContentContainer>
             </ContentContainer>
 
-            <ContentContainer className="h-32 rounded-2xl flex flex-row items-center border-2 border-dotted border-kiiraBlue justify-center gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
+            <BorderedContainer className="border-none">
               <ContentContainer className="flex flex-col flex-nowrap gap-1 items-center">
                 <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 p-1 rounded-full">
                   <AddCircle />
@@ -105,10 +105,12 @@ const Subscription = () => {
                   Add a new card
                 </Typography>
               </ContentContainer>
-            </ContentContainer>
+            </BorderedContainer>
           </Card>
         </ContentContainer>
       </ContentContainer>
+
+      {/* Modal  */}
       <Dialog
         open={open}
         handler={handleOpen}

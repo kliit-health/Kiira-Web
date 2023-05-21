@@ -8,6 +8,7 @@ import SignupSubscription from './SignupSubscription/SignupSubscription';
 import Subscription from './Subscription/Subscription';
 import Home from './Home/Home';
 import Inbox from './Inbox/Inbox';
+import History from './History/History'
 
 export {
   Login,
@@ -19,5 +20,6 @@ export {
   SignupSubscription,
   Home,
   Subscription,
-  Inbox
+  Inbox,
+  History
 };

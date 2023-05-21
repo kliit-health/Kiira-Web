@@ -9,6 +9,7 @@ export default withMT({
         kiiraBlue: '#3F84FF',
         kiiraGradient: 'linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)',
         kiiraDark: '#000B1E',
+        kiiraBlackishGreen: '#112211',
         kiiraText: '#6F7888',
         kiiraBlackText: '#252539',
         kiiraBg: '#F1F5FF',
@@ -18,7 +19,8 @@ export default withMT({
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
-        montserrat: ['Montserrat', 'sans-serif']
+        montserrat: ['Montserrat', 'sans-serif'],
+        manrope: ['Manrope', 'sans-serif']
       }
     }
   },

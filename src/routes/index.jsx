@@ -5,6 +5,7 @@ import {
   BookAppointment,
   CodeVerification,
   ForgotPassword,
+  History,
   Home,
   Inbox,
   Login,
@@ -30,6 +31,7 @@ export const Router = () => {
           <Route index exact path={ROUTES.INDEX} element={<Home />} />
           <Route exact path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route exact path={ROUTES.INBOX} element={<Inbox />} />
+          <Route exact path={ROUTES.HISTORY} element={<History />} />
         </Route>
       </Routes>
     </BrowserRouter>

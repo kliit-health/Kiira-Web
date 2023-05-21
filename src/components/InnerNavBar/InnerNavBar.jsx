@@ -47,7 +47,7 @@ export default function InnerNavBar() {
         <NavListItem>Subscription Plan</NavListItem>
       </AppLink>
       {isAuthenticated ? (
-        <AppLink to="#">
+        <AppLink to={ROUTES.HISTORY}>
           <NavListItem>History</NavListItem>
         </AppLink>
       ) : null}
@@ -86,7 +86,7 @@ export default function InnerNavBar() {
                       row
                       cursor="pointer"
                       className="items-center gap-1 hover:opacity-80">
-                      <Badge overlap="circular" placement="bottom-end">
+                      <Badge overlap="circular" placement="bottom-end" color="blue">
                         <Avatar
                           src={user?.photo}
                           alt="Profile"
