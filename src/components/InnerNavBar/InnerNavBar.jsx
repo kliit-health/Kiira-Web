@@ -37,9 +37,9 @@ export default function InnerNavBar() {
 
   const navList = (
     <List className="flex flex-row flex-wrap gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center mx-4 p-0">
-      <Link to="#">
+      <AppLink to={ROUTES.BOOK_APPOINTMENT}>
         <NavListItem className="">Book an Appointment</NavListItem>
-      </Link>
+      </AppLink>
       <AppLink to="#">
         <NavListItem>Doctors</NavListItem>
       </AppLink>
@@ -86,7 +86,7 @@ export default function InnerNavBar() {
                       row
                       cursor="pointer"
                       className="items-center gap-1 hover:opacity-80">
-                      <Badge overlap="circular" placement="bottom-end" color="blue">
+                      <ContentContainer className="relative">
                         <Avatar
                           src={user?.photo}
                           alt="Profile"
@@ -94,7 +94,10 @@ export default function InnerNavBar() {
                           size="md"
                           className="rounded-full"
                         />
-                      </Badge>
+                        <i
+                          className="fa fa-angle-down text-[0.55rem] absolute bottom-0 right-1 p-1.5 bg-kiiraBlue w-2 h-2 flex items-center justify-center rounded-full"
+                          aria-hidden="true"></i>
+                      </ContentContainer>
                       <Typography
                         variant="small"
                         className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">

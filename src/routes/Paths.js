@@ -8,5 +8,6 @@ export const ROUTES = {
   SIGINUP_SUBSCRIPTION: '/sign-up-subscription',
   SUBSCRIPTION: '/subscription',
   INBOX: '/inbox',
-  HISTORY: '/history'
+  HISTORY: '/history',
+  BOOK_APPOINTMENT: '/book-appointment'
 };

@@ -1,6 +1,5 @@
 import React from 'react';
-import { AddCircleIcon, BorderedContainer, ContentContainer } from '../shared/styledComponents';
-import { Typography } from '@material-tailwind/react';
+import { AddCircleIcon, AppTypography, BorderedContainer, ContentContainer } from '../shared/styledComponents';
 
 const AddButton = () => {
   return (
@@ -9,9 +8,9 @@ const AddButton = () => {
         <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 p-1 rounded-full">
           <AddCircleIcon />
         </ContentContainer>
-        <Typography variant="small" className="text-xs md:text-sm text-kiiraDark font-medium">
+        <AppTypography variant="small" className="text-xs md:text-sm text-kiiraDark font-medium">
           Add a new card
-        </Typography>
+        </AppTypography>
       </ContentContainer>
     </BorderedContainer>
   );

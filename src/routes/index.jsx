@@ -32,6 +32,7 @@ export const Router = () => {
           <Route exact path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route exact path={ROUTES.INBOX} element={<Inbox />} />
           <Route exact path={ROUTES.HISTORY} element={<History />} />
+          <Route exact path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
         </Route>
       </Routes>
     </BrowserRouter>

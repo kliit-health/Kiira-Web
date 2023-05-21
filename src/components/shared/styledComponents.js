@@ -1,11 +1,52 @@
-import { Button, Input, List, ListItem, MenuItem } from '@material-tailwind/react';
+import { Button, List, ListItem, MenuItem, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
 
+export const ContentContainer = styled.div`
+  ${(props) => props.hideScroll && hideScrollbar}
+  position: ${({ position }) => position};
+  display: flex;
+  color: ${({ color }) => color};
+  flex: ${({ flex }) => flex};
+  flex-wrap: ${({ flexWrap }) => flexWrap};
+  flex-direction: ${({ column, row, flexDirection }) =>
+    row ? 'row' : column ? 'column' : flexDirection ? flexDirection : 'column'};
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  padding: ${({ padding }) => padding};
+  margin: ${({ margin }) => margin};
+  max-width: ${({ maxWidth }) => maxWidth};
+  min-width: ${({ minWidth }) => minWidth};
+  min-height: ${({ minHeight }) => minHeight};
+  height: ${({ height }) => height};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  align-items: ${({ alignItems }) => alignItems};
+  background: ${({ background }) => background};
+  border-radius: ${({ borderRadius }) => borderRadius};
+  gap: ${({ gap }) => gap};
+  cursor: ${({ cursor }) => cursor};
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${({ border }) => border || 'transparent'};
+  overflow: ${({ overflow }) => overflow};
+  overflow-x: ${({ overflowX }) => overflowX};
+  overflow-y: ${({ overflowY }) => overflowY};
+  box-shadow: ${({ boxShadow }) => boxShadow};
+  z-index: ${({ zIndex }) => zIndex};
+`;
+
+export const AppTypography = styled(Typography)`
+  ${tw`font-poppins`}
+`;
+
 export const LayoutWrapper = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
   ${tw`flex relative flex-col w-full h-screen gap-8 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
+`;
+
+export const InnerLayoutWrapper = styled(ContentContainer)`
+  ${tw`w-full h-full min-h-[50vh] p-4 lg:px-10 lg:py-4 gap-4`}
 `;
 
 export const AppLink = styled(Link)`
@@ -36,7 +77,7 @@ export const MenuListItem = styled(MenuItem)`
 `;
 
 export const AppButton = styled(Button)`
-  ${tw`p-2 text-sm font-bold text-sm text-white capitalize shadow-transparent`}
+  ${tw`p-2 text-sm font-bold text-white capitalize shadow-transparent`}
   background: ${(background) =>
     background ? background : `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)`};
   border-radius: 12px;
@@ -90,39 +131,6 @@ export const hideScrollbar = () => css`
   &::-webkit-scrollbar {
     display: none !important;
   }
-`;
-
-export const ContentContainer = styled.div`
-  ${(props) => props.hideScroll && hideScrollbar}
-  position: ${({ position }) => position};
-  display: flex;
-  color: ${({ color }) => color};
-  flex: ${({ flex }) => flex};
-  flex-wrap: ${({ flexWrap }) => flexWrap};
-  flex-direction: ${({ column, row, flexDirection }) =>
-    row ? 'row' : column ? 'column' : flexDirection ? flexDirection : 'column'};
-  width: ${({ width }) => width};
-  height: ${({ height }) => height};
-  padding: ${({ padding }) => padding};
-  margin: ${({ margin }) => margin};
-  max-width: ${({ maxWidth }) => maxWidth};
-  min-width: ${({ minWidth }) => minWidth};
-  min-height: ${({ minHeight }) => minHeight};
-  height: ${({ height }) => height};
-  justify-content: ${({ justifyContent }) => justifyContent};
-  align-items: ${({ alignItems }) => alignItems};
-  background: ${({ background }) => background};
-  border-radius: ${({ borderRadius }) => borderRadius};
-  gap: ${({ gap }) => gap};
-  cursor: ${({ cursor }) => cursor};
-  border-width: 1px;
-  border-style: solid;
-  border-color: ${({ border }) => border || 'transparent'};
-  overflow: ${({ overflow }) => overflow};
-  overflow-x: ${({ overflowX }) => overflowX};
-  overflow-y: ${({ overflowY }) => overflowY};
-  box-shadow: ${({ boxShadow }) => boxShadow};
-  z-index: ${({ zIndex }) => zIndex};
 `;
 
 export const BorderedContainer = styled(ContentContainer)`

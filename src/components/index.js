@@ -5,5 +5,7 @@ import InnerNavBar from './InnerNavBar/InnerNavBar';
 import SocialAuth from './SocialAuth/SocialAuth';
 import BookingCard from './BookingCard/BookingCard';
 import AddButton from './AddButton/AddButton';
+import SearchInput from './SearchInput/SearchInput';
+import ServiceCard from './ServiceCard/ServiceCard';
 
-export { AppNavBar, AppPasswordInput, SubscriptionPlans, InnerNavBar, SocialAuth, BookingCard, AddButton };
+export { AppNavBar, AppPasswordInput, SubscriptionPlans, InnerNavBar, SocialAuth, BookingCard, AddButton, SearchInput, ServiceCard };

@@ -1,11 +1,25 @@
-import { ContentContainer } from 'src/components/shared/styledComponents';
+import { SearchInput, ServiceCard } from 'src/components';
+import { ContentContainer, InnerLayoutWrapper } from 'src/components/shared/styledComponents';
+import { kiiraServices } from 'src/data';
 import { MainLayout } from 'src/layouts';
 
 const BookAppointment = () => {
   return (
     <MainLayout>
-      <ContentContainer background="silver" width="100%" height="80vh">
-        HIIIII
+      <ContentContainer
+        width="100%"
+        height="100%"
+        className="h-full min-h-[50vh] w-full  p-4 lg:px-10 lg:py-4 gap-4 overflow-hidden overflow-y-auto">
+        {/* <InnerLayoutWrapper> */}
+        <SearchInput label="Search health keyword" />
+        <ContentContainer>
+          <div class="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-4 grid-col-1 gap-4">
+            {kiiraServices.map((service, index) => {
+              return <ServiceCard service={service} key={index.toString()} />
+            })}
+          </div>
+        </ContentContainer>
+        {/* </InnerLayoutWrapper> */}
       </ContentContainer>
     </MainLayout>
   );
