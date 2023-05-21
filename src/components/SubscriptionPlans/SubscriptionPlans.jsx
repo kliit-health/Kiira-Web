@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { AppButton, ContentContainer } from '../shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { ReactComponent as Badge } from 'src/assets/icons/check-badge.svg';
 import propTypes from 'prop-types';
-import { Typography } from '@material-tailwind/react';
 import useAuth from 'src/hooks/useAuth';
 
 const SubscriptionPlans = ({ plan }) => {
@@ -35,13 +34,13 @@ const SubscriptionPlans = ({ plan }) => {
             ? 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl border border-kiiraBlue/20'
             : 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl'
         ]}>
-        <Typography className="text-kiiraText text-xs min-h-[36px]" variant="small">
+        <AppTypography className="text-kiiraText text-xs min-h-[36px]" variant="small">
           {plan?.description}
-        </Typography>
+        </AppTypography>
 
-        <Typography className="p-2 w-full bg-[#E2EDFF] text-kiiraBlue text-xs text-center font-semibold rounded-md">
+        <AppTypography className="p-2 w-full bg-[#E2EDFF] text-kiiraBlue text-xs text-center font-semibold rounded-md">
           Kiira Membership Plan Features:
-        </Typography>
+        </AppTypography>
 
         <ContentContainer className="flex flex-col gap-y-2">
           {plan?.package?.map((item, index) => {
@@ -50,12 +49,12 @@ const SubscriptionPlans = ({ plan }) => {
                 <span className="w-1">
                   <Badge className="h-3.5 w-3.5 mt-0.5" />
                 </span>
-                <Typography
+                <AppTypography
                   variant="small"
                   className="flex flex-row flex-nowrap gap-4 text-kiira/50 text-[10px] text-left font-medium ml-1"
                   key={index?.toString()}>
                   {item}
-                </Typography>
+                </AppTypography>
               </ContentContainer>
             );
           })}
@@ -72,9 +71,9 @@ const SubscriptionPlans = ({ plan }) => {
         </AppButton>
 
         {isAuthenticated && plan?.cycle === 'Monthly' ? (
-          <Typography variant="small" className="text-[0.675rem] text-center text-kiiraText">
+          <AppTypography variant="small" className="text-[0.675rem] text-center text-kiiraText">
             Expires Apr 30th, 2023
-          </Typography>
+          </AppTypography>
         ) : null}
       </ContentContainer>
     </ContentContainer>

@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
+import { Button, Card, CardBody,  } from '@material-tailwind/react';
 import { Link, Navigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
@@ -26,20 +26,20 @@ const CodeVerification = () => {
               <i class="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
-          <Typography variant="h2" className="text-[#252539] font-medium -mt-5">
+          <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">
             Verify code
-          </Typography>
-          <Typography variant="small" className="text-kiiraText text-base w-3/4">
+          </AppTypography>
+          <AppTypography variant="small" className="text-kiiraText text-base w-3/4">
             An authentication code has been sent to your email.
-          </Typography>
+          </AppTypography>
 
           <AppPasswordInput label="Enter Code" size="lg" className="" />
-          <Typography variant="small" className="flex flex-wrap -mt-5">
+          <AppTypography variant="small" className="flex flex-wrap -mt-5">
             Didn’t receive a code?
             <Link to={ROUTES.CODE_VERIFICATION} className="ml-1 font-semibold text-kiiraBlue">
               Resend
             </Link>
-          </Typography>
+          </AppTypography>
 
           <AppButton
             size="md"

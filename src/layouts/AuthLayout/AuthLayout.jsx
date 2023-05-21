@@ -1,7 +1,7 @@
-import { Typography, Carousel } from '@material-tailwind/react';
+import {  Carousel } from '@material-tailwind/react';
 import { bool, element } from 'prop-types';
 import { AppNavBar } from 'src/components';
-import { ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
+import { AppTypography, ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
 
 const carouselContent = [
@@ -60,12 +60,12 @@ const AuthLayout = ({ children, showSlider, hideScroll }) => {
                   />
                   <div className="absolute bottom-0 w-full h-3/4 flex place-items-end bg-gradient-to-t from-[#15346B] to-black/0 from-10% via-sky-500 via-30%">
                     <div className="w-full m-10">
-                      <Typography
+                      <AppTypography
                         variant="lead"
                         color="white"
                         className="px-2 py-5 text-4xl font-medium leading-[1.35] tracking-wide w-4/5">
                         {item.description}
-                      </Typography>
+                      </AppTypography>
                     </div>
                   </div>
                 </div>

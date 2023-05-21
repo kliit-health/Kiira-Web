@@ -1,6 +1,6 @@
-import { Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
+import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
-import { AppButton, ContentContainer } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as Visa } from 'src/assets/icons/visa.svg';
@@ -22,9 +22,11 @@ const SignupSubscription = () => {
           hideScroll>
           <Card className="w-full h-auto 2xl:h-full shadow-none bg-transparent">
             <CardBody className="flex flex-col h-full gap-4 p-0">
-              <Typography variant="h2" className="text-[#252539] font-medium text-2xl lg:text-3xl ">
+              <AppTypography
+                variant="h2"
+                className="text-[#252539] font-medium text-2xl lg:text-3xl ">
                 Select a plan
-              </Typography>
+              </AppTypography>
 
               <ContentContainer className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5">
                 {kiiraSubscriptions?.map((plan, index) => {
@@ -38,12 +40,12 @@ const SignupSubscription = () => {
         {/* Payment Form */}
         <Card className="w-full h-auto 2xl:h-full shadow-none">
           <CardBody className="flex flex-col h-full gap-6 px-8 py-8">
-            <Typography variant="h3" className="text-[#252539] font-medium">
+            <AppTypography variant="h3" className="text-[#252539] font-medium">
               Add payment
-            </Typography>
-            <Typography variant="small" className="text-base font-normal text-kiiraText">
+            </AppTypography>
+            <AppTypography variant="small" className="text-base font-normal text-kiiraText">
               Start enjoying amazing benefits as a member
-            </Typography>
+            </AppTypography>
             <div className="flex flex-col w-full gap-5 mt-5">
               <ContentContainer className="flex flex-row items-center justify-between gap-4 flex-wrap md:flex-nowrap">
                 <Input label="Card Number" size="lg" className="w-full" icon={<Visa />} />
@@ -77,13 +79,13 @@ const SignupSubscription = () => {
               }}>
               Subscribe
             </AppButton>
-            <Typography
+            <AppTypography
               variant="small"
               className="flex justify-center flex-wrap -mt-1 text-center text-xs text-kiiraText/75">
               By confirming your subscription, you allow Kiira health to charge your card for this
               payment and future payments in accordance with their terms. You can always cancel your
               subscription.
-            </Typography>
+            </AppTypography>
           </CardBody>
         </Card>
       </ContentContainer>

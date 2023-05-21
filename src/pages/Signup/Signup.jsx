@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
+import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
@@ -16,13 +16,13 @@ const Signup = () => {
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
         <CardBody className="flex flex-col h-full gap-4 lg:gap-6 p-4 lg:p-8">
-          <Typography variant="h2" className="text-[#252539] font-medium">
+          <AppTypography variant="h2" className="text-[#252539] font-medium">
             Hello 👋🏽,
-          </Typography>
-          <Typography variant="small" className="text-lg font-normal text-kiiraText">
+          </AppTypography>
+          <AppTypography variant="small" className="text-lg font-normal text-kiiraText">
             In a few steps, you will be able to join a<br /> community of people enjoying quality
             health care
-          </Typography>
+          </AppTypography>
           <div className="flex flex-col w-full gap-5 mt-5">
             <ContentContainer className="flex flex-row items-center justify-between gap-4 flex-wrap md:flex-nowrap">
               <Input label="First Name" size="lg" className="w-full" autoComplete="given-name" />
@@ -61,12 +61,12 @@ const Signup = () => {
             }}>
             Create Account
           </AppButton>
-          <Typography variant="small" className="flex justify-center flex-wrap -mt-1">
+          <AppTypography variant="small" className="flex justify-center flex-wrap -mt-1">
             Already have an account?
             <Link to={ROUTES.LOGIN} className="ml-1 font-semibold text-kiiraBlue">
               Login
             </Link>
-          </Typography>
+          </AppTypography>
         </CardBody>
       </Card>
     </AuthLayout>

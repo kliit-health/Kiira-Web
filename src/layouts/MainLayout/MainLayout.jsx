@@ -1,8 +1,8 @@
 import { bool, element } from 'prop-types';
 import { AppNavBar, InnerNavBar } from 'src/components';
-import { ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
+import { AppTypography, ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
 import gradientBg from 'src/assets/images/gradientBg.png';
-import { Card, Typography } from '@material-tailwind/react';
+import { Card } from '@material-tailwind/react';
 import useAuth from 'src/hooks/useAuth';
 
 const MainLayout = ({ children, hideScroll }) => {
@@ -19,16 +19,18 @@ const MainLayout = ({ children, hideScroll }) => {
         className="bg-transparent gap-1 h-full max-h-full overflow-y-auto">
         <AppNavBar />
         <ContentContainer className="min-h-[16vh] w-full gap-3">
-          <Typography variant="h2" className="text-kiiraBlackText text-3xl md:text-4xl lg:text-4xl">
+          <AppTypography
+            variant="h2"
+            className="text-kiiraBlackText text-3xl md:text-4xl lg:text-4xl">
             Hello {user?.firstName},
             <br />
             Welcome back 👋🏾
-          </Typography>
-          <Typography
+          </AppTypography>
+          <AppTypography
             variant="small"
             className="text-kiiraText text-sm md:text-lg w-full lg:w-3/4 xl:w-1/2">
             Manage your health on the go, connect with doctors, book appointments and much more.
-          </Typography>
+          </AppTypography>
           <InnerNavBar />
         </ContentContainer>
         <ContentContainer className="min-h-[58vh] w-full h-full">

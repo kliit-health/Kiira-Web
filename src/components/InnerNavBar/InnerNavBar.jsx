@@ -5,7 +5,6 @@ import {
   Navbar,
   Badge,
   Avatar,
-  Typography,
   Collapse,
   Menu,
   MenuList,
@@ -20,6 +19,7 @@ import { ROUTES } from 'src/routes/Paths';
 import {
   AppButton,
   AppLink,
+  AppTypography,
   ContentContainer,
   MenuListItem,
   NavListItem
@@ -98,11 +98,11 @@ export default function InnerNavBar() {
                           className="fa fa-angle-down text-[0.55rem] absolute bottom-0 right-1 p-1.5 bg-kiiraBlue w-2 h-2 flex items-center justify-center rounded-full"
                           aria-hidden="true"></i>
                       </ContentContainer>
-                      <Typography
+                      <AppTypography
                         variant="small"
                         className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">
                         {user?.firstName}
-                      </Typography>
+                      </AppTypography>
                     </ContentContainer>
                   </MenuHandler>
                   <MenuList>
@@ -111,9 +111,9 @@ export default function InnerNavBar() {
                     </MenuListItem>
                     <hr className="my-2 border-blue-gray-50" />
                     <MenuItem className="flex items-center gap-2" onClick={logout}>
-                      <Typography variant="small" className="text-red-600 font-semibold">
+                      <AppTypography variant="small" className="text-red-600 font-semibold">
                         Log Out
-                      </Typography>
+                      </AppTypography>
                     </MenuItem>
                   </MenuList>
                 </Menu>

@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, Checkbox, Input, Typography } from '@material-tailwind/react';
+import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, Navigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
@@ -27,13 +27,13 @@ const ForgotPassword = () => {
               <i class="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
-          <Typography variant="h2" className="text-[#252539] font-medium -mt-5">
+          <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">
             Forgot password?
-          </Typography>
-          <Typography variant="small" className="text-kiiraText text-lg">
+          </AppTypography>
+          <AppTypography variant="small" className="text-kiiraText text-lg">
             Don’t worry, happens to all of us. Enter your email <br /> below to recover your
             password
-          </Typography>
+          </AppTypography>
 
           <Input autoFocus label="Email" size="lg" className="ring-transparent ring-0" />
 

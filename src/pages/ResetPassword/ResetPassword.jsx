@@ -1,6 +1,6 @@
-import { Button, Card, CardBody, Typography } from '@material-tailwind/react';
+import { Button, Card, CardBody } from '@material-tailwind/react';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, ContentContainer } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { useNavigate } from 'react-router-dom';
@@ -22,12 +22,12 @@ const ResetPassword = () => {
               <i className="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
-          <Typography variant="h2" className="text-[#252539] font-medium -mt-5">
+          <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">
             Set Password
-          </Typography>
-          <Typography variant="small" className="text-kiiraText text-base">
+          </AppTypography>
+          <AppTypography variant="small" className="text-kiiraText text-base">
             Your previous password has been reseted. Please set a new password for your account.
-          </Typography>
+          </AppTypography>
 
           <AppPasswordInput label="Create Password" size="lg" className="" />
           <AppPasswordInput label="Re-enter Password" size="lg" className="" />

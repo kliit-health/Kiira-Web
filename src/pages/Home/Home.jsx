@@ -1,18 +1,11 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Typography
-} from '@material-tailwind/react';
+import { Avatar, Button, Card, CardBody, CardFooter, CardHeader } from '@material-tailwind/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookingCard } from 'src/components';
+import { AddButton, BookingCard } from 'src/components';
 import {
   AddCircleIcon,
   AppButton,
+  AppTypography,
   BorderedContainer,
   ContentContainer
 } from 'src/components/shared/styledComponents';
@@ -26,10 +19,11 @@ const Home = () => {
         width="100%"
         height="100%"
         className="h-full min-h-[50vh]  p-4 lg:px-10 lg:py-4 gap-4">
-        <Typography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
+        <AppTypography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
           Kick it with Kiira
-        </Typography>
+        </AppTypography>
 
+        <AddButton label='New booking' />
         <ContentContainer
           hideScroll
           width="100%"
@@ -47,18 +41,18 @@ const Home = () => {
                   </CardHeader>
                   <CardBody className="bg-kiiraBg2 p-2 h-full flex flex-col gap-2 justify-between">
                     <ContentContainer className="gap-2">
-                      <Typography
+                      <AppTypography
                         variant="h4"
                         color="blue-gray"
                         className="text-[#252539] text-xl font-semibold">
                         {item?.title}
-                      </Typography>
-                      <Typography
+                      </AppTypography>
+                      <AppTypography
                         variant="small"
                         color="gray"
                         className="font-normal text-[#93939A] text-[0.75rem] font-manrope leading-tight">
                         {item?.content}
-                      </Typography>
+                      </AppTypography>
                     </ContentContainer>
                     <ContentContainer className="flex flex-col gap-2 bg-kiiraBg2">
                       <div className="flex flex-row items-center space-x-3">
@@ -70,16 +64,18 @@ const Home = () => {
                           className="rounded-full"
                         />
 
-                        <Typography className="font-normal text-kiiraDark text-sm">
+                        <AppTypography className="font-normal text-kiiraDark text-sm">
                           {item?.author}
-                        </Typography>
+                        </AppTypography>
                       </div>
                     </ContentContainer>
                     <ContentContainer className="flex flex-col gap-2 bg-kiiraBg2">
                       <Link to="#" className="flex flex-row items-center space-x-3">
-                        <Typography variant="small" className="font-normal text-kiiraBlue text-xs">
+                        <AppTypography
+                          variant="small"
+                          className="font-normal text-kiiraBlue text-xs">
                           Read more <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                        </Typography>
+                        </AppTypography>
                       </Link>
                     </ContentContainer>
                   </CardBody>
@@ -90,15 +86,16 @@ const Home = () => {
         </ContentContainer>
 
         <Card className="w-full h-full bg-kiiraBg2 p-4 lg:px-5 lg:py-4 gap-4 shadow-none">
-          <Typography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
+          <AppTypography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
             Book a new appointment
-          </Typography>
-         
+          </AppTypography>
 
           <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
-            <Typography variant="h6" className="text-[#112211] font-semibold text-xs lg:text-base">
+            <AppTypography
+              variant="h6"
+              className="text-[#112211] font-semibold text-xs lg:text-base">
               Booking History
-            </Typography>
+            </AppTypography>
             <Button
               variant="text"
               size="sm"
