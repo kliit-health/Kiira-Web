@@ -40,7 +40,7 @@ export default function InnerNavBar() {
       <AppLink to={ROUTES.BOOK_APPOINTMENT}>
         <NavListItem className="">Book an Appointment</NavListItem>
       </AppLink>
-      <AppLink to="#">
+      <AppLink to={ROUTES.DOCTORS}>
         <NavListItem>Doctors</NavListItem>
       </AppLink>
       <AppLink to={ROUTES.SUBSCRIPTION}>
@@ -88,11 +88,14 @@ export default function InnerNavBar() {
                       className="items-center gap-1 hover:opacity-80">
                       <ContentContainer className="relative">
                         <Avatar
-                          src={user?.photo}
-                          alt="Profile"
+                          src={
+                            user?.photo ||
+                            'https://wallpapers.com/images/hd/default-pfp-face-izpao33go55ztvn9.jpg'
+                          }
+                          alt={user?.lastName}
                           variant="circular"
                           size="md"
-                          className="rounded-full"
+                          className="rounded-full bg-kiiraText/50"
                         />
                         <i
                           className="fa fa-angle-down text-[0.55rem] absolute bottom-0 right-1 p-1.5 bg-kiiraBlue w-2 h-2 flex items-center justify-center rounded-full"

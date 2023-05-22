@@ -9,5 +9,6 @@ export const ROUTES = {
   SUBSCRIPTION: '/subscription',
   INBOX: '/inbox',
   HISTORY: '/history',
-  BOOK_APPOINTMENT: '/book-appointment'
+  BOOK_APPOINTMENT: '/book-appointment',
+  DOCTORS: '/doctors',
 };

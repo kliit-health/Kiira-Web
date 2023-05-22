@@ -13,7 +13,7 @@ const BookAppointment = () => {
         {/* <InnerLayoutWrapper> */}
         <SearchInput label="Search health keyword" />
         <ContentContainer>
-          <div class="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-4 grid-col-1 gap-4">
+          <div class="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4">
             {kiiraServices.map((service, index) => {
               return <ServiceCard service={service} key={index.toString()} />
             })}

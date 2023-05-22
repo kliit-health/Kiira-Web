@@ -50,8 +50,8 @@ const SubscriptionPlans = ({ plan }) => {
                   <Badge className="h-3.5 w-3.5 mt-0.5" />
                 </span>
                 <AppTypography
-                  variant="small"
-                  className="flex flex-row flex-nowrap gap-4 text-kiira/50 text-[10px] text-left font-medium ml-1"
+                  variant="lead"
+                  className="flex flex-row flex-nowrap gap-4 text-kiiraText text-xs text-left font-medium ml-1"
                   key={index?.toString()}>
                   {item}
                 </AppTypography>

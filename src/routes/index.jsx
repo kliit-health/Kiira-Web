@@ -4,6 +4,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import {
   BookAppointment,
   CodeVerification,
+  Doctors,
   ForgotPassword,
   History,
   Home,
@@ -33,6 +34,7 @@ export const Router = () => {
           <Route exact path={ROUTES.INBOX} element={<Inbox />} />
           <Route exact path={ROUTES.HISTORY} element={<History />} />
           <Route exact path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
+          <Route exact path={ROUTES.DOCTORS} element={<Doctors />} />
         </Route>
       </Routes>
     </BrowserRouter>

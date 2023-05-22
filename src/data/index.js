@@ -6,6 +6,8 @@ import { ReactComponent as OvalPlan2 } from 'src/assets/icons/oval2.svg';
 import { ReactComponent as Calender } from 'src/assets/icons/calenderIcon.svg';
 import { ReactComponent as Location } from 'src/assets/icons/Location.svg';
 import { ReactComponent as SearchIcon } from 'src/assets/icons/search.svg';
+import { ReactComponent as TimeIcon } from 'src/assets/icons/Time.svg';
+import { ReactComponent as TimeIconFilled } from 'src/assets/icons/TimeFilled.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
 import MessageProfilePicture from 'src/assets/images/inbox_profile.png';
@@ -21,6 +23,13 @@ import mentalHealth from 'src/assets/images/options/mentalHealth.png';
 import pregnancy from 'src/assets/images/options/Pregnancy.png';
 import primaryCare from 'src/assets/images/options/PrimaryCare.png';
 import ultrasound from 'src/assets/images/options/Ultrasound.png';
+import DrCandice from 'src/assets/images/doctors/DrCandice.png';
+import DrFrancesca from 'src/assets/images/doctors/DrFrancesca.png';
+import DrLauraine from 'src/assets/images/doctors/DrLauraine.png';
+import DrNneka from 'src/assets/images/doctors/DrNneka.png';
+import DrOdunsi from 'src/assets/images/doctors/DrOdunsi.png';
+import DrPilar from 'src/assets/images/doctors/DrPilar.png';
+import DrScut from 'src/assets/images/doctors/DrScut.png';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
@@ -43,7 +52,16 @@ export const IMAGES = {
   MentalHealth: mentalHealth,
   Pregnancy: pregnancy,
   PrimaryCare: primaryCare,
-  Ultrasound: ultrasound
+  Ultrasound: ultrasound,
+  DrCandice,
+  DrFrancesca,
+  DrLauraine,
+  DrNneka,
+  DrOdunsi,
+  DrPilar,
+  DrScut,
+  TimeIcon,
+  TimeIconFilled
 };
 
 export const userData = {
@@ -170,5 +188,72 @@ export const kiiraServices = [
     description:
       'Need help with your mental and emotional health? Talk to our psychiatrists, therapists and other mental health experts.',
     fee: '$390.00'
+  }
+];
+
+export const profileState = {
+  online: 'online',
+  offline: 'offline',
+  busy: 'busy',
+  away: 'away',
+  unavailable: 'unavailable'
+};
+
+export const kiiraDoctors = [
+  {
+    name: 'Dr. Candice Fraser',
+    image: IMAGES?.DrCandice,
+    specialization: 'Obstetrician and Gynecologist',
+    rating: 5,
+    status: profileState.online
+  },
+  {
+    name: 'Dr. Lorraine Beraho',
+    image: IMAGES.DrLauraine,
+    specialization: 'Pediatrician',
+    rating: 5,
+    status: profileState.busy
+  },
+  {
+    name: 'Dr. Francesca Rogers',
+    image: IMAGES.DrFrancesca,
+    specialization: 'Obstetrician and Gynecologist',
+    rating: 5,
+    status: profileState.offline
+  },
+  {
+    name: 'Dr. Tobi Odunsi',
+    image: IMAGES.inboxImg,
+    specialization: 'Psychiatrist',
+    rating: 5,
+    status: profileState.online
+  },
+  {
+    name: 'Nnenna Abaeze DNP',
+    image: IMAGES.inboxImg,
+    specialization: 'Psychiatric Nurse Practitioner',
+    rating: 5,
+    status: profileState.online
+  },
+  {
+    name: 'Pilar Walker, LMHC',
+    image: IMAGES.inboxImg,
+    specialization: 'Licensed Mental Health Counselor',
+    rating: 5,
+    status: profileState.unavailable
+  },
+  {
+    name: 'Dr. Scut Tom',
+    image: IMAGES.inboxImg,
+    specialization: 'Health Specialist',
+    rating: 5,
+    status: profileState.online
+  },
+  {
+    name: 'Dr. Candice Fraser',
+    image: IMAGES.inboxImg,
+    specialization: 'Obstetrician and Gynecologist',
+    rating: 5,
+    status: 'online'
   }
 ];

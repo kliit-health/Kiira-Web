@@ -1,10 +1,10 @@
-import { string } from 'prop-types';
+import { object, shape, string } from 'prop-types';
 import React from 'react';
 import { IMAGES } from 'src/data';
 
-const SearchInput = ({ placeholder, label, ...rest }) => {
+const SearchInput = ({ placeholder, label, containerStyle, ...rest }) => {
   return (
-    <div className="w-full relative">
+    <div className={['w-full relative']} style={containerStyle}>
       <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
         <IMAGES.Search />
       </div>
@@ -22,7 +22,8 @@ const SearchInput = ({ placeholder, label, ...rest }) => {
 
 SearchInput.propTypes = {
   placeholder: string,
-  label: string
+  label: string,
+  containerStyle: shape({})
 };
 
 SearchInput.defaultProps = {

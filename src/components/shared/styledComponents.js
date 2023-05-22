@@ -1,7 +1,8 @@
-import { Button, List, ListItem, MenuItem, Typography } from '@material-tailwind/react';
+import { Avatar, Button, List, ListItem, MenuItem, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
+import { profileState } from 'src/data';
 
 export const ContentContainer = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
@@ -131,6 +132,12 @@ export const hideScrollbar = () => css`
   &::-webkit-scrollbar {
     display: none !important;
   }
+`;
+
+export const AppAvatar = styled(Avatar)`
+  ${tw`p-[4px] object-cover rounded-full mt-6 border border-solid`}
+  /* border-color: ${({ status }) =>
+    status === profileState.online ? tw`border-[#6467CE]` : tw`border-[#DFDFDF]`}; */
 `;
 
 export const BorderedContainer = styled(ContentContainer)`

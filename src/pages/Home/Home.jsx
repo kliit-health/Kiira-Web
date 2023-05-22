@@ -23,7 +23,6 @@ const Home = () => {
           Kick it with Kiira
         </AppTypography>
 
-        <AddButton label='New booking' />
         <ContentContainer
           hideScroll
           width="100%"
@@ -89,7 +88,7 @@ const Home = () => {
           <AppTypography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
             Book a new appointment
           </AppTypography>
-
+          <AddButton label="New Booking" />
           <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
             <AppTypography
               variant="h6"
