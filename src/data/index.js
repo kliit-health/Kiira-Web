@@ -223,37 +223,30 @@ export const kiiraDoctors = [
   },
   {
     name: 'Dr. Tobi Odunsi',
-    image: IMAGES.inboxImg,
+    image: IMAGES.DrOdunsi,
     specialization: 'Psychiatrist',
     rating: 5,
     status: profileState.online
   },
   {
     name: 'Nnenna Abaeze DNP',
-    image: IMAGES.inboxImg,
+    image: IMAGES.DrNneka,
     specialization: 'Psychiatric Nurse Practitioner',
     rating: 5,
     status: profileState.online
   },
   {
     name: 'Pilar Walker, LMHC',
-    image: IMAGES.inboxImg,
+    image: IMAGES.DrPilar,
     specialization: 'Licensed Mental Health Counselor',
     rating: 5,
     status: profileState.unavailable
   },
   {
     name: 'Dr. Scut Tom',
-    image: IMAGES.inboxImg,
+    image: IMAGES.profilePhoto,
     specialization: 'Health Specialist',
     rating: 5,
     status: profileState.online
-  },
-  {
-    name: 'Dr. Candice Fraser',
-    image: IMAGES.inboxImg,
-    specialization: 'Obstetrician and Gynecologist',
-    rating: 5,
-    status: 'online'
   }
 ];
