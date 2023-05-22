@@ -5,7 +5,7 @@ import { ReactComponent as OvalPlan1 } from 'src/assets/icons/oval.svg';
 import { ReactComponent as OvalPlan2 } from 'src/assets/icons/oval2.svg';
 import { ReactComponent as Calender } from 'src/assets/icons/calenderIcon.svg';
 import { ReactComponent as Location } from 'src/assets/icons/Location.svg';
-import { ReactComponent as SearchIcon } from 'src/assets/icons/search.svg';
+import { ReactComponent as SearchIcon } from 'src/assets/icons/Search.svg';
 import { ReactComponent as TimeIcon } from 'src/assets/icons/Time.svg';
 import { ReactComponent as TimeIconFilled } from 'src/assets/icons/TimeFilled.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
