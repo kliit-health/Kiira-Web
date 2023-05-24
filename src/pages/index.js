@@ -10,6 +10,7 @@ import Home from './Home/Home';
 import Inbox from './Inbox/Inbox';
 import History from './History/History';
 import Doctors from './Doctors/Doctors';
+import ChooseAppointment from './ChooseAppointment/ChooseAppointment';
 
 export {
   Login,
@@ -23,5 +24,6 @@ export {
   Subscription,
   Inbox,
   History,
-  Doctors
+  Doctors,
+  ChooseAppointment
 };

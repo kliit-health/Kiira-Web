@@ -2,21 +2,27 @@ import React from 'react';
 import { AppAvatar, AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES, profileState } from 'src/data';
 import { Avatar, Badge, Button, Rating } from '@material-tailwind/react';
-import { object } from 'prop-types';
+import { bool, object, shape, string } from 'prop-types';
 import tw, { styled } from 'twin.macro';
 
-const ServiceContainer = styled(ContentContainer)`
-  ${tw`col-auto flex-col w-full max-w-[-webkit-fill-available] rounded-3xl h-full bg-kiiraBg2 gap-2`}
-`;
+const ServiceContainer = styled(ContentContainer)(({ disabled, whiteBackground }) => [
+  tw`col-auto flex-col w-full max-w-[-webkit-fill-available] rounded-3xl h-full gap-2`,
+  disabled && tw`cursor-not-allowed opacity-50`,
+  whiteBackground ? tw`bg-white` : tw`bg-kiiraBg2`
+]);
 
 const Dot = styled.span`
   ${tw`h-4 w-4 rounded-full items-center justify-center`}
   background: ${({ color }) => color || 'rgb(63 132 255)'};
 `;
 
-const DoctorsCard = ({ doctor }) => {
+const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
   return (
-    <ServiceContainer className="relative items-center gap-4 justify-center p-4 pt-3.5">
+    <ServiceContainer
+      className={['relative items-center gap-4 justify-center p-4 pt-3.5']}
+      disabled={disabled}
+      whiteBackground={whiteBackground}
+      style={style}>
       <ContentContainer className="absolute right-3 top-3 flex flex-row flex-nowrap items-center gap-1 justify-end">
         <AppTypography variant="small" className="text-[10px] capitalize">
           {doctor?.status}
@@ -71,16 +77,19 @@ const DoctorsCard = ({ doctor }) => {
       <hr className="bg-kiiraText mt-auto w-full " />
       <ContentContainer className="flex flex-row items-center gap-2 justify-center flex-wrap lg:flex-nowrap">
         <Button
+          disabled={disabled}
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] text-kiiraText bg-transparent shadow-none border border-kiiraText/20">
           Profile
         </Button>
         <Button
+          disabled={disabled}
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] bg-kiiraBlue shadow-none">
           Book now
         </Button>
       </ContentContainer>
+    
     </ServiceContainer>
   );
 };
@@ -88,5 +97,13 @@ const DoctorsCard = ({ doctor }) => {
 export default DoctorsCard;
 
 DoctorsCard.propTypes = {
-  doctor: object
+  doctor: object,
+  string: string,
+  disabled: bool,
+  whiteBackground: bool
+};
+
+DoctorsCard.defaultProps = {
+  disabled: false,
+  whiteBackground: false
 };

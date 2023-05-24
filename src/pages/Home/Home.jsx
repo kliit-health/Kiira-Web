@@ -36,7 +36,7 @@ const Home = () => {
                     shadow={false}
                     color="transparent"
                     className="m-0 rounded-2xl rounded-b-none min-h-[169px]">
-                    <img src={item?.imageSrc} alt={item.title} />
+                    <img src={item?.imageSrc} alt={item.title} loading="lazy" />
                   </CardHeader>
                   <CardBody className="bg-kiiraBg2 p-2 h-full flex flex-col gap-2 justify-between">
                     <ContentContainer className="gap-2">
@@ -73,7 +73,7 @@ const Home = () => {
                         <AppTypography
                           variant="small"
                           className="font-normal text-kiiraBlue text-xs">
-                          Read more <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                          Read more <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
                         </AppTypography>
                       </Link>
                     </ContentContainer>

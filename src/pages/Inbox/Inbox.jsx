@@ -19,7 +19,7 @@ const Inbox = () => {
           return (
             <ContentContainer className="rounded-lg bg-kiiraBg2 p-2 lg:px-5 lg:py-5 flex flex-row items-center justify-between gap-1 flex-wrap">
               <ContentContainer className="flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-6 items-center">
-                <Avatar src={IMAGES.inboxImg} alt="pic" size="xl" />
+                <Avatar src={IMAGES.inboxImg} alt="pic" size="xl" loading='lazy' />
                 <ContentContainer column className="gap-2">
                   <AppTypography
                     variant="h5"

@@ -10,5 +10,6 @@ export const ROUTES = {
   INBOX: '/inbox',
   HISTORY: '/history',
   BOOK_APPOINTMENT: '/book-appointment',
-  DOCTORS: '/doctors',
+  CHOOSE_APPOINTMENT: '/book-appointment/choose-appointment',
+  DOCTORS: '/doctors'
 };

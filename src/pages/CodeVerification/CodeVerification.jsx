@@ -1,7 +1,12 @@
-import { Button, Card, CardBody,  } from '@material-tailwind/react';
+import { Button, Card, CardBody } from '@material-tailwind/react';
 import { Link, Navigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, AppTypography, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import {
+  AppButton,
+  AppTypography,
+  ContentContainer,
+  Divider
+} from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
@@ -23,7 +28,7 @@ const CodeVerification = () => {
               size="small"
               onClick={() => navigate(ROUTES.LOGIN)}
               className="flex items-center gap-2 text-kiiraText font-medium hover:bg-transparent normal-case px-1 py-2 ">
-              <i class="fa fa-angle-left" aria-hidden="true"></i>Back to login
+              <i className="fa fa-angle-left" aria-hidden="true"></i>Back to login
             </Button>
           </ContentContainer>
           <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">

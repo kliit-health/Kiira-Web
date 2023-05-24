@@ -1,5 +1,5 @@
 import { Avatar, Button, List, ListItem, MenuItem, Typography } from '@material-tailwind/react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
 import { profileState } from 'src/data';
@@ -46,11 +46,15 @@ export const LayoutWrapper = styled.div`
   ${tw`flex relative flex-col w-full h-screen gap-8 p-4 pt-0 mx-auto overflow-auto max-w-screen-xl lg:max-w-screen-2xl text-kiiraText lg:px-8 lg:pb-2 lg:pt-0 md:pl-16 md:pr-16 bg-kiiraBg`}
 `;
 
-export const InnerLayoutWrapper = styled(ContentContainer)`
-  ${tw`w-full h-full min-h-[50vh] p-4 lg:px-10 lg:py-4 gap-4`}
+export const ItemCardWrapper = styled(ContentContainer)`
+  ${tw`col-auto flex-col w-full max-w-max rounded-3xl h-full bg-kiiraBg2 gap-2`}
 `;
 
 export const AppLink = styled(Link)`
+  ${tw`text-sm font-medium text-kiiraText`}
+`;
+
+export const AppNavLink = styled(NavLink)`
   ${tw`text-sm font-medium text-kiiraText`}
 `;
 

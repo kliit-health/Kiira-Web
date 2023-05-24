@@ -18,6 +18,7 @@ const BookingCard = ({ disabled }) => {
           src={IMAGES?.medicalAid}
           alt="image"
           className="w-full h-[150px] sm:h-full object-cover rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none"
+          loading='lazy' 
         />
       </ContentContainer>
       <ContentContainer className="p-2 md:p-4 w-full gap-4">

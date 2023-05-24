@@ -33,7 +33,7 @@ const Auth = {
   },
   isAuthenticated: () => {
     const token = localStorage.getItem('token');
-    console.log('🚀 ~ file: storage.js:36 ~ token:', token);
+
     if (token === 'tokenAvailable') return true;
     return false;
   },

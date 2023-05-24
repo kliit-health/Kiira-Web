@@ -9,7 +9,8 @@ import {
   Menu,
   MenuList,
   MenuHandler,
-  MenuItem
+  MenuItem,
+  ListItemPrefix
 } from '@material-tailwind/react';
 import { ReactComponent as Hamburger } from 'src/assets/icons/hamburger.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/icons/kiiraBirdie.svg';
@@ -19,16 +20,18 @@ import { ROUTES } from 'src/routes/Paths';
 import {
   AppButton,
   AppLink,
+  AppNavLink,
   AppTypography,
   ContentContainer,
   MenuListItem,
   NavListItem
 } from '../shared/styledComponents';
 import useAuth from 'src/hooks/useAuth';
+import { IMAGES } from 'src/data';
 
 export default function InnerNavBar() {
   const { user, isAuthenticated, logout } = useAuth();
-  console.log('🚀 ~ file: InnerNavBar.jsx:27 ~ InnerNavBar ~ user:', user);
+
   const [openNav, setOpenNav] = useState(false);
 
   useEffect(() => {
@@ -37,19 +40,19 @@ export default function InnerNavBar() {
 
   const navList = (
     <List className="flex flex-row flex-wrap gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center mx-4 p-0">
-      <AppLink to={ROUTES.BOOK_APPOINTMENT}>
-        <NavListItem className="">Book an Appointment</NavListItem>
-      </AppLink>
-      <AppLink to={ROUTES.DOCTORS}>
+      <AppNavLink to={ROUTES.BOOK_APPOINTMENT}>
+        <NavListItem>Book an Appointment</NavListItem>
+      </AppNavLink>
+      <AppNavLink to={ROUTES.DOCTORS}>
         <NavListItem>Doctors</NavListItem>
-      </AppLink>
-      <AppLink to={ROUTES.SUBSCRIPTION}>
+      </AppNavLink>
+      <AppNavLink to={ROUTES.SUBSCRIPTION}>
         <NavListItem>Subscription Plan</NavListItem>
-      </AppLink>
+      </AppNavLink>
       {isAuthenticated ? (
-        <AppLink to={ROUTES.HISTORY}>
+        <AppNavLink to={ROUTES.HISTORY}>
           <NavListItem>History</NavListItem>
-        </AppLink>
+        </AppNavLink>
       ) : null}
     </List>
   );
@@ -109,11 +112,21 @@ export default function InnerNavBar() {
                     </ContentContainer>
                   </MenuHandler>
                   <MenuList>
-                    <MenuListItem className="bg-transparent">
-                      <Link to="#">Account</Link>
+                    <MenuListItem className="bg-transparent flex items-center gap-1 flex-nowrap">
+                      <ListItemPrefix className="mr-2 ">
+                        <IMAGES.AccountIcon className="" />
+                      </ListItemPrefix>
+                      <Link to="#" className="font-medium">
+                        <AppTypography variant="lead" className="text-kiiraText text-sm">
+                          Account
+                        </AppTypography>
+                      </Link>
                     </MenuListItem>
                     <hr className="my-2 border-blue-gray-50" />
-                    <MenuItem className="flex items-center gap-2" onClick={logout}>
+                    <MenuItem className="flex items-center gap-1 flex-nowrap" onClick={logout}>
+                      <ListItemPrefix className="mr-2 ">
+                        <IMAGES.LogoutIcon />
+                      </ListItemPrefix>
                       <AppTypography variant="small" className="text-red-600 font-semibold">
                         Log Out
                       </AppTypography>

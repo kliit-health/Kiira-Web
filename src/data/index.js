@@ -1,4 +1,3 @@
-import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
 import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
 import { ReactComponent as OvalPlan1 } from 'src/assets/icons/oval.svg';
@@ -8,6 +7,10 @@ import { ReactComponent as Location } from 'src/assets/icons/Location.svg';
 import { ReactComponent as SearchIcon } from 'src/assets/icons/Search.svg';
 import { ReactComponent as TimeIcon } from 'src/assets/icons/Time.svg';
 import { ReactComponent as TimeIconFilled } from 'src/assets/icons/TimeFilled.svg';
+import { ReactComponent as LogoutIcon } from 'src/assets/icons/LogoutIcon.svg';
+import { ReactComponent as AccountIcon } from 'src/assets/icons/AccountIcon.svg';
+import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
+import { ReactComponent as KiiraBirdieBlack } from 'src/assets/icons/KiiraBirdieBlack.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
 import MessageProfilePicture from 'src/assets/images/inbox_profile.png';
@@ -61,7 +64,10 @@ export const IMAGES = {
   DrPilar,
   DrScut,
   TimeIcon,
-  TimeIconFilled
+  TimeIconFilled,
+  KiiraBirdieBlack,
+  AccountIcon,
+  LogoutIcon
 };
 
 export const userData = {
@@ -145,49 +151,56 @@ export const kiiraServices = [
     title: 'Health Coaching',
     description:
       'Talk to a health coach and create a personalized care plan and guide you on your health journey. Join Kiira and book a visit to get started.',
-    fee: '$150.00'
+    fee: '$150.00',
+    _id: 'health-coaching'
   },
   {
     icon: IMAGES.PrimaryCare,
     title: 'Primary Care',
     description:
       'Talk to one of our primary care providers about annual wellness, general checkups, cold, flu and other symptoms and more',
-    fee: '$270.00'
+    fee: '$270.00',
+    _id: 'primary-care'
   },
   {
     icon: IMAGES.Pregnancy,
     title: 'Pregnancy',
     description:
       'Visit us for all your pregnancy care needs including prenatal visits, delivery, postpartum care and more.',
-    fee: '$150.00'
+    fee: '$150.00',
+    _id: 'pregnancy'
   },
   {
     icon: IMAGES.Gynecology,
     title: 'Gynecology',
     description:
       "Meet in person or virtually with OBGYN’s, and other women's health experts about gynecological concerns, STI's and more.",
-    fee: '$270.00'
+    fee: '$270.00',
+    _id: 'gynecology'
   },
   {
     icon: IMAGES.GeneralHealth,
     title: 'General Health',
     description:
       'Need help with your mental and emotional health? Talk to our psychiatrists, therapists and other mental health experts.',
-    fee: '$150.00'
+    fee: '$150.00',
+    _id: 'general-health'
   },
   {
     icon: IMAGES.Ultrasound,
     title: 'Ultrasounds',
     description:
       'Measure and evaluate your pelvic organs. Monitor the growth and development of your fetus, check your breast, endometrium, uterine muscle tissue, fallopian tubes, bladder and more',
-    fee: '$150.00'
+    fee: '$150.00',
+    _id: 'ultrasounds'
   },
   {
     icon: IMAGES.MentalHealth,
     title: 'Mental Health',
     description:
       'Need help with your mental and emotional health? Talk to our psychiatrists, therapists and other mental health experts.',
-    fee: '$390.00'
+    fee: '$390.00',
+    _id: 'mental-health'
   }
 ];
 

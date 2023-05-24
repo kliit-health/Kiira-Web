@@ -3,6 +3,7 @@ import { ROUTES } from './Paths';
 import { ProtectedRoute } from './ProtectedRoute';
 import {
   BookAppointment,
+  ChooseAppointment,
   CodeVerification,
   Doctors,
   ForgotPassword,
@@ -15,6 +16,7 @@ import {
   SignupSubscription,
   Subscription
 } from 'src/pages';
+import { AppointmentLayout } from 'src/layouts';
 
 export const Router = () => {
   return (
@@ -30,11 +32,14 @@ export const Router = () => {
         {/* Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
           <Route index exact path={ROUTES.INDEX} element={<Home />} />
-          <Route exact path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
-          <Route exact path={ROUTES.INBOX} element={<Inbox />} />
-          <Route exact path={ROUTES.HISTORY} element={<History />} />
-          <Route exact path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
-          <Route exact path={ROUTES.DOCTORS} element={<Doctors />} />
+          <Route path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
+          <Route path={ROUTES.INBOX} element={<Inbox />} />
+          <Route path={ROUTES.HISTORY} element={<History />} />
+          <Route path={ROUTES.DOCTORS} element={<Doctors />} />
+          <Route path={ROUTES.BOOK_APPOINTMENT} element={<AppointmentLayout />}>
+            <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
+            <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

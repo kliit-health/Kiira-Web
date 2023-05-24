@@ -1,6 +1,10 @@
 import { bool, element } from 'prop-types';
 import { AppNavBar, InnerNavBar } from 'src/components';
-import { AppTypography, ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
+import {
+  AppTypography,
+  ContentContainer,
+  LayoutWrapper
+} from 'src/components/shared/styledComponents';
 import gradientBg from 'src/assets/images/gradientBg.png';
 import { Card } from '@material-tailwind/react';
 import useAuth from 'src/hooks/useAuth';
@@ -12,7 +16,8 @@ const MainLayout = ({ children, hideScroll }) => {
       <img
         className="w-96 h-72 rounded-lg absolute right-0 top-8"
         src={gradientBg}
-        alt="nature image"
+        alt=""
+        loading="lazy"
       />
       <LayoutWrapper
         hideScroll={hideScroll}

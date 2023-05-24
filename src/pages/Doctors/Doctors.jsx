@@ -19,8 +19,8 @@ const Doctors = () => {
               className="text-kiiraText text-[0.6rem] uppercase font-medium">
               STATUS
             </AppTypography>
-            <div class="relative h-8 min-w-[60px]">
-              <select class="peer h-full w-full rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+            <div className="relative h-8 min-w-[60px]">
+              <select className="peer h-full w-full rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
                 <option value="brazil" className="text-kiiraText text-xs">
                   Online
                 </option>
@@ -43,9 +43,9 @@ const Doctors = () => {
           </ContentContainer>
         </ContentContainer>
         <ContentContainer>
-          <div class="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4">
+          <div className="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4">
             {kiiraDoctors?.map((doctor, index) => {
-              return <DoctorsCard doctor={doctor} key={index.toString()} />
+              return <DoctorsCard doctor={doctor} key={index.toString()} />;
             })}
           </div>
         </ContentContainer>
