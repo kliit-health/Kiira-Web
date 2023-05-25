@@ -29,7 +29,9 @@ const Home = () => {
           className="overflow-hidden overflow-x-auto flex flex-row items-center gap-4 space-x-2">
           {kiiraUpdates?.map((item, index) => {
             return (
-              <ContentContainer className="p-0 md:p-2 bg-kiiraBg2 rounded-2xl">
+              <ContentContainer
+                className="p-0 md:p-2 bg-kiiraBg2 rounded-2xl"
+                key={index?.toString()}>
                 <Card className="w-[235px] md:w-[256px] h-[376px] overflow-hidden shadow-none">
                   <CardHeader
                     floated={false}
@@ -104,7 +106,7 @@ const Home = () => {
           </ContentContainer>
 
           {[1, 2].map((d, index) => {
-            return <BookingCard disabled={index !== 0} />;
+            return <BookingCard disabled={index !== 0} key={index?.toString()} />;
           })}
         </Card>
       </ContentContainer>

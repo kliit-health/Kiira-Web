@@ -12,17 +12,19 @@ import {
   Inbox,
   Login,
   ResetPassword,
+  ReviewAppointment,
   Signup,
   SignupSubscription,
   Subscription
 } from 'src/pages';
 import { AppointmentLayout } from 'src/layouts';
+import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route index path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.SIGINUP} element={<Signup />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
@@ -39,6 +41,7 @@ export const Router = () => {
           <Route path={ROUTES.BOOK_APPOINTMENT} element={<AppointmentLayout />}>
             <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
             <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />
+            <Route path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
           </Route>
         </Route>
       </Routes>

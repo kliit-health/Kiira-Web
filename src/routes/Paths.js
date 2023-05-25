@@ -11,5 +11,6 @@ export const ROUTES = {
   HISTORY: '/history',
   BOOK_APPOINTMENT: '/book-appointment',
   CHOOSE_APPOINTMENT: '/book-appointment/choose-appointment',
+  REVIEW_APPOINTMENT: '/book-appointment/review-appointment',
   DOCTORS: '/doctors'
 };

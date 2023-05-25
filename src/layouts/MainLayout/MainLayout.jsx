@@ -23,7 +23,7 @@ const MainLayout = ({ children, hideScroll }) => {
         hideScroll={hideScroll}
         className="bg-transparent gap-1 h-full max-h-full overflow-y-auto">
         <AppNavBar />
-        <ContentContainer className="min-h-[16vh] w-full gap-3">
+        <ContentContainer className="min-h-[16vh] w-full gap-3 mt-4">
           <AppTypography
             variant="h2"
             className="text-kiiraBlackText text-3xl md:text-4xl lg:text-4xl">

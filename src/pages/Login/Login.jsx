@@ -47,7 +47,7 @@ const Login = () => {
             onClick={() => {
               login();
               setTimeout(() => {
-                navigate(ROUTES.INDEX, { replace: true });
+                navigate(ROUTES.INDEX);
               }, 500);
             }}>
             Login

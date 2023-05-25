@@ -11,6 +11,7 @@ import Inbox from './Inbox/Inbox';
 import History from './History/History';
 import Doctors from './Doctors/Doctors';
 import ChooseAppointment from './ChooseAppointment/ChooseAppointment';
+import ReviewAppointment from './ReviewAppointment/ReviewAppointment';
 
 export {
   Login,
@@ -25,5 +26,6 @@ export {
   Inbox,
   History,
   Doctors,
-  ChooseAppointment
+  ChooseAppointment, 
+  ReviewAppointment
 };

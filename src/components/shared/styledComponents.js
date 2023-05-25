@@ -139,13 +139,58 @@ export const hideScrollbar = () => css`
 `;
 
 export const AppAvatar = styled(Avatar)`
-  ${tw`p-[4px] object-cover rounded-full mt-6 border border-solid`}
-  /* border-color: ${({ status }) =>
-    status === profileState.online ? tw`border-[#6467CE]` : tw`border-[#DFDFDF]`}; */
+  ${tw`p-[4px] object-cover rounded-full mt-6 border border-solid`}/* border-color: ${({
+    status
+  }) => (status === profileState.online ? tw`border-[#6467CE]` : tw`border-[#DFDFDF]`)}; */
 `;
 
 export const BorderedContainer = styled(ContentContainer)`
   background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='14' ry='14' stroke='%233F84FFFF' stroke-width='2' stroke-dasharray='14%2c 10' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
   border-radius: 14px;
   ${tw`h-32 rounded-2xl min-w-fit flex flex-row items-center border-none justify-center gap-1 flex-wrap hover:opacity-80 hover:cursor-pointer`}
+`;
+
+export const CalendarWrapper = styled(ContentContainer)`
+  /* .responsive-calendar {
+    width: 40%;
+    height: 100%;
+  }
+
+  ${tw`w-full flex-wrap lg:flex-nowrap`} */
+
+  .Calendar__monthYear.-shown {
+    font-weight: 700;
+    opacity: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    /* transform: translateX(-150%); */
+    font-size: 1.25rem;
+  }
+
+  @media (min-width: 768px) and (max-width: 1440px) {
+    .Calendar__monthYear.-shown {
+      /* transform: translateX(-120%); */
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .Calendar__header {
+      padding: 1em 1.9em;
+    }
+
+    .Calendar__section {
+      padding: 0 0.9em;
+    }
+
+    .Calendar__monthYear.-shown {
+      /* transform: translateX(-70%); */
+    }
+    .Calendar__yearText:last-child {
+      margin-left: -0.875em;
+    }
+    .Calendar__day.-ltr {
+      min-height: 4.75em;
+      font-size: 1em;
+    }
+  }
 `;

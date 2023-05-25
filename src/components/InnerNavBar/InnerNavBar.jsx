@@ -10,12 +10,12 @@ import {
   MenuList,
   MenuHandler,
   MenuItem,
-  ListItemPrefix
+  ListItemPrefix,
 } from '@material-tailwind/react';
 import { ReactComponent as Hamburger } from 'src/assets/icons/hamburger.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/icons/kiiraBirdie.svg';
 import { ReactComponent as Message } from 'src/assets/icons/Message.svg';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import {
   AppButton,
@@ -30,6 +30,7 @@ import useAuth from 'src/hooks/useAuth';
 import { IMAGES } from 'src/data';
 
 export default function InnerNavBar() {
+  const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
 
   const [openNav, setOpenNav] = useState(false);
@@ -123,7 +124,12 @@ export default function InnerNavBar() {
                       </Link>
                     </MenuListItem>
                     <hr className="my-2 border-blue-gray-50" />
-                    <MenuItem className="flex items-center gap-1 flex-nowrap" onClick={logout}>
+                    <MenuItem
+                      className="flex items-center gap-1 flex-nowrap"
+                      onClick={() => {
+                        logout();
+                        navigate(ROUTES.LOGIN);
+                      }}>
                       <ListItemPrefix className="mr-2 ">
                         <IMAGES.LogoutIcon />
                       </ListItemPrefix>

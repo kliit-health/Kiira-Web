@@ -33,6 +33,10 @@ import DrNneka from 'src/assets/images/doctors/DrNneka.png';
 import DrOdunsi from 'src/assets/images/doctors/DrOdunsi.png';
 import DrPilar from 'src/assets/images/doctors/DrPilar.png';
 import DrScut from 'src/assets/images/doctors/DrScut.png';
+import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
+import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
+import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
+import { ReactComponent as RadioChecked } from 'src/assets/icons/radioChecked.svg';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
@@ -67,7 +71,11 @@ export const IMAGES = {
   TimeIconFilled,
   KiiraBirdieBlack,
   AccountIcon,
-  LogoutIcon
+  LogoutIcon,
+  VisaIcon,
+  RadioChecked,
+  DownloadIcon,
+  PdfIcon
 };
 
 export const userData = {
@@ -218,6 +226,7 @@ export const kiiraDoctors = [
     image: IMAGES?.DrCandice,
     specialization: 'Obstetrician and Gynecologist',
     rating: 5,
+    _bookingId: 'gynecology',
     status: profileState.online
   },
   {
@@ -225,6 +234,7 @@ export const kiiraDoctors = [
     image: IMAGES.DrLauraine,
     specialization: 'Pediatrician',
     rating: 5,
+    _bookingId: 'general-health',
     status: profileState.busy
   },
   {
@@ -232,6 +242,7 @@ export const kiiraDoctors = [
     image: IMAGES.DrFrancesca,
     specialization: 'Obstetrician and Gynecologist',
     rating: 5,
+    _bookingId: 'pregnancy',
     status: profileState.offline
   },
   {
@@ -239,6 +250,7 @@ export const kiiraDoctors = [
     image: IMAGES.DrOdunsi,
     specialization: 'Psychiatrist',
     rating: 5,
+    _bookingId: 'mental-health',
     status: profileState.online
   },
   {
@@ -246,6 +258,7 @@ export const kiiraDoctors = [
     image: IMAGES.DrNneka,
     specialization: 'Psychiatric Nurse Practitioner',
     rating: 5,
+    _bookingId: 'general-health',
     status: profileState.online
   },
   {
@@ -253,6 +266,7 @@ export const kiiraDoctors = [
     image: IMAGES.DrPilar,
     specialization: 'Licensed Mental Health Counselor',
     rating: 5,
+    _bookingId: 'mental-health',
     status: profileState.unavailable
   },
   {
@@ -260,6 +274,7 @@ export const kiiraDoctors = [
     image: IMAGES.profilePhoto,
     specialization: 'Health Specialist',
     rating: 5,
+    _bookingId: 'health-coaching',
     status: profileState.online
   }
 ];

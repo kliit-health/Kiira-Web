@@ -4,6 +4,8 @@ import { IMAGES, profileState } from 'src/data';
 import { Avatar, Badge, Button, Rating } from '@material-tailwind/react';
 import { bool, object, shape, string } from 'prop-types';
 import tw, { styled } from 'twin.macro';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from 'src/routes/Paths';
 
 const ServiceContainer = styled(ContentContainer)(({ disabled, whiteBackground }) => [
   tw`col-auto flex-col w-full max-w-[-webkit-fill-available] rounded-3xl h-full gap-2`,
@@ -17,6 +19,8 @@ const Dot = styled.span`
 `;
 
 const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
+  const navigate = useNavigate();
+
   return (
     <ServiceContainer
       className={['relative items-center gap-4 justify-center p-4 pt-3.5']}
@@ -84,12 +88,12 @@ const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
         </Button>
         <Button
           disabled={disabled}
+          onClick={() => navigate(`${ROUTES.CHOOSE_APPOINTMENT}/${doctor?._bookingId}`)}
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] bg-kiiraBlue shadow-none">
           Book now
         </Button>
       </ContentContainer>
-    
     </ServiceContainer>
   );
 };
