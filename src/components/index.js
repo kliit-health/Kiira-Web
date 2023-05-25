@@ -8,7 +8,15 @@ import AddButton from './AddButton/AddButton';
 import SearchInput from './SearchInput/SearchInput';
 import ServiceCard from './ServiceCard/ServiceCard';
 import DoctorsCard from './DoctorsCard/DoctorsCard';
-import { VisaIcon, PdfIcon, DownloadIcon, RadioCheckedIcon } from './shared/AppIcons/AppIcons';
+import {
+  VisaIcon,
+  PdfIcon,
+  DownloadIcon,
+  RadioCheckedIcon,
+  CloseIcon
+} from './shared/AppIcons/AppIcons';
+import SavedCards from './PaymentCard/SavedCards';
+import PaymentCard from './PaymentCard/PaymentCard';
 
 export {
   AppNavBar,
@@ -24,5 +32,8 @@ export {
   VisaIcon,
   PdfIcon,
   DownloadIcon,
-  RadioCheckedIcon
+  RadioCheckedIcon,
+  SavedCards,
+  PaymentCard,
+  CloseIcon
 };

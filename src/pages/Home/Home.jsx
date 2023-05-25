@@ -1,6 +1,6 @@
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader } from '@material-tailwind/react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AddButton, BookingCard } from 'src/components';
 import {
   AddCircleIcon,
@@ -11,8 +11,10 @@ import {
 } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraUpdates } from 'src/data';
 import { MainLayout } from 'src/layouts';
+import { ROUTES } from 'src/routes/Paths';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <MainLayout>
       <ContentContainer
@@ -90,7 +92,9 @@ const Home = () => {
           <AppTypography variant="h6" className="text-kiiraDark font-bold text-base lg:text-lg">
             Book a new appointment
           </AppTypography>
-          <AddButton label="New Booking" />
+
+          <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
+
           <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
             <AppTypography
               variant="h6"

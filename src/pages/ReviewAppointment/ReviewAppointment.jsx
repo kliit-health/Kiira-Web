@@ -1,18 +1,16 @@
-import { Breadcrumbs, Button, Card, IconButton, Radio } from '@material-tailwind/react';
+import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AddButton, BookingCard, DoctorsCard, RadioCheckedIcon, VisaIcon } from 'src/components';
+import { BookingCard, SavedCards } from 'src/components';
 import {
   AppButton,
   AppLink,
   AppLinkExternal,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
+import { IMAGES, kiiraServices } from 'src/data';
 import { MainLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
@@ -22,11 +20,6 @@ const ReviewAppointment = () => {
   const { id } = useParams();
 
   const [serviceSelected, setServiceSelected] = useState({});
-  const [selectedDay, setSelectedDay] = useState(null);
-  console.log(
-    '🚀 ~ file: ReviewAppointment.jsx:20 ~ ReviewAppointment ~ serviceSelected:',
-    serviceSelected
-  );
 
   useEffect(() => {
     if (isEmpty(id)) return;
@@ -138,32 +131,97 @@ const ReviewAppointment = () => {
               </AppTypography>
             </ContentContainer>
 
-            <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none p-4 rounded-lg">
-              <ContentContainer className="rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
-                <ContentContainer className="flex flex-row flex-nowrap gap-5 items-center">
-                  <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-kiiraBlue p-1 md:h-8 md:w-8 rounded-full">
-                    <VisaIcon className="h-10 w-10" />
-                  </ContentContainer>
-                  <AppTypography
-                    variant="small"
-                    className="text-sm md:text-base text-white font-medium">
-                    **** 4321 <span className="font-normal ml-3">02/27</span>
-                  </AppTypography>
-                </ContentContainer>
-                <ContentContainer className="flex flex-row flex-nowrap gap-0.5 items-center">
-                  <ContentContainer className="flex flex-row items-center justify-center p-0.5 h-8 w-8 rounded-full">
-                    {true ? <RadioCheckedIcon /> : <Radio id="white" name="color" color="white" />}
-                  </ContentContainer>
-                </ContentContainer>
-              </ContentContainer>
-
-              <AddButton label="Add a new card" />
-            </Card>
+            {/* Card Options */}
+            <SavedCards />
           </ContentContainer>
 
           {/* Booking Cart review */}
           <ContentContainer className="w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
             <BookingCard review />
+            <AppTypography
+              variant="lead"
+              className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center">
+              Your booking is protected by <b>Acuity</b>
+            </AppTypography>
+
+            <ContentContainer className="flex-col gap-4">
+              <AppTypography variant="lead" className="text-xs md:text-sm  w-full">
+                Price Details
+              </AppTypography>
+              <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                  Base Fare
+                </AppTypography>
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                  $150
+                </AppTypography>
+              </ContentContainer>
+              <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                  Discount
+                </AppTypography>
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                  $0
+                </AppTypography>
+              </ContentContainer>
+              <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                  Taxes
+                </AppTypography>
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                  $20
+                </AppTypography>
+              </ContentContainer>
+              <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                  Service Fee
+                </AppTypography>
+                <AppTypography
+                  variant="h6"
+                  className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                  $5
+                </AppTypography>
+              </ContentContainer>
+            </ContentContainer>
+
+            <hr />
+
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Total
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                $175
+              </AppTypography>
+            </ContentContainer>
+
+            <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
+              <Checkbox iconProps={{ size: 'xs' }} labelProps={{ className: 'p-1 rounded' }} />
+              <span className="text-xs text-kiiraText">
+                I agree to all the <AppLink className="text-kiiraBlue text-xs">Terms</AppLink> and
+                <AppLink className="text-kiiraBlue text-xs"> Privacy Policies</AppLink>
+              </span>
+            </ContentContainer>
+
+            <AppButton className="text-xs">Confirm Booking</AppButton>
           </ContentContainer>
         </ContentContainer>
       </ContentContainer>

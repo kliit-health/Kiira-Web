@@ -88,6 +88,8 @@ export const AppButton = styled(Button)`
   border-radius: 12px;
 `;
 
+
+
 AppButton.defaultProps = {
   background: `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%);`,
   size: 'md'

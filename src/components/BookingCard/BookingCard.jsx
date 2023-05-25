@@ -15,14 +15,14 @@ const BookingCard = ({ disabled, review }) => {
       className={
         !review
           ? 'flex-col md:flex-row w-full max-w-max rounded-l-2xl lg:max-h-[360px]'
-          : 'flex-row w-full max-w-max rounded-l-2xl lg:max-h-[360px] gap-4'
+          : 'flex-col sm:flex-row w-full max-w-max rounded-l-2xl lg:max-h-[360px] gap-4'
       }
       disabled={disabled}>
       <ContentContainer
         className={
           !review
             ? 'w-full sm:w-1/4  shrink-0 m-0 rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none bg-[#E2EDFF] bg-blend-darken'
-            : 'h-full w-28 shrink-0 m-0 rounded-xl  bg-[#E2EDFF] bg-blend-darken'
+            : 'h-full w-28 shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
         }>
         <img
           src={IMAGES?.medicalAid}
@@ -30,7 +30,7 @@ const BookingCard = ({ disabled, review }) => {
           className={
             !review
               ? 'w-full h-[150px] sm:h-full object-cover rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none'
-              : 'w-full object-cover rounded-xl'
+              : 'w-full h-full object-cover rounded-xl'
           }
           loading="lazy"
         />

@@ -9,6 +9,7 @@ import { ReactComponent as TimeIcon } from 'src/assets/icons/Time.svg';
 import { ReactComponent as TimeIconFilled } from 'src/assets/icons/TimeFilled.svg';
 import { ReactComponent as LogoutIcon } from 'src/assets/icons/LogoutIcon.svg';
 import { ReactComponent as AccountIcon } from 'src/assets/icons/AccountIcon.svg';
+import { ReactComponent as CloseIcon } from 'src/assets/icons/Close.svg';
 import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
 import { ReactComponent as KiiraBirdieBlack } from 'src/assets/icons/KiiraBirdieBlack.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
@@ -75,7 +76,8 @@ export const IMAGES = {
   VisaIcon,
   RadioChecked,
   DownloadIcon,
-  PdfIcon
+  PdfIcon,
+  CloseIcon
 };
 
 export const userData = {
