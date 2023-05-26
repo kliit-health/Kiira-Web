@@ -13,6 +13,7 @@ import Doctors from './Doctors/Doctors';
 import ChooseAppointment from './ChooseAppointment/ChooseAppointment';
 import ReviewAppointment from './ReviewAppointment/ReviewAppointment';
 import ConfirmBooking from './ConfirmBooking/ConfirmBooking';
+import ViewBooking from './ViewBooking/ViewBooking';
 
 export {
   Login,
@@ -29,5 +30,6 @@ export {
   Doctors,
   ChooseAppointment,
   ReviewAppointment,
-  ConfirmBooking
+  ConfirmBooking,
+  ViewBooking
 };

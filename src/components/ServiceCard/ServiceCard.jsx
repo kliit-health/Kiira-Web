@@ -1,10 +1,9 @@
 import React from 'react';
-import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
+import { AppButton, AppLink, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES } from 'src/data';
 import { Avatar, Button } from '@material-tailwind/react';
 import { object } from 'prop-types';
 import tw, { styled } from 'twin.macro';
-import { useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { truncate } from 'src/utils/truncate';
 
@@ -13,11 +12,6 @@ const ServiceContainer = styled(ContentContainer)`
 `;
 
 const ServiceCard = ({ service }) => {
-  const navigate = useNavigate();
-
-  const pushLink = (selection) => {
-    navigate(`${ROUTES.CHOOSE_APPOINTMENT}/${selection}`);
-  };
   return (
     <ServiceContainer className="">
       <ContentContainer className="w-full p-3 shrink-0 m-0 pb-0">
@@ -48,12 +42,11 @@ const ServiceCard = ({ service }) => {
           <AppTypography variant="h6" className="font-montserrat text-kiiraDark font-bold text-xs">
             {service?.fee}
           </AppTypography>
-          <Button
-            size="sm"
-            className="w-32 rounded-full text-[8px] bg-kiiraBlue"
-            onClick={() => pushLink(service?._id)}>
-            Book now
-          </Button>
+          <AppLink to={`${ROUTES.CHOOSE_APPOINTMENT}/${service?._id}`}>
+            <Button size="sm" className="w-32 rounded-full text-[8px] bg-kiiraBlue">
+              Book now
+            </Button>
+          </AppLink>
         </ContentContainer>
       </ContentContainer>
     </ServiceContainer>

@@ -16,10 +16,12 @@ import {
   ReviewAppointment,
   Signup,
   SignupSubscription,
-  Subscription
+  Subscription,
+  ViewBooking
 } from 'src/pages';
-import { AppointmentLayout } from 'src/layouts';
+
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+import { MainOutletLayout, OutletLayout } from 'src/layouts';
 
 export const Router = () => {
   return (
@@ -37,13 +39,16 @@ export const Router = () => {
           <Route index exact path={ROUTES.INDEX} element={<Home />} />
           <Route path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route path={ROUTES.INBOX} element={<Inbox />} />
-          <Route path={ROUTES.HISTORY} element={<History />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />
-          <Route path={ROUTES.BOOK_APPOINTMENT} element={<AppointmentLayout />}>
-            <Route exact index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
+          <Route element={<OutletLayout />}>
+            <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
             <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />
-            <Route exact path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
-            <Route exact path={ROUTES.CONFIRM_BOOKING} element={<ConfirmBooking />} />
+            <Route path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
+            <Route path={ROUTES.CONFIRM_BOOKING} element={<ConfirmBooking />} />
+          </Route>
+          <Route element={<MainOutletLayout />}>
+            <Route index path={ROUTES.HISTORY} element={<History />} />
+            <Route path={`${ROUTES.VIEW_BOOKING}/:id`} element={<ViewBooking />} />
           </Route>
         </Route>
       </Routes>

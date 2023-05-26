@@ -6,3 +6,5 @@ export const PdfIcon = styled(IMAGES.PdfIcon)``;
 export const DownloadIcon = styled(IMAGES.DownloadIcon)``;
 export const RadioCheckedIcon = styled(IMAGES.RadioChecked)``;
 export const CloseIcon = styled(IMAGES.CloseIcon)``;
+export const ShareIcon = styled(IMAGES.ShareIcon)``;
+export const DividerIcon = styled(IMAGES.DividerIcon)``;

@@ -19,8 +19,6 @@ const BookAppointment = () => {
             })}
           </div>
         </ContentContainer>
-
-        <Outlet />
       </ContentContainer>
     </MainLayout>
   );

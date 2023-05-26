@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-const AppointmentLayout = () => {
+const OutletLayout = () => {
   return <Outlet />;
 };
 
-export default AppointmentLayout;
+export default OutletLayout;

@@ -10,6 +10,7 @@ import { ReactComponent as TimeIconFilled } from 'src/assets/icons/TimeFilled.sv
 import { ReactComponent as LogoutIcon } from 'src/assets/icons/LogoutIcon.svg';
 import { ReactComponent as AccountIcon } from 'src/assets/icons/AccountIcon.svg';
 import { ReactComponent as CloseIcon } from 'src/assets/icons/Close.svg';
+import { ReactComponent as ShareIcon } from 'src/assets/icons/ShareIcon.svg';
 import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
 import { ReactComponent as KiiraBirdieBlack } from 'src/assets/icons/KiiraBirdieBlack.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
@@ -35,10 +36,12 @@ import DrOdunsi from 'src/assets/images/doctors/DrOdunsi.png';
 import DrPilar from 'src/assets/images/doctors/DrPilar.png';
 import DrScut from 'src/assets/images/doctors/DrScut.png';
 import ConfirmBookingBirdie from 'src/assets/images/DrPenguin.png';
+import QR from 'src/assets/images/qrCode.png';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
 import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
 import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
 import { ReactComponent as RadioChecked } from 'src/assets/icons/radioChecked.svg';
+import { ReactComponent as DividerIcon } from 'src/assets/icons/DividerShape.svg';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
@@ -79,7 +82,10 @@ export const IMAGES = {
   DownloadIcon,
   PdfIcon,
   CloseIcon,
-  Penguin: ConfirmBookingBirdie
+  Penguin: ConfirmBookingBirdie,
+  ShareIcon,
+  QR,
+  DividerIcon
 };
 
 export const userData = {
@@ -164,7 +170,7 @@ export const kiiraServices = [
     description:
       'Talk to a health coach and create a personalized care plan and guide you on your health journey. Join Kiira and book a visit to get started.',
     fee: '$150.00',
-    _id: 'health-coaching'
+    _id: 'healthCoaching'
   },
   {
     icon: IMAGES.PrimaryCare,
@@ -172,7 +178,7 @@ export const kiiraServices = [
     description:
       'Talk to one of our primary care providers about annual wellness, general checkups, cold, flu and other symptoms and more',
     fee: '$270.00',
-    _id: 'primary-care'
+    _id: 'primaryCare'
   },
   {
     icon: IMAGES.Pregnancy,
@@ -196,7 +202,7 @@ export const kiiraServices = [
     description:
       'Need help with your mental and emotional health? Talk to our psychiatrists, therapists and other mental health experts.',
     fee: '$150.00',
-    _id: 'general-health'
+    _id: 'generalHealth'
   },
   {
     icon: IMAGES.Ultrasound,
@@ -212,7 +218,7 @@ export const kiiraServices = [
     description:
       'Need help with your mental and emotional health? Talk to our psychiatrists, therapists and other mental health experts.',
     fee: '$390.00',
-    _id: 'mental-health'
+    _id: 'mentalHealth'
   }
 ];
 

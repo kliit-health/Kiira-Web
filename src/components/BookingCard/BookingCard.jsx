@@ -2,14 +2,14 @@ import React from 'react';
 import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES } from 'src/data';
 import { Avatar } from '@material-tailwind/react';
-import { bool } from 'prop-types';
+import { bool, func } from 'prop-types';
 import tw, { styled } from 'twin.macro';
 
 const BookingContainer = styled(ContentContainer)(({ disabled }) => [
   disabled && tw`cursor-not-allowed opacity-50`
 ]);
 
-const BookingCard = ({ disabled, review }) => {
+const BookingCard = ({ disabled, review, bookingAction }) => {
   return (
     <BookingContainer
       className={
@@ -128,7 +128,7 @@ const BookingCard = ({ disabled, review }) => {
 
             <hr className="bg-kiiraText" />
 
-            <AppButton size="md" fullWidth disabled={disabled}>
+            <AppButton size="md" fullWidth disabled={disabled} onClick={bookingAction}>
               View Booking
             </AppButton>
           </>
@@ -140,12 +140,14 @@ const BookingCard = ({ disabled, review }) => {
 
 BookingCard.propTypes = {
   disabled: bool,
-  review: bool
+  review: bool,
+  bookingAction: func
 };
 
 BookingCard.defaultProps = {
   disabled: false,
-  review: false
+  review: false,
+  bookingAction: () => {}
 };
 
 export default BookingCard;
