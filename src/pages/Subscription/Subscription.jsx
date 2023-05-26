@@ -1,6 +1,6 @@
 import { Card, CardBody, Dialog, DialogBody, DialogHeader, Radio } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import { AddButton, SubscriptionPlans } from 'src/components';
+import { AddButton, SavedCards, SubscriptionPlans } from 'src/components';
 import {
   AppTypography,
   BorderedContainer,
@@ -70,30 +70,7 @@ const Subscription = () => {
             })}
           </Card>
 
-          <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none p-4 rounded-lg">
-            <AppTypography variant="h5" className="text-lg font-semibold text-kiiraDark">
-              Payment Method
-            </AppTypography>
-            <ContentContainer className="rounded-2xl bg-kiiraBlue p-1 lg:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
-              <ContentContainer className="flex flex-row flex-nowrap gap-5 items-center">
-                <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-kiiraBlue p-1 md:h-8 md:w-8 rounded-full">
-                  <VisaIcon className="h-10 w-10" />
-                </ContentContainer>
-                <AppTypography
-                  variant="small"
-                  className="text-sm md:text-base text-white font-medium">
-                  **** 4321 <span className="font-normal ml-3">02/27</span>
-                </AppTypography>
-              </ContentContainer>
-              <ContentContainer className="flex flex-row flex-nowrap gap-0.5 items-center">
-                <ContentContainer className="flex flex-row items-center justify-center p-0.5 h-8 w-8 rounded-full">
-                  {true ? <RadioChecked /> : <Radio id="white" name="color" color="white" />}
-                </ContentContainer>
-              </ContentContainer>
-            </ContentContainer>
-
-            <AddButton label="Add a new card" />
-          </Card>
+          <SavedCards />
         </ContentContainer>
       </ContentContainer>
 

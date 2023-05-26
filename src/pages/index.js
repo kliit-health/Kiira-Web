@@ -12,6 +12,7 @@ import History from './History/History';
 import Doctors from './Doctors/Doctors';
 import ChooseAppointment from './ChooseAppointment/ChooseAppointment';
 import ReviewAppointment from './ReviewAppointment/ReviewAppointment';
+import ConfirmBooking from './ConfirmBooking/ConfirmBooking';
 
 export {
   Login,
@@ -26,6 +27,7 @@ export {
   Inbox,
   History,
   Doctors,
-  ChooseAppointment, 
-  ReviewAppointment
+  ChooseAppointment,
+  ReviewAppointment,
+  ConfirmBooking
 };

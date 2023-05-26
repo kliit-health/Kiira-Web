@@ -10,7 +10,7 @@ import {
   MenuList,
   MenuHandler,
   MenuItem,
-  ListItemPrefix,
+  ListItemPrefix
 } from '@material-tailwind/react';
 import { ReactComponent as Hamburger } from 'src/assets/icons/hamburger.svg';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/icons/kiiraBirdie.svg';
@@ -42,17 +42,27 @@ export default function InnerNavBar() {
   const navList = (
     <List className="flex flex-row flex-wrap gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center mx-4 p-0">
       <AppNavLink to={ROUTES.BOOK_APPOINTMENT}>
-        <NavListItem>Book an Appointment</NavListItem>
+        {({ isActive }) => (
+          <NavListItem className={isActive ? 'text-kiiraBlue' : ''}>
+            Book an Appointment
+          </NavListItem>
+        )}
       </AppNavLink>
       <AppNavLink to={ROUTES.DOCTORS}>
-        <NavListItem>Doctors</NavListItem>
+        {({ isActive }) => (
+          <NavListItem className={isActive ? 'text-kiiraBlue' : ''}>Doctors</NavListItem>
+        )}
       </AppNavLink>
       <AppNavLink to={ROUTES.SUBSCRIPTION}>
-        <NavListItem>Subscription Plan</NavListItem>
+        {({ isActive }) => (
+          <NavListItem className={isActive ? 'text-kiiraBlue' : ''}>Subscription Plan</NavListItem>
+        )}
       </AppNavLink>
       {isAuthenticated ? (
         <AppNavLink to={ROUTES.HISTORY}>
-          <NavListItem>History</NavListItem>
+          {({ isActive }) => (
+            <NavListItem className={isActive ? 'text-kiiraBlue' : ''}>History</NavListItem>
+          )}
         </AppNavLink>
       ) : null}
     </List>

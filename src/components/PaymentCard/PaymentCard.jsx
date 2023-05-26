@@ -62,6 +62,10 @@ const PaymentCard = ({ closeModal }) => {
             fullWidth
             onClick={() => {
               setOpen(true);
+
+              setTimeout(() => {
+                closeModal();
+              }, 1500);
             }}>
             Add Card
           </AppButton>

@@ -82,13 +82,11 @@ export const MenuListItem = styled(MenuItem)`
 `;
 
 export const AppButton = styled(Button)`
-  ${tw`p-2 text-sm font-bold text-white capitalize shadow-transparent`}
+  ${tw`p-2 text-sm font-bold text-white capitalize! shadow-transparent`}
   background: ${(background) =>
     background ? background : `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)`};
   border-radius: 12px;
 `;
-
-
 
 AppButton.defaultProps = {
   background: `linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%);`,

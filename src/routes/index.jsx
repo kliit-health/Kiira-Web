@@ -5,6 +5,7 @@ import {
   BookAppointment,
   ChooseAppointment,
   CodeVerification,
+  ConfirmBooking,
   Doctors,
   ForgotPassword,
   History,
@@ -39,9 +40,10 @@ export const Router = () => {
           <Route path={ROUTES.HISTORY} element={<History />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />
           <Route path={ROUTES.BOOK_APPOINTMENT} element={<AppointmentLayout />}>
-            <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
+            <Route exact index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
             <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />
-            <Route path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
+            <Route exact path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
+            <Route exact path={ROUTES.CONFIRM_BOOKING} element={<ConfirmBooking />} />
           </Route>
         </Route>
       </Routes>

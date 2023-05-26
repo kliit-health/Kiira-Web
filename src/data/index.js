@@ -34,6 +34,7 @@ import DrNneka from 'src/assets/images/doctors/DrNneka.png';
 import DrOdunsi from 'src/assets/images/doctors/DrOdunsi.png';
 import DrPilar from 'src/assets/images/doctors/DrPilar.png';
 import DrScut from 'src/assets/images/doctors/DrScut.png';
+import ConfirmBookingBirdie from 'src/assets/images/DrPenguin.png';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
 import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
 import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
@@ -77,7 +78,8 @@ export const IMAGES = {
   RadioChecked,
   DownloadIcon,
   PdfIcon,
-  CloseIcon
+  CloseIcon,
+  Penguin: ConfirmBookingBirdie
 };
 
 export const userData = {

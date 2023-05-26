@@ -221,7 +221,9 @@ const ReviewAppointment = () => {
               </span>
             </ContentContainer>
 
-            <AppButton className="text-xs">Confirm Booking</AppButton>
+            <AppButton className="text-xs" onClick={() => navigate(ROUTES.CONFIRM_BOOKING)}>
+              Confirm Booking
+            </AppButton>
           </ContentContainer>
         </ContentContainer>
       </ContentContainer>
