@@ -3,25 +3,19 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BookingCalendar, DoctorsCard } from 'src/components';
 import {
-  AppButton,
   AppLink,
   AppLinkExternal,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
-import { string } from 'prop-types';
 
 const ChooseAppointment = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
   console.log(

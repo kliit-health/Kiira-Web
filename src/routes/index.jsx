@@ -22,9 +22,10 @@ import {
   Subscription,
   ViewBooking
 } from 'src/pages';
-
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-import { MainOutletLayout, OutletLayout } from 'src/layouts';
+// import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
+
+import { MainOutletLayout } from 'src/layouts';
 
 export const Router = () => {
   return (

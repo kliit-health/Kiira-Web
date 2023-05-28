@@ -10,7 +10,6 @@ import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
 import { MainLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
 import useAuth from 'src/hooks/useAuth';
 import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
 
