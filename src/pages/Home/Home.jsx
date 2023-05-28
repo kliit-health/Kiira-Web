@@ -110,7 +110,13 @@ const Home = () => {
           </ContentContainer>
 
           {[1, 2].map((d, index) => {
-            return <BookingCard disabled={index !== 0} key={index?.toString()} />;
+            return (
+              <BookingCard
+                disabled={index !== 0}
+                key={index?.toString()}
+                bookingAction={() => navigate(`${ROUTES.VIEW_BOOKING}/booking`)}
+              />
+            );
           })}
         </Card>
       </ContentContainer>

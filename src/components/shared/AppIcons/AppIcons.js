@@ -8,3 +8,5 @@ export const RadioCheckedIcon = styled(IMAGES.RadioChecked)``;
 export const CloseIcon = styled(IMAGES.CloseIcon)``;
 export const ShareIcon = styled(IMAGES.ShareIcon)``;
 export const DividerIcon = styled(IMAGES.DividerIcon)``;
+export const PenIcon = styled(IMAGES.PenIcon)``;
+export const EditIcon = styled(IMAGES.EditIcon)``;

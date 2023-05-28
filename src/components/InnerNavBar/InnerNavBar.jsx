@@ -127,7 +127,7 @@ export default function InnerNavBar() {
                       <ListItemPrefix className="mr-2 ">
                         <IMAGES.AccountIcon className="" />
                       </ListItemPrefix>
-                      <Link to="#" className="font-medium">
+                      <Link to={ROUTES.PROFILE} className="font-medium">
                         <AppTypography variant="lead" className="text-kiiraText text-sm">
                           Account
                         </AppTypography>

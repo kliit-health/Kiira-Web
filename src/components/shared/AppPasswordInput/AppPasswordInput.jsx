@@ -13,9 +13,13 @@ const AppPasswordInput = (props) => {
       type={showPassword ? 'text' : 'password'}
       icon={
         showPassword ? (
-          <i className="fa-sharp fa-solid fa-eye" onClick={togglePasswordVisibility}></i>
+          <i
+            className="fa-sharp fa-solid fa-eye font-bold text-kiiraDark"
+            onClick={togglePasswordVisibility}></i>
         ) : (
-          <i className="fa-sharp fa-solid fa-eye-slash" onClick={togglePasswordVisibility}></i>
+          <i
+            className="fa-sharp fa-solid fa-eye-slash font-bold text-kiiraDark"
+            onClick={togglePasswordVisibility}></i>
         )
       }
       {...props}

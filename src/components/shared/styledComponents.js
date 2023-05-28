@@ -39,6 +39,7 @@ export const ContentContainer = styled.div`
 
 export const AppTypography = styled(Typography)`
   ${tw`font-poppins`}
+  font-family: 'Poppins', sans-serif !important;
 `;
 
 export const LayoutWrapper = styled.div`

@@ -3,6 +3,7 @@ import { ROUTES } from './Paths';
 import { ProtectedRoute } from './ProtectedRoute';
 import {
   BookAppointment,
+  ChangePassword,
   ChooseAppointment,
   CodeVerification,
   ConfirmBooking,
@@ -42,7 +43,11 @@ export const Router = () => {
           <Route path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route path={ROUTES.INBOX} element={<Inbox />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route element={<MainOutletLayout />}>
+            <Route index path={ROUTES.PROFILE} element={<Profile />} />
+            <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
+          </Route>
+
           <Route element={<MainOutletLayout />}>
             <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
             <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />

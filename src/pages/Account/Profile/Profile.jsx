@@ -1,7 +1,7 @@
-import { Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DoctorsCard } from 'src/components';
+import { BookingCalendar, DoctorsCard } from 'src/components';
 import {
   AppButton,
   AppLink,
@@ -16,17 +16,17 @@ import { MainLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import { Calendar, utils } from 'react-modern-calendar-datepicker';
+import useAuth from 'src/hooks/useAuth';
+import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useAuth();
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
-  console.log(
-    '🚀 ~ file: RescheduleAppointment.jsx:20 ~ RescheduleAppointment ~ serviceSelected:',
-    serviceSelected
-  );
+
 
   useEffect(() => {
     if (isEmpty(id)) return;
@@ -56,130 +56,109 @@ const Profile = () => {
           fullWidth
           className="w-auto bg-transparent">
           <AppNavLink
-            to={ROUTES.BOOK_APPOINTMENT}
+            to={ROUTES.INDEX}
             className="opacity-75 text-xs font-semibold text-kiiraBlue hover:text-kiiraBlue">
-            Book Appointment
+            Home
           </AppNavLink>
           <AppNavLink to="#" className="opacity-75 text-xs font-medium cursor-default">
-            Choose Appointment
+            Profile
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
 
-      <ContentContainer className="w-full h-full flex flex-col gap-4  p-4 bg-kiiraBg2 rounded-lg">
+      <ContentContainer className="w-full h-full flex flex-col gap-4">
         <ContentContainer className="w-full gap-4">
-          <ContentContainer row className="flex justify-between flex-wrap md:flex-nowrap gap-4">
-            <ContentContainer className="flex flex-col gap-3">
-              <AppTypography
-                variant="h6"
-                color="blue"
-                className="capitalise text-kiiraBlackishGreen text-xl lg:text-2xl font-semibold">
-                {serviceSelected?.title || 'General Health Assessment'}
-              </AppTypography>
-              <AppTypography variant="lead" className="text-sm text-kiiraText w-full xl:w-10/12">
-                {/* {serviceSelected?.description} */}
-                This is NOT a doctor's visit. The purpose is to get a general understanding of the
-                state of your health across all aspects and guide you through the next steps of
-                care. <br /> <br />A health assessment is a set of questions, answered by patients,
-                that asks about personal behaviors, risks, life-changing events, health goals and
-                priorities, and overall health to create a treatment plan best suitable for you.
-              </AppTypography>
+          <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
+            <ContentContainer className="relative hover:opacity-80">
+              <Avatar
+                src={
+                  user?.photo ||
+                  'https://wallpapers.com/images/hd/default-pfp-face-izpao33go55ztvn9.jpg'
+                }
+                alt={user?.lastName}
+                variant="circular"
+                size="xxl"
+                className="rounded-full bg-kiiraText/50 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40"
+              />
+              <PenIcon className="z-10 absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
             </ContentContainer>
-
-            <ContentContainer col className="-mt-1 lg:gap-4">
-              <AppTypography
-                variant="h4"
-                className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                {serviceSelected?.fee || '$150.00'}
-              </AppTypography>
-              <AppTypography
-                variant="lead"
-                className="text-sm md:text-right text-kiiraBlackishGreen font-montserrat">
-                1 hr session
-              </AppTypography>
-            </ContentContainer>
-          </ContentContainer>
-
-          <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
             <AppTypography
               variant="h6"
-              className="text-[#112211] font-semibold text-xs lg:text-base">
-              Your appointment with
+              className="text-[#112211] font-semibold text-sm lg:text-base">
+              {user?.firstName} {user?.lastName}
+            </AppTypography>
+            <AppTypography
+              variant="small"
+              className="text-kiiraText text-xs font-medium tracking-tight -mt-1">
+              {user?.email}
             </AppTypography>
           </ContentContainer>
-          <ContentContainer
-            className="flex flex-row flex-nowrap gap-4 lg:gap-2 items-center overflow-hidden overflow-x-auto"
-            hideScroll={true}>
-            {kiiraDoctors
-              ?.map((doctor, index) => {
-                return (
-                  <div className="col" key={index.toString()}>
-                    <DoctorsCard
-                      whiteBackground
-                      doctor={doctor}
-                      disabled={index !== 0}
-                      style={{ minWidth: '245px' }}
-                    />
-                  </div>
-                );
-              })
-              .slice(0, 1)}
+        </ContentContainer>
+        <AppTypography
+          variant="h6"
+          color="blue"
+          className="capitalise text-kiiraDark text-lg md:text-xl font-normal font-poppins">
+          Account
+        </AppTypography>
+        <ContentContainer className="w-full gap-5 bg-kiiraBg2 p-4 rounded-2xl h-full">
+          <ContentContainer className="gap-1.5">
+            <AppTypography
+              variant="small"
+              className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
+              Name
+            </AppTypography>
+            <AppTypography
+              variant="h6"
+              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+              {user?.firstName} {user?.lastName}
+            </AppTypography>
+          </ContentContainer>
+          <ContentContainer className="gap-1.5">
+            <AppTypography
+              variant="small"
+              className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
+              Email
+            </AppTypography>
+            <AppTypography
+              variant="lead"
+              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+              {user?.email}
+            </AppTypography>
+          </ContentContainer>
+          <ContentContainer row className="flex-wrap items-center justify-between">
+            <ContentContainer className="gap-1.5">
+              <AppTypography
+                variant="small"
+                className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
+                Password
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+                ************
+              </AppTypography>
+            </ContentContainer>
+
+            <Button
+              className="flex flex-row flex-nowrap gap-1 text-kiiraText/70 items-center bg-transparent shadow-none border border-kiiraBlue capitalize font-semibold text-xs md:text-sm"
+              onClick={() => navigate(ROUTES.CHANGE_PASSWORD)}>
+              <EditIcon />
+              Change Password
+            </Button>
           </ContentContainer>
 
-          <AppTypography
-            variant="h6"
-            className="text-[#112211] font-semibold text-xs lg:text-base w-full">
-            Edit your date
-          </AppTypography>
-
-          <CalendarWrapper className="col w-full flex-row flex-wrap lg:flex-nowrap gap-0.5 ">
-            <Calendar
-              value={selectedDay}
-              onChange={setSelectedDay}
-              minimumDate={utils().getToday()}
-              calendarClassName="w-full lg:w-1/2 p-2 min-w-min shadow-none lg:rounded-r-none "
-              calendarSelectedDayClassName="h-4 w-8 md:h-10 md:w-10 rounded-full"
-              colorPrimary="#3F84FF"
-            />
-            <ContentContainer className="w-full lg:w-1/2 px-6 py-3 rounded-2xl lg:rounded-l-none bg-white flex col gap-4">
-              <ContentContainer>
-                <AppTypography variant="lead" className="font-medium text-xs">
-                  Thursday, April 16
-                </AppTypography>
-                <AppTypography variant="lead" className="font-medium text-xs">
-                  TIME ZONE: <b>LAGOS (GMT+01:00)</b>
-                </AppTypography>
-              </ContentContainer>
-
-              <ContentContainer>
-                <div className="grid grid-flow-row md:grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[
-                    '12:00 AM',
-                    '12:30 AM',
-                    '1:00 AM',
-                    '12:00 AM',
-                    '12:30 AM',
-                    '1:00 AM',
-                    '12:00 AM',
-                    '12:30 AM',
-                    '1:00 AM'
-                  ].map((time, index) => {
-                    return (
-                      <ContentContainer
-                        // onClick={() => navigate(ROUTES.REVIEW_APPOINTMENT)}
-                        className="col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer "
-                        key={index.toString()}>
-                        <AppTypography variant="small" className="font-medium text-sm">
-                          {time}
-                        </AppTypography>
-                      </ContentContainer>
-                    );
-                  })}
-                </div>
-              </ContentContainer>
-            </ContentContainer>
-          </CalendarWrapper>
-          <AppButton maxWidth>Save</AppButton>
+          <ContentContainer className="gap-1.5">
+            <AppTypography
+              variant="small"
+              className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
+              Phone Number
+            </AppTypography>
+            <AppTypography
+              variant="h6"
+              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+              {user?.phoneNumber}
+            </AppTypography>
+          </ContentContainer>
         </ContentContainer>
       </ContentContainer>
     </ContentContainer>

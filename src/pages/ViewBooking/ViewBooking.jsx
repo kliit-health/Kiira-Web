@@ -108,26 +108,28 @@ const ViewBooking = () => {
               className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
               {serviceSelected?.fee || '$150.00'}
             </AppTypography>
-            <ContentContainer row className="gap-2 items-center flex-wrap">
+            <ContentContainer row className="gap-2 items-center flex-wrap md:justify-end">
               <Button
                 to="#"
                 onClick={() =>
                   navigate(`${ROUTES.HISTORY}/mentalHealth${ROUTES.RESCHEDULE_APPOINTMENT}`)
                 }
                 variant="small"
-                className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize">
+                className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
                 Reschedule Appointment
               </Button>
-              <IconButton variant="text" size="sm" className="border border-kiiraBlue">
-                <ShareIcon />
-              </IconButton>
+              <ContentContainer row className="gap-2 items-center flex-wrap">
+                <IconButton variant="text" size="sm" className="border border-kiiraBlue">
+                  <ShareIcon />
+                </IconButton>
 
-              <Button
-                className="capitalize bg-kiiraBlue shadow-none hover:shadow-none"
-                size="md"
-                onClick={downloadPdfDocument}>
-                Download
-              </Button>
+                <Button
+                  className="capitalize bg-kiiraBlue shadow-none hover:shadow-none"
+                  size="md"
+                  onClick={downloadPdfDocument}>
+                  Download
+                </Button>
+              </ContentContainer>
             </ContentContainer>
           </ContentContainer>
         </ContentContainer>
@@ -143,7 +145,7 @@ const ViewBooking = () => {
                   Date
                 </AppTypography>
               </ContentContainer>
-              <DividerIcon className="rotate-90 md:rotate-0 w-full xs:w-auto" />
+              <DividerIcon className="rotate-0 sm:rotate-90 md:rotate-0 w-full xs:w-auto md:max-w-min " />
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                 <AppTypography variant="h4" color="blue-gray" className="text-2xl">
                   1:00 PM

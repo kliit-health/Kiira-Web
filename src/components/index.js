@@ -17,6 +17,7 @@ import {
 } from './shared/AppIcons/AppIcons';
 import SavedCards from './PaymentCard/SavedCards';
 import PaymentCard from './PaymentCard/PaymentCard';
+import BookingCalendar from './BookingCalendar/BookingCalendar';
 
 export {
   AppNavBar,
@@ -35,5 +36,6 @@ export {
   RadioCheckedIcon,
   SavedCards,
   PaymentCard,
-  CloseIcon
+  CloseIcon,
+  BookingCalendar
 };

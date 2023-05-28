@@ -1,18 +1,15 @@
-import { Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { Breadcrumbs } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DoctorsCard } from 'src/components';
 import {
   AppButton,
-  AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
   CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
+import { kiiraDoctors, kiiraServices } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import { Calendar, utils } from 'react-modern-calendar-datepicker';
@@ -23,10 +20,6 @@ const RescheduleAppointment = () => {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
-  console.log(
-    '🚀 ~ file: RescheduleAppointment.jsx:20 ~ RescheduleAppointment ~ serviceSelected:',
-    serviceSelected
-  );
 
   useEffect(() => {
     if (isEmpty(id)) return;
@@ -179,7 +172,9 @@ const RescheduleAppointment = () => {
               </ContentContainer>
             </ContentContainer>
           </CalendarWrapper>
-          <AppButton maxWidth>Save</AppButton>
+          <AppButton maxWidth onClick={() => navigate(ROUTES.HISTORY)}>
+            Save
+          </AppButton>
         </ContentContainer>
       </ContentContainer>
     </ContentContainer>

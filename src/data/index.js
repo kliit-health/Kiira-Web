@@ -11,6 +11,7 @@ import { ReactComponent as LogoutIcon } from 'src/assets/icons/LogoutIcon.svg';
 import { ReactComponent as AccountIcon } from 'src/assets/icons/AccountIcon.svg';
 import { ReactComponent as CloseIcon } from 'src/assets/icons/Close.svg';
 import { ReactComponent as ShareIcon } from 'src/assets/icons/ShareIcon.svg';
+import { ReactComponent as PenIcon } from 'src/assets/icons/Pen.svg';
 import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
 import { ReactComponent as KiiraBirdieBlack } from 'src/assets/icons/KiiraBirdieBlack.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
@@ -42,6 +43,7 @@ import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
 import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
 import { ReactComponent as RadioChecked } from 'src/assets/icons/radioChecked.svg';
 import { ReactComponent as DividerIcon } from 'src/assets/icons/DividerShape.svg';
+import { ReactComponent as EditIcon } from 'src/assets/icons/EditFilled.svg';
 
 export const IMAGES = {
   profilePhoto: dummyProfilePhoto,
@@ -85,7 +87,9 @@ export const IMAGES = {
   Penguin: ConfirmBookingBirdie,
   ShareIcon,
   QR,
-  DividerIcon
+  DividerIcon,
+  PenIcon,
+  EditIcon
 };
 
 export const userData = {
