@@ -14,7 +14,12 @@ const History = () => {
       className="h-full min-h-[50vh] p-4 lg:px-10 lg:py-4 gap-4">
       <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
       {[1].map((history, index) => {
-        return <BookingCard bookingAction={() => navigate(`${ROUTES.VIEW_BOOKING}/booking`)} />;
+        return (
+          <BookingCard
+            bookingAction={() => navigate(`${ROUTES.VIEW_BOOKING}/booking`)}
+            key={index?.toString()}
+          />
+        );
       })}
     </ContentContainer>
   );

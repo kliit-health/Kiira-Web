@@ -162,6 +162,7 @@ const ViewBooking = () => {
                   <Avatar
                     src={IMAGES?.inboxImg}
                     alt=""
+                    loading="lazy"
                     variant="circular"
                     size="md"
                     className="rounded-full bg-kiiraText/50"
@@ -192,7 +193,12 @@ const ViewBooking = () => {
                 </ContentContainer>
 
                 <ContentContainer className="h-24 w-24">
-                  <img src={IMAGES.QR} alt="" className="h-full w-full object-cover" />
+                  <img
+                    src={IMAGES.QR}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
                 </ContentContainer>
               </ContentContainer>
             </ContentContainer>

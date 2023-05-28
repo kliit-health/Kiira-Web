@@ -1,14 +1,9 @@
-import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { Avatar, Breadcrumbs, Button } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { BookingCalendar, DoctorsCard } from 'src/components';
 import {
-  AppButton,
-  AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
@@ -26,7 +21,6 @@ const Profile = () => {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
-
 
   useEffect(() => {
     if (isEmpty(id)) return;

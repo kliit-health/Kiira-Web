@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import { AppTypography, CalendarWrapper, ContentContainer } from '../shared/styledComponents';
 import { Calendar, utils } from 'react-modern-calendar-datepicker';
+import { element, func, string } from 'prop-types';
 
-const BookingCalendar = () => {
+const BookingCalendar = ({ dateLabel, onTimeSelect }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   return (
     <>
-      <AppTypography
-        variant="h6"
-        className="text-[#112211] font-semibold text-xs lg:text-base w-full">
-        Edit your date
-      </AppTypography>
+      {dateLabel ? (
+        dateLabel
+      ) : (
+        <AppTypography
+          variant="h6"
+          className="text-[#112211] font-semibold text-xs lg:text-base w-full text-center">
+          Choose a date
+        </AppTypography>
+      )}
 
       <CalendarWrapper className="col w-full flex-row flex-wrap lg:flex-nowrap gap-0.5 ">
         <Calendar
@@ -46,7 +51,7 @@ const BookingCalendar = () => {
               ].map((time, index) => {
                 return (
                   <ContentContainer
-                    // onClick={() => navigate(ROUTES.REVIEW_APPOINTMENT)}
+                    onClick={onTimeSelect}
                     className="col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer "
                     key={index.toString()}>
                     <AppTypography variant="small" className="font-medium text-sm">
@@ -61,6 +66,14 @@ const BookingCalendar = () => {
       </CalendarWrapper>
     </>
   );
+};
+
+BookingCalendar.propTypes = {
+  dateLabel: element,
+  onTimeSelect: func
+};
+BookingCalendar.defaultProps = {
+  onTimeSelect: () => {}
 };
 
 export default BookingCalendar;

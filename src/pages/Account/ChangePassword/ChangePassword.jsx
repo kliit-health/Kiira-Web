@@ -1,23 +1,16 @@
-import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { Breadcrumbs } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppPasswordInput, BookingCalendar, DoctorsCard } from 'src/components';
+import { AppPasswordInput } from 'src/components';
 import {
-  AppButton,
-  AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
+import { kiiraServices } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
 import useAuth from 'src/hooks/useAuth';
-import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
