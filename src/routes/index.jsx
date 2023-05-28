@@ -12,6 +12,8 @@ import {
   Home,
   Inbox,
   Login,
+  Profile,
+  RescheduleAppointment,
   ResetPassword,
   ReviewAppointment,
   Signup,
@@ -36,11 +38,12 @@ export const Router = () => {
 
         {/* Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route index exact path={ROUTES.INDEX} element={<Home />} />
+          <Route index path={ROUTES.INDEX} element={<Home />} />
           <Route path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route path={ROUTES.INBOX} element={<Inbox />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />
-          <Route element={<OutletLayout />}>
+          <Route path={ROUTES.PROFILE} element={<Profile />} />
+          <Route element={<MainOutletLayout />}>
             <Route index path={ROUTES.BOOK_APPOINTMENT} element={<BookAppointment />} />
             <Route path={`${ROUTES.CHOOSE_APPOINTMENT}/:id`} element={<ChooseAppointment />} />
             <Route path={ROUTES.REVIEW_APPOINTMENT} element={<ReviewAppointment />} />
@@ -49,6 +52,10 @@ export const Router = () => {
           <Route element={<MainOutletLayout />}>
             <Route index path={ROUTES.HISTORY} element={<History />} />
             <Route path={`${ROUTES.VIEW_BOOKING}/:id`} element={<ViewBooking />} />
+            <Route
+              path={`${ROUTES.HISTORY}/:id${ROUTES.RESCHEDULE_APPOINTMENT}`}
+              element={<RescheduleAppointment />}
+            />
           </Route>
         </Route>
       </Routes>

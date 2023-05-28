@@ -14,6 +14,8 @@ import ChooseAppointment from './ChooseAppointment/ChooseAppointment';
 import ReviewAppointment from './ReviewAppointment/ReviewAppointment';
 import ConfirmBooking from './ConfirmBooking/ConfirmBooking';
 import ViewBooking from './ViewBooking/ViewBooking';
+import RescheduleAppointment from './RescheduleAppointment/RescheduleAppointment';
+import Profile from './Account/Profile/Profile';
 
 export {
   Login,
@@ -31,5 +33,7 @@ export {
   ChooseAppointment,
   ReviewAppointment,
   ConfirmBooking,
-  ViewBooking
+  ViewBooking,
+  RescheduleAppointment,
+  Profile
 };

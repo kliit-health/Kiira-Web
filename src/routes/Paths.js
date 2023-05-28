@@ -14,5 +14,8 @@ export const ROUTES = {
   REVIEW_APPOINTMENT: '/book-appointment/review-appointment',
   CONFIRM_BOOKING: '/book-appointment/confirm-booking',
   DOCTORS: '/doctors',
-  VIEW_BOOKING: '/history/view-booking'
+  VIEW_BOOKING: '/history/view-booking',
+  RESCHEDULE_APPOINTMENT: '/reschedule-appointment',
+  PROFILE: '/profile',
+  CHANGE_PASSWORD: '/change-password'
 };

@@ -5,6 +5,9 @@ export default withMT({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      screens: {
+        xs: '475px'
+      },
       colors: {
         kiiraBlue: '#3F84FF',
         kiiraGradient: 'linear-gradient(290.44deg, #0253E2 13.57%, #00C0E2 86.43%)',

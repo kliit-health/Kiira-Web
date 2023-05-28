@@ -92,7 +92,7 @@ const ChooseAppointment = () => {
                 <AppTypography
                   variant="h4"
                   className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                  {serviceSelected?.fee}
+                  {serviceSelected?.fee || '$150.00'}
                 </AppTypography>
                 <AppTypography
                   variant="lead"
