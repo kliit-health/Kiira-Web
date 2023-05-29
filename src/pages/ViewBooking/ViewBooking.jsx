@@ -2,28 +2,19 @@ import {
   Avatar,
   Breadcrumbs,
   Button,
-  Card,
-  CardBody,
-  CardHeader,
   IconButton
 } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DoctorsCard } from 'src/components';
 import {
-  AppButton,
   AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
+import { IMAGES, kiiraServices } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
 import { DividerIcon, ShareIcon } from 'src/components/shared/AppIcons/AppIcons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';

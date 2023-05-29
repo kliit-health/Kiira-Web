@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppTypography, CalendarWrapper, ContentContainer } from '../shared/styledComponents';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
-import { element, func, string } from 'prop-types';
+import { Calendar, utils } from '@amir04lm26/react-modern-calendar-date-picker';
+import { element, func } from 'prop-types';
 
 const BookingCalendar = ({ dateLabel, onTimeSelect }) => {
   const [selectedDay, setSelectedDay] = useState(null);

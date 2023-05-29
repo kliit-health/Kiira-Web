@@ -6,13 +6,11 @@ import {
   AppButton,
   AppNavLink,
   AppTypography,
-  CalendarWrapper,
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { kiiraDoctors, kiiraServices } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import { Calendar, utils } from 'react-modern-calendar-datepicker';
 
 const RescheduleAppointment = () => {
   const navigate = useNavigate();
