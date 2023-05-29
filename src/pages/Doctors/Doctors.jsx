@@ -12,7 +12,7 @@ const Doctors = () => {
         width="100%"
         height="100%"
         className="h-full min-h-[50vh] w-full  p-4 lg:px-10 lg:py-4 gap-4 overflow-hidden overflow-y-auto ">
-        <ContentContainer className="flex flex-row w-full items-center justify-between flex-wrap md:flex-nowrap gap-2">
+        <ContentContainer className="flex flex-row w-full items-center justify-between flex-wrap xl:flex-nowrap gap-2">
           <ContentContainer className="w-full flex flex-row items-center gap-2 flex-wrap md:flex-nowrap">
             <AppTypography
               variant="small"
