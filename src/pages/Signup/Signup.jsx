@@ -1,17 +1,12 @@
-import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import { AppButton, AppTypography, ContentContainer, Divider } from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
-import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
-import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
-import useAuth from 'src/hooks/useAuth';
 
 const Signup = () => {
-  const navigate = useNavigate()
-  const { login } = useAuth();
+  const navigate = useNavigate();
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
@@ -54,7 +49,6 @@ const Signup = () => {
             className="text-sm font-medium text-white capitalize shadow-transparent"
             fullWidth
             onClick={() => {
-              login();
               setTimeout(() => {
                 navigate(ROUTES.SIGINUP_SUBSCRIPTION);
               }, 500);

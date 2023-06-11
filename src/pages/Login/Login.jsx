@@ -4,12 +4,25 @@ import { AppPasswordInput, SocialAuth } from 'src/components';
 import { AppButton, AppTypography, Divider } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-
-import useAuth from 'src/hooks/useAuth';
+import { useLogin } from 'src/queries/queryHooks';
+import { Toast } from 'src/utils';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
+  const { mutate, error, isError, isLoading } = useLogin();
+  console.log(
+    '🚀 ~ file: Login.jsx:16 ~ Login ~ data:',
+    mutate,
+    isError,
+    isLoading,
+    error?.response?.data?.message
+  );
+
+  Toast.fire({
+    icon: 'success',
+    title: 'welcome'
+  });
 
   return (
     <AuthLayout showSlider hideScroll>
@@ -45,12 +58,11 @@ const Login = () => {
             className="text-sm font-medium text-white capitalize shadow-transparent"
             fullWidth
             onClick={() => {
-              login();
               setTimeout(() => {
                 navigate(ROUTES.INDEX);
               }, 500);
             }}>
-            Login
+            {isLoading ? null : 'Login'}
           </AppButton>
           <AppTypography variant="small" className="flex justify-center -mt-1">
             Don't have an account?

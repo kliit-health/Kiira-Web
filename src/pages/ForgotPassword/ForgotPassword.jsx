@@ -1,6 +1,4 @@
 import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { Link, Navigate } from 'react-router-dom';
-import { AppPasswordInput } from 'src/components';
 import {
   AppButton,
   AppTypography,
@@ -13,11 +11,10 @@ import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
 import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
 import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { useNavigate } from 'react-router-dom';
-import useAuth from 'src/hooks/useAuth';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
@@ -48,7 +45,6 @@ const ForgotPassword = () => {
             className="text-sm font-medium text-white capitalize shadow-transparent"
             fullWidth
             onClick={() => {
-              login();
               setTimeout(() => {
                 navigate(ROUTES.RESET_PASSWORD);
               }, 500);

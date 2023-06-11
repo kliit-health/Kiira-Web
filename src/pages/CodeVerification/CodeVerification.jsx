@@ -1,23 +1,13 @@
 import { Button, Card, CardBody } from '@material-tailwind/react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppPasswordInput } from 'src/components';
-import {
-  AppButton,
-  AppTypography,
-  ContentContainer,
-  Divider
-} from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-import { ReactComponent as FacebookIcon } from 'src/assets/icons/facebook.svg';
-import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
-import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { useNavigate } from 'react-router-dom';
-import useAuth from 'src/hooks/useAuth';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
@@ -52,7 +42,6 @@ const CodeVerification = () => {
             className="text-sm font-medium text-white capitalize shadow-transparent mt-6"
             fullWidth
             onClick={() => {
-              login();
               setTimeout(() => {
                 navigate(ROUTES.INDEX);
               }, 500);

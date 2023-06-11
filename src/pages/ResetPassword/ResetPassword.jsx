@@ -4,11 +4,10 @@ import { AppButton, AppTypography, ContentContainer } from 'src/components/share
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { useNavigate } from 'react-router-dom';
-import useAuth from 'src/hooks/useAuth';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
@@ -38,7 +37,6 @@ const ResetPassword = () => {
             className="text-sm font-medium text-white capitalize shadow-transparent mt-6"
             fullWidth
             onClick={() => {
-              login();
               setTimeout(() => {
                 navigate(ROUTES.INDEX);
               }, 500);

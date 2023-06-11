@@ -6,4 +6,62 @@
   html {
     font-family: 'Poppins', sans-serif;
   }
+
+  .swal2-container {
+    z-index: 999999999999999 !important;
+  }
+  .swal2-toast,
+  .swal2-title,
+  .swal2-html-container {
+    margin: 0.3em !important;
+    display: flex !important;
+    align-items: center !important;
+    font-weight: 700 !important;
+  }
+
+  .swal2-popup.swal2-toast .swal2-icon {
+    width: 2em !important;
+    min-width: 2em !important;
+    height: 2em !important;
+  }
+
+  .swal2-toast {
+    padding: 0.3em !important;
+  }
+
+  .colored-toast.swal2-icon-success {
+    background-color: #006400 !important;
+  }
+
+  .swal2-popup.swal2-toast {
+    padding: 0.65em !important;
+  }
+
+  .colored-toast.swal2-icon-error {
+    background-color: #800000 !important;
+  }
+
+  .colored-toast.swal2-icon-warning {
+    background-color: #ffad15 !important;
+  }
+
+  .colored-toast.swal2-icon-info {
+    background-color: #3e4bfc !important;
+  }
+
+  .colored-toast.swal2-icon-question {
+    background-color: #565f6f !important;
+  }
+
+  .colored-toast .swal2-title {
+    color: white;
+  }
+
+  .colored-toast .swal2-close {
+    color: white;
+  }
+
+  .colored-toast .swal2-html-container {
+    color: white;
+  }
 }

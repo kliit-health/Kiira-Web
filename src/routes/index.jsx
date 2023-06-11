@@ -1,6 +1,7 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { ROUTES } from './Paths';
 import { ProtectedRoute } from './ProtectedRoute';
+import { MainOutletLayout } from 'src/layouts';
+import { ROUTES } from './Paths';
 import {
   BookAppointment,
   ChangePassword,
@@ -23,9 +24,6 @@ import {
   ViewBooking
 } from 'src/pages';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-// import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
-
-import { MainOutletLayout } from 'src/layouts';
 
 export const Router = () => {
   return (

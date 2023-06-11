@@ -10,7 +10,6 @@ import { kiiraSubscriptions } from 'src/data';
 
 const SignupSubscription = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   return (
     <AuthLayout hideScroll>
       <ContentContainer
@@ -72,7 +71,6 @@ const SignupSubscription = () => {
               className="text-sm font-medium text-white capitalize shadow-transparent"
               fullWidth
               onClick={() => {
-                login();
                 setTimeout(() => {
                   navigate(ROUTES.INDEX);
                 }, 500);

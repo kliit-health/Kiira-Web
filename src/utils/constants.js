@@ -4,4 +4,4 @@ export const genderOptions = [
   { label: "Female", value: "Female" },
 ];
 
-export const BASE_URL = "https://staging.kiira.com/api";
+export const BASE_URL = "https://kiiraapi.awadelivery.ng/v1";

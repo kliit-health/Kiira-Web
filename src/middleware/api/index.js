@@ -1,16 +1,18 @@
-import ApiHandler from "./ApiHandler";
+import ApiHandler from './ApiHandler';
 
 const Api = {
   auth: {
-    signInEmail: (data) => ApiHandler.post(`/auth/login`, data),
-    signUpEmail: (data) => ApiHandler.post(`/users`, data),
-    refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
-    signInSocial: (token) =>
-      ApiHandler.get(`/auth/socials/redirect?idToken=${token}`),
-    logout: (data) => ApiHandler.post(`/auth/logout`, data),
+    signIn: (data) => ApiHandler.post(`/users/sign-in`, data),
+    signUp: (data) => ApiHandler.post(`/users/sign-up`, data),
+    resendVerification: (data) => ApiHandler.post(`/users/resend-verification/email`, data),
+    verifyEmail: (data) => ApiHandler.post(`/users/verify/email`, data)
+    // refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
+    // signInSocial: (token) =>
+    //   ApiHandler.get(`/auth/socials/redirect?idToken=${token}`),
+    // logout: (data) => ApiHandler.post(`/auth/logout`, data),
   },
   user: {
-    userDetails: () => ApiHandler.get(`/auth/user`),
-  },
+    getProfile: () => ApiHandler.get(`/users/profile`)
+  }
 };
 export default Api;
