@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-
   const logout = () => {
     Auth?.destroyToken();
     setUser({});
@@ -26,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     getAuth();
-  }, [isAuth, userData]);
+  }, []);
 
   const value = {
     user,

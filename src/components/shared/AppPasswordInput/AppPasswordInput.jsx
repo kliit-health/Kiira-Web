@@ -1,14 +1,18 @@
+import React, { forwardRef, useRef, useState } from 'react';
 import { Input } from '@material-tailwind/react';
-import React, { useState } from 'react';
 
-const AppPasswordInput = (props) => {
+const AppPasswordInput = forwardRef((props, innerRef) => {
+  const ref = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  
   return (
     <Input
+      ref={ref}
+      inputRef={innerRef}
       autoComplete="off"
       type={showPassword ? 'text' : 'password'}
       icon={
@@ -25,6 +29,6 @@ const AppPasswordInput = (props) => {
       {...props}
     />
   );
-};
+});
 
 export default AppPasswordInput;

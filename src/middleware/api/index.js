@@ -5,7 +5,9 @@ const Api = {
     signIn: (data) => ApiHandler.post(`/users/sign-in`, data),
     signUp: (data) => ApiHandler.post(`/users/sign-up`, data),
     resendVerification: (data) => ApiHandler.post(`/users/resend-verification/email`, data),
-    verifyEmail: (data) => ApiHandler.post(`/users/verify/email`, data)
+    verifyEmail: (data) => ApiHandler.post(`/users/verify/email`, data),
+    forgotPassword: (data) => ApiHandler.patch(`/users/forgot-password`, data),
+    resetPassword: (data) => ApiHandler.patch(`/users/reset-password`, data)
     // refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
     // signInSocial: (token) =>
     //   ApiHandler.get(`/auth/socials/redirect?idToken=${token}`),
@@ -13,6 +15,9 @@ const Api = {
   },
   user: {
     getProfile: () => ApiHandler.get(`/users/profile`)
+  },
+  bookings: {
+    getProducts: () => ApiHandler.get(`/products`)
   }
 };
 export default Api;

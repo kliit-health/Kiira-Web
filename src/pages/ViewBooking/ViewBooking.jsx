@@ -105,7 +105,7 @@ const ViewBooking = () => {
                 onClick={() =>
                   navigate(`${ROUTES.HISTORY}/mentalHealth${ROUTES.RESCHEDULE_APPOINTMENT}`)
                 }
-                variant="small"
+                variant="sm"
                 className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
                 Reschedule Appointment
               </Button>

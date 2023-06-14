@@ -31,7 +31,8 @@
     "sweetalert2": "^11.7.12",
     "twin.macro": "^3.3.1",
     "vite-plugin-babel-macros": "^1.0.6",
-    "vite-plugin-svgr": "^3.2.0"
+    "vite-plugin-svgr": "^3.2.0",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.29.9",

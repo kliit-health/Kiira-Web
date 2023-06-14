@@ -4,7 +4,7 @@ export const ROUTES = {
   SIGINUP: '/sign-up',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
-  CODE_VERIFICATION: '/code-verification',
+  VERIFY_ACCOUNT: '/verify-account',
   SIGINUP_SUBSCRIPTION: '/sign-up-subscription',
   SUBSCRIPTION: '/subscription',
   INBOX: '/inbox',

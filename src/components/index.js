@@ -18,6 +18,7 @@ import {
 import SavedCards from './PaymentCard/SavedCards';
 import PaymentCard from './PaymentCard/PaymentCard';
 import BookingCalendar from './BookingCalendar/BookingCalendar';
+import Loader from './shared/Loader/Loader';
 
 export {
   AppNavBar,
@@ -37,5 +38,6 @@ export {
   SavedCards,
   PaymentCard,
   CloseIcon,
-  BookingCalendar
+  BookingCalendar,
+  Loader
 };

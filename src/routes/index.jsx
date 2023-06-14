@@ -33,7 +33,7 @@ export const Router = () => {
         <Route path={ROUTES.SIGINUP} element={<Signup />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-        <Route path={ROUTES.CODE_VERIFICATION} element={<CodeVerification />} />
+        <Route path={ROUTES.VERIFY_ACCOUNT} element={<CodeVerification />} />
         <Route path={ROUTES.SIGINUP_SUBSCRIPTION} element={<SignupSubscription />} />
 
         {/* Authenticated Routes */}

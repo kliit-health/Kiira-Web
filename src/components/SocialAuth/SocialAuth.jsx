@@ -6,23 +6,25 @@ import { Button } from '@material-tailwind/react';
 
 const SocialAuth = () => {
   return (
-    <div className="flex flex-row justify-between w-full gap-5 flex-wrap md:flex-nowrap">
-      <Button
-        variant="text"
-        className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-        <FacebookIcon />
-      </Button>
-      <Button
-        variant="text"
-        className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-        <GoogleIcon />
-      </Button>
-      <Button
-        variant="text"
-        className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-        <AppleIcon />
-      </Button>
-    </div>
+    <>
+      <div className="flex flex-row justify-between w-full gap-5">
+        <Button
+          variant="text"
+          className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
+          <FacebookIcon />
+        </Button>
+        <Button
+          variant="text"
+          className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
+          <GoogleIcon />
+        </Button>
+        <Button
+          variant="text"
+          className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
+          <AppleIcon />
+        </Button>
+      </div>
+    </>
   );
 };
 
