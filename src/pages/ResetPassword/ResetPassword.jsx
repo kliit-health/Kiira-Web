@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Input } from '@material-tailwind/react';
-import { AppPasswordInput } from 'src/components';
+import { AppPasswordInput, Loader } from 'src/components';
 import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
@@ -15,7 +15,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
-  const getStoredEmail = useLocalStore((state) => state.getStoredEmail);
+  const getStoredEmail = useLocalStore((state) => state.email);
 
   const { mutate, isLoading } = useResetPassword();
 
@@ -24,10 +24,11 @@ const ResetPassword = () => {
     handleSubmit,
     reset,
     formState: { errors }
+    
   } = useForm();
 
   const onSubmit = (data) => {
-    if (data?.password !== data?.confirm_password) {
+    if (data?.new_password !== data?.confirm_new_password) {
       Toast.fire({
         icon: 'warning',
         title: `Passwords do not match`
@@ -36,14 +37,12 @@ const ResetPassword = () => {
     }
 
     const payload = {
-      email: getStoredEmail,
+      email: getStoredEmail?.email,
       ...data
     };
-    console.log(' \n 🚀 ~ file: ResetPassword.jsx:44 ~ onSubmit ~ payload:', payload);
 
     mutate(payload, {
       onSuccess: (response) => {
-        console.log(' \n 🚀 ~ file: ResetPassword.jsx:55 ~ onSubmit ~ response:', response?.data);
         reset();
         Toast.fire({
           icon: 'success',

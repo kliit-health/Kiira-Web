@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { ReactComponent as Badge } from 'src/assets/icons/check-badge.svg';
 import propTypes from 'prop-types';
-import useAuth from 'src/hooks/useAuth';
+import Auth from 'src/middleware/storage';
 
 const SubscriptionPlans = ({ plan }) => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = Auth.isAuthenticated();
   const Icon = plan?.planIcon;
 
   return (

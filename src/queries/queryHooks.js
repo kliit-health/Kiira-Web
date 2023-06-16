@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import KEYS from './queryKeys';
 import {
+  changePassword,
   forgotPassword,
   login,
   resetPassword,
@@ -66,16 +67,23 @@ export const useResetPassword = () => {
     }
   });
   return data;
-};
+};changePassword
+
+export const useChangePassword = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return changePassword(data);
+    }
+  });
+  return data;
+};changePassword
 
 export const useProfile = () => {
   const data = useQuery({ queryKey: [KEYS.PROFILE], queryFn: fetchUserProfile });
-
   return data;
 };
 
 export const useProducts = () => {
   const data = useQuery({ queryKey: [KEYS.PRODUCTS], queryFn: fetchKiiraProducts });
-
   return data;
 };

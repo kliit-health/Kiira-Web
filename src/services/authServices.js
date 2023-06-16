@@ -20,6 +20,11 @@ export const resetPassword = async (data) => {
   return res;
 };
 
+export const changePassword = async (data) => {
+  const res = await Api.auth.changePassword(data);
+  return res;
+};
+
 export const verifyEmail = async (data) => {
   const res = await Api.auth.verifyEmail(data);
   return res;

@@ -8,10 +8,9 @@ export const AuthContext = createContext();
 // create the auth provider component
 export const AuthProvider = ({ children }) => {
   // state for storing the authenticated user
-  const isAuth = Auth?.isAuthenticated();
+  const isAuthenticated = Auth?.isAuthenticated();
   const userData = Auth?.getUser();
-  const [user, setUser] = useState({});
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({});  
 
   const logout = () => {
     Auth?.destroyToken();
@@ -21,11 +20,14 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const getAuth = () => {
       setUser(userData);
-      setIsAuthenticated(isAuth);
     };
 
     getAuth();
   }, []);
+
+  useEffect(() => {
+    console.log('isAuth', isAuthenticated);
+  }, [isAuthenticated]);
 
   const value = {
     user,

@@ -26,11 +26,9 @@ const ForgotPassword = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log('\n 🚀 ~ file: ForgotPassword.jsx:25 ~ onSubmit ~ data:', data);
     mutate(data, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         setStoredEmail({ email: data.email });
-        console.log('🚀 ~ file: Login.jsx:46 ~ onSubmit ~ response:', response?.data);
         Toast.fire({
           icon: 'success',
           title: `Kindly check your email to continue`

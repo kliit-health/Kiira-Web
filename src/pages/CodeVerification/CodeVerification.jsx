@@ -12,12 +12,14 @@ import { useVerifyEmail } from 'src/queries/queryHooks';
 import { useForm } from 'react-hook-form';
 import { Loader } from 'src/components';
 import isEmpty from 'src/utils/isEmpty';
+import { useLocalStore } from 'src/store';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const { mutate, isLoading } = useVerifyEmail();
+  const getStoredEmail = useLocalStore((state) => state.email);
 
   const {
     register,
@@ -27,7 +29,7 @@ const CodeVerification = () => {
 
   const onSubmit = (data) => {
     const payload = {
-      email: user?.email,
+      email: getStoredEmail?.email,
       code: data?.code
     };
     mutate(payload, {

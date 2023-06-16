@@ -12,6 +12,7 @@ import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import useAuth from 'src/hooks/useAuth';
 import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
+import { useProfile } from 'src/queries/queryHooks';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -20,6 +21,12 @@ const Profile = () => {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
+
+  const { data: data, isLoading, error } = useProfile();
+  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ error:', error);
+  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ isLoading:', isLoading);
+  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ profile:', data?.data?.user);
+  const profile = data?.data?.user;
 
   useEffect(() => {
     if (isEmpty(id)) return;
@@ -78,12 +85,12 @@ const Profile = () => {
             <AppTypography
               variant="h6"
               className="text-[#112211] font-semibold text-sm lg:text-base">
-              {user?.firstName} {user?.lastName}
+              {profile?.firstName} {profile?.lastName}
             </AppTypography>
             <AppTypography
               variant="small"
               className="text-kiiraText text-xs font-medium tracking-tight -mt-1">
-              {user?.email}
+              {profile?.email}
             </AppTypography>
           </ContentContainer>
         </ContentContainer>
@@ -103,7 +110,7 @@ const Profile = () => {
             <AppTypography
               variant="h6"
               className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {user?.firstName} {user?.lastName}
+              {profile?.firstName} {profile?.lastName}
             </AppTypography>
           </ContentContainer>
           <ContentContainer className="gap-1.5">
@@ -115,7 +122,7 @@ const Profile = () => {
             <AppTypography
               variant="lead"
               className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {user?.email}
+              {profile?.email}
             </AppTypography>
           </ContentContainer>
           <ContentContainer row className="flex-wrap items-center justify-between">
@@ -149,7 +156,7 @@ const Profile = () => {
             <AppTypography
               variant="h6"
               className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {user?.phoneNumber}
+              {profile?.phone_number}
             </AppTypography>
           </ContentContainer>
         </ContentContainer>

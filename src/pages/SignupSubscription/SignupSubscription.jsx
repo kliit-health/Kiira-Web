@@ -10,6 +10,7 @@ import { kiiraSubscriptions } from 'src/data';
 
 const SignupSubscription = () => {
   const navigate = useNavigate();
+
   return (
     <AuthLayout hideScroll>
       <ContentContainer

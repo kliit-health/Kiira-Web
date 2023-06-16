@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import {
   AppButton,
@@ -16,37 +16,43 @@ import { useForm } from 'react-hook-form';
 import isEmpty from 'src/utils/isEmpty';
 import Api from 'src/middleware/api';
 import Auth from 'src/middleware/storage';
+import { useLocalStore } from 'src/store';
 
 const Login = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
+  const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
   const { mutate, isLoading } = useLogin();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log('🚀 ~ file: Login.jsx:35 ~ onSubmit ~ data:', data);
     mutate(data, {
       onSuccess: (response) => {
         console.log('🚀 ~ file: Login.jsx:46 ~ onSubmit ~ response:', response?.data);
+        setStoredEmail({ email: data?.email });
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
-
-        if (!response.data?.user?.is_email_verified) {
-          Api.auth.resendVerification(response.data?.user?.email);
-          navigate(ROUTES.VERIFY_ACCOUNT);
-          return;
-        }
-        navigate(ROUTES.INDEX);
         Toast.fire({
           icon: 'success',
           title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
         });
+
+        if (!response.data?.user?.is_email_verified) {
+          const emailData = {
+            email: response.data?.user?.email
+          };
+          Api.auth.resendVerification(emailData);
+          redirect(ROUTES.VERIFY_ACCOUNT);
+          return;
+        }
+
+        navigate(ROUTES.INDEX);
+        return;
       },
       onError: (error) => {
         console.log('🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error);
@@ -143,7 +149,7 @@ const Login = () => {
             </div>
 
             {isLoading ? (
-              <Loader />
+              <Loader className="mt-4" />
             ) : (
               <AppButton
                 size="md"

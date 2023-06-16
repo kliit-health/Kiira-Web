@@ -28,10 +28,12 @@ import {
 } from '../shared/styledComponents';
 import useAuth from 'src/hooks/useAuth';
 import { IMAGES } from 'src/data';
+import Auth from 'src/middleware/storage';
 
 export default function InnerNavBar() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const isAuthenticated = Auth.isAuthenticated();
+  const { user, logout } = useAuth();
 
   const [openNav, setOpenNav] = useState(false);
 

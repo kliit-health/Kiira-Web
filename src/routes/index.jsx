@@ -38,7 +38,7 @@ export const Router = () => {
 
         {/* Authenticated Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route index path={ROUTES.INDEX} element={<Home />} />
+          <Route exact index path={ROUTES.INDEX} element={<Home />} />
           <Route path={ROUTES.SUBSCRIPTION} element={<Subscription />} />
           <Route path={ROUTES.INBOX} element={<Inbox />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />

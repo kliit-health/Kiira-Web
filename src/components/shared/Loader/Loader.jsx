@@ -9,10 +9,14 @@ const Loader = ({ spinner, label, fullWidth, size, className }) => {
     <Button
       disabled
       size={size}
-      className={[
-        'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent',
+      className={
         className
-      ]}
+          ? [
+              'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent',
+              className
+            ]
+          : 'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent'
+      }
       fullWidth={fullWidth}>
       {spinner}{' '}
       <ContentContainer className="font-poppins font-semibold text-base">{label}</ContentContainer>

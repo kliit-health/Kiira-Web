@@ -39,7 +39,7 @@ const Home = () => {
                     floated={false}
                     shadow={false}
                     color="transparent"
-                    className="m-0 rounded-2xl rounded-b-none min-h-[169px]">
+                    className="m-0 rounded-2xl rounded-b-none min-h-[150px]">
                     <img src={item?.imageSrc} alt={item.title} loading="lazy" />
                   </CardHeader>
                   <CardBody className="bg-kiiraBg2 p-2 h-full flex flex-col gap-2 justify-between">
