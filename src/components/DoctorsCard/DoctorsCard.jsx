@@ -1,11 +1,13 @@
 import React from 'react';
-import { AppAvatar, AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
+import { AppAvatar, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES, profileState } from 'src/data';
-import { Avatar, Badge, Button, Rating } from '@material-tailwind/react';
-import { bool, object, shape, string } from 'prop-types';
+import { Badge, Button, Rating } from '@material-tailwind/react';
+import { bool, object, string } from 'prop-types';
 import tw, { styled } from 'twin.macro';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
+import { truncate } from 'src/utils/truncate';
+import isEmpty from 'src/utils/isEmpty';
 
 const ServiceContainer = styled(ContentContainer)(({ disabled, whiteBackground }) => [
   tw`col-auto flex-col w-full max-w-[-webkit-fill-available] rounded-3xl h-full gap-2`,
@@ -18,20 +20,26 @@ const Dot = styled.span`
   background: ${({ color }) => color || 'rgb(63 132 255)'};
 `;
 
-const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
+const DoctorsCard = ({ doctor, style, disabled, whiteBackground, loading }) => {
   const navigate = useNavigate();
 
   return (
     <ServiceContainer
-      className={['relative items-center gap-4 justify-center p-4 pt-3.5']}
+      className={[
+        loading
+          ? 'relative items-center gap-4 justify-center p-4 pt-3.5 animate-pulse'
+          : 'relative items-center gap-4 justify-center p-4 pt-3.5'
+      ]}
       disabled={disabled}
       whiteBackground={whiteBackground}
       style={style}>
       <ContentContainer className="absolute right-3 top-3 flex flex-row flex-nowrap items-center gap-1 justify-end">
         <AppTypography variant="small" className="text-[10px] capitalize">
-          {doctor?.status}
+          {doctor?.status || 'available'}
         </AppTypography>{' '}
-        {doctor?.status === profileState.busy || doctor?.status === profileState.unavailable ? (
+        {doctor?.status === profileState.busy ||
+        doctor?.status === profileState.unavailable ||
+        true ? (
           <IMAGES.TimeIconFilled />
         ) : (
           <IMAGES.TimeIcon />
@@ -40,7 +48,6 @@ const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
       <Badge
         overlap="circular"
         placement="top-end"
-        // color="deep-purple"
         className="h-4 w-4 bg-white p-[1px] mt-6"
         content={
           <Dot
@@ -55,12 +62,13 @@ const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
         }>
         <AppAvatar
           size="xxl"
-          src={doctor?.image}
+          src={doctor?.image ? doctor?.image : IMAGES.dummyProfilePhoto}
           alt="avatar"
           status={doctor?.status}
           withBorder={true}
+          loading='lazy'
           className={[
-            doctor?.status === profileState.online
+            doctor?.status === profileState.online || true
               ? `p-[4px] object-cover rounded-full mt-6 border border-[#6467CE]`
               : `p-[4px] object-cover rounded-full mt-6 border border-[#DFDFDF]`
           ]}
@@ -73,22 +81,26 @@ const DoctorsCard = ({ doctor, style, disabled, whiteBackground }) => {
           className="capitalise text-kiiraDark text-base font-bold font-poppins text-center">
           {doctor?.name}
         </AppTypography>
-        <AppTypography variant="small" className="text-kiiraText text-[0.875rem] text-center">
-          {doctor?.specialization}
-        </AppTypography>
+        {!isEmpty(doctor?.description) ? (
+          <AppTypography variant="small" className="text-kiiraText text-[0.875rem] text-center">
+            {truncate(doctor?.description, 80)}
+          </AppTypography>
+        ) : null}
       </ContentContainer>
-      <Rating value={doctor?.rating} readonly />
+      <Rating value={doctor?.rating || 5} readonly />
       <hr className="bg-kiiraText mt-auto w-full " />
       <ContentContainer className="flex flex-row items-center gap-2 justify-center flex-wrap lg:flex-nowrap">
         <Button
-          disabled={disabled}
+          disabled={disabled || loading}
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] text-kiiraText bg-transparent shadow-none border border-kiiraText/20">
           Profile
         </Button>
         <Button
-          disabled={disabled}
-          onClick={() => navigate(`${ROUTES.CHOOSE_APPOINTMENT}/${doctor?._bookingId}`)}
+          disabled={disabled || loading}
+          onClick={() =>
+            navigate(`${ROUTES.CHOOSE_APPOINTMENT}/${doctor?.id}`, { state: { doctor } })
+          }
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] bg-kiiraBlue shadow-none">
           Book now
@@ -104,10 +116,12 @@ DoctorsCard.propTypes = {
   doctor: object,
   string: string,
   disabled: bool,
-  whiteBackground: bool
+  whiteBackground: bool,
+  loading: bool
 };
 
 DoctorsCard.defaultProps = {
   disabled: false,
-  whiteBackground: false
+  whiteBackground: false,
+  loading: false
 };

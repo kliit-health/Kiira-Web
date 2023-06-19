@@ -9,7 +9,7 @@ import {
   verifyEmail
 } from 'src/services/authServices';
 import { fetchUserProfile } from 'src/services/userServices';
-import { fetchKiiraProducts } from 'src/services/bookingServices';
+import { fetchDoctorsCalendars, fetchKiiraProducts } from 'src/services/bookingServices';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -67,7 +67,8 @@ export const useResetPassword = () => {
     }
   });
   return data;
-};changePassword
+};
+changePassword;
 
 export const useChangePassword = () => {
   const data = useMutation({
@@ -76,7 +77,8 @@ export const useChangePassword = () => {
     }
   });
   return data;
-};changePassword
+};
+changePassword;
 
 export const useProfile = () => {
   const data = useQuery({ queryKey: [KEYS.PROFILE], queryFn: fetchUserProfile });
@@ -85,5 +87,10 @@ export const useProfile = () => {
 
 export const useProducts = () => {
   const data = useQuery({ queryKey: [KEYS.PRODUCTS], queryFn: fetchKiiraProducts });
+  return data;
+};
+
+export const useDoctorsCalendars = () => {
+  const data = useQuery({ queryKey: [KEYS.DOCTORS], queryFn: fetchDoctorsCalendars });
   return data;
 };

@@ -71,10 +71,7 @@ const Profile = () => {
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
             <ContentContainer className="relative hover:opacity-80">
               <Avatar
-                src={
-                  user?.photo ||
-                  'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
-                }
+                src={user?.photo || IMAGES.dummyProfilePhoto}
                 alt={user?.lastName}
                 variant="circular"
                 size="xxl"

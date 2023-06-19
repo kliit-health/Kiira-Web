@@ -46,7 +46,7 @@ import { ReactComponent as DividerIcon } from 'src/assets/icons/DividerShape.svg
 import { ReactComponent as EditIcon } from 'src/assets/icons/EditFilled.svg';
 
 export const IMAGES = {
-  profilePhoto: dummyProfilePhoto,
+  dummyProfilePhoto: 'https://www.lasma.eu/img/no-image-available.jpg', // 'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
   GlobeIconSvg: GlobeIconSvg,
   KiiraLogoSvg: KiiraLogoSvg,
   sliderImg1: sliderImg1,
@@ -97,7 +97,7 @@ export const userData = {
   lastName: 'Osindele',
   email: 'aosindele@gmail.com',
   phoneNumber: '01-77939920',
-  photo: IMAGES.profilePhoto
+  photo: IMAGES.dummyProfilePhoto
 };
 
 export const kiiraSubscriptions = [
@@ -285,7 +285,7 @@ export const kiiraDoctors = [
   },
   {
     name: 'Dr. Scut Tom',
-    image: IMAGES.profilePhoto,
+    image: IMAGES.dummyProfilePhoto,
     specialization: 'Health Specialist',
     rating: 5,
     _bookingId: 'health-coaching',

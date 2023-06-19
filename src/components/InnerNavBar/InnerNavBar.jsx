@@ -104,10 +104,7 @@ export default function InnerNavBar() {
                       className="items-center gap-1 hover:opacity-80">
                       <ContentContainer className="relative">
                         <Avatar
-                          src={
-                            user?.photo ||
-                            'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
-                          }
+                          src={user?.photo || IMAGES.dummyProfilePhoto}
                           alt={user?.last_name}
                           variant="circular"
                           size="md"
@@ -130,10 +127,7 @@ export default function InnerNavBar() {
                       onClick={() => navigate(ROUTES.PROFILE)}>
                       <ListItemPrefix className="mr-2">
                         <Avatar
-                          src={
-                            user?.photo ||
-                            'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
-                          }
+                          src={IMAGES.dummyProfilePhoto || IMAGES.dummyProfilePhoto}
                           alt={user?.lastName}
                           variant="circular"
                           size="sm"

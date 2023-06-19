@@ -18,7 +18,8 @@ const Api = {
     getProfile: () => ApiHandler.get(`/users/profile`)
   },
   bookings: {
-    getProducts: () => ApiHandler.get(`/products`)
+    getProducts: () => ApiHandler.get(`/products`),
+    getCalendars: () => ApiHandler.get(`/calendars`)
   }
 };
 export default Api;
