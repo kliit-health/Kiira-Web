@@ -73,7 +73,7 @@ const Profile = () => {
               <Avatar
                 src={
                   user?.photo ||
-                  'https://wallpapers.com/images/hd/default-pfp-face-izpao33go55ztvn9.jpg'
+                  'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
                 }
                 alt={user?.lastName}
                 variant="circular"
@@ -82,16 +82,25 @@ const Profile = () => {
               />
               <PenIcon className="z-10 absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
             </ContentContainer>
-            <AppTypography
-              variant="h6"
-              className="text-[#112211] font-semibold text-sm lg:text-base">
-              {profile?.firstName} {profile?.lastName}
-            </AppTypography>
-            <AppTypography
-              variant="small"
-              className="text-kiiraText text-xs font-medium tracking-tight -mt-1">
-              {profile?.email}
-            </AppTypography>
+            {isLoading ? (
+              <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
+                <div className="w-3/4 bg-gray-300 h-3 rounded"></div>
+                <div className="w-full bg-gray-300 h-3 rounded"></div>
+              </ContentContainer>
+            ) : (
+              <>
+                <AppTypography
+                  variant="h6"
+                  className="text-[#112211] font-semibold text-sm lg:text-base">
+                  {profile?.first_name} {profile?.last_name}
+                </AppTypography>
+                <AppTypography
+                  variant="small"
+                  className="text-kiiraText text-xs font-medium tracking-tight -mt-1">
+                  {profile?.email}
+                </AppTypography>
+              </>
+            )}
           </ContentContainer>
         </ContentContainer>
         <AppTypography
@@ -107,11 +116,17 @@ const Profile = () => {
               className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
               Name
             </AppTypography>
-            <AppTypography
-              variant="h6"
-              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {profile?.firstName} {profile?.lastName}
-            </AppTypography>
+            {isLoading ? (
+              <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
+                <div className="w-full bg-gray-300 h-3 rounded"></div>
+              </ContentContainer>
+            ) : (
+              <AppTypography
+                variant="h6"
+                className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+                {profile?.first_name} {profile?.last_name}
+              </AppTypography>
+            )}
           </ContentContainer>
           <ContentContainer className="gap-1.5">
             <AppTypography
@@ -119,11 +134,17 @@ const Profile = () => {
               className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
               Email
             </AppTypography>
-            <AppTypography
-              variant="lead"
-              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {profile?.email}
-            </AppTypography>
+            {isLoading ? (
+              <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
+                <div className="w-full bg-gray-300 h-3 rounded"></div>
+              </ContentContainer>
+            ) : (
+              <AppTypography
+                variant="lead"
+                className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+                {profile?.email}
+              </AppTypography>
+            )}
           </ContentContainer>
           <ContentContainer row className="flex-wrap items-center justify-between">
             <ContentContainer className="gap-1.5">
@@ -132,11 +153,17 @@ const Profile = () => {
                 className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
                 Password
               </AppTypography>
-              <AppTypography
-                variant="h6"
-                className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-                ************
-              </AppTypography>
+              {isLoading ? (
+                <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
+                  <div className="w-full bg-gray-300 h-3 rounded"></div>
+                </ContentContainer>
+              ) : (
+                <AppTypography
+                  variant="h6"
+                  className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+                  ************
+                </AppTypography>
+              )}
             </ContentContainer>
 
             <Button
@@ -153,11 +180,17 @@ const Profile = () => {
               className="text-kiiraText text-[10px] md:text-sm xl:text-base font-normal tracking-tight -mt-1">
               Phone Number
             </AppTypography>
-            <AppTypography
-              variant="h6"
-              className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
-              {profile?.phone_number}
-            </AppTypography>
+            {isLoading ? (
+              <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
+                <div className="w-full bg-gray-300 h-3 rounded"></div>
+              </ContentContainer>
+            ) : (
+              <AppTypography
+                variant="h6"
+                className="text-kiiraText font-poppins font-semibold text-sm md:text-sm xl:text-base">
+                {profile?.phone_number}
+              </AppTypography>
+            )}
           </ContentContainer>
         </ContentContainer>
       </ContentContainer>

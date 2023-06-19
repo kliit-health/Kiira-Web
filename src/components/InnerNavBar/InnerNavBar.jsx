@@ -106,9 +106,9 @@ export default function InnerNavBar() {
                         <Avatar
                           src={
                             user?.photo ||
-                            'https://wallpapers.com/images/hd/default-pfp-face-izpao33go55ztvn9.jpg'
+                            'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
                           }
-                          alt={user?.lastName}
+                          alt={user?.last_name}
                           variant="circular"
                           size="md"
                           className="rounded-full bg-kiiraText/50"
@@ -120,20 +120,30 @@ export default function InnerNavBar() {
                       <AppTypography
                         variant="small"
                         className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">
-                        {user?.firstName}
+                        {user?.first_name}
                       </AppTypography>
                     </ContentContainer>
                   </MenuHandler>
                   <MenuList>
-                    <MenuListItem className="bg-transparent flex items-center gap-1 flex-nowrap">
-                      <ListItemPrefix className="mr-2 ">
-                        <IMAGES.AccountIcon className="" />
+                    <MenuListItem
+                      className="bg-transparent flex items-center gap-1 flex-nowrap"
+                      onClick={() => navigate(ROUTES.PROFILE)}>
+                      <ListItemPrefix className="mr-2">
+                        <Avatar
+                          src={
+                            user?.photo ||
+                            'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
+                          }
+                          alt={user?.lastName}
+                          variant="circular"
+                          size="sm"
+                          className="rounded-full bg-kiiraText/50"
+                        />
                       </ListItemPrefix>
-                      <Link to={ROUTES.PROFILE} className="font-medium">
-                        <AppTypography variant="lead" className="text-kiiraText text-sm">
-                          Account
-                        </AppTypography>
-                      </Link>
+
+                      <AppTypography variant="lead" className="text-kiiraText text-sm font-medium">
+                        Account
+                      </AppTypography>
                     </MenuListItem>
                     <hr className="my-2 border-blue-gray-50" />
                     <MenuItem
