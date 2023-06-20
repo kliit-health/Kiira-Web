@@ -1,47 +1,19 @@
 import { Avatar, Breadcrumbs, Button } from '@material-tailwind/react';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   AppNavLink,
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
+import { IMAGES } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
-import isEmpty from 'src/utils/isEmpty';
-import useAuth from 'src/hooks/useAuth';
 import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
 import { useProfile } from 'src/queries/queryHooks';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { user } = useAuth();
-  const [selectedDay, setSelectedDay] = useState(null);
-
-  const [serviceSelected, setServiceSelected] = useState({});
-
-  const { data: data, isLoading, error } = useProfile();
-  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ error:', error);
-  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ isLoading:', isLoading);
-  console.log(' \n 🚀 ~ file: Profile.jsx:26 ~ Profile ~ profile:', data?.data?.user);
+  const { data: data, isLoading } = useProfile();
   const profile = data?.data?.user;
-
-  useEffect(() => {
-    if (isEmpty(id)) return;
-
-    let filteredService = {};
-
-    kiiraServices.filter((service) => {
-      if (service._id === id) {
-        filteredService = service;
-        return true;
-      }
-      setServiceSelected(filteredService);
-      return false;
-    });
-  }, [id]);
 
   return (
     <ContentContainer
@@ -71,8 +43,8 @@ const Profile = () => {
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
             <ContentContainer className="relative hover:opacity-80">
               <Avatar
-                src={user?.photo || IMAGES.dummyProfilePhoto}
-                alt={user?.lastName}
+                src={profile?.photo || IMAGES.dummyProfilePhoto}
+                alt={profile?.last_name}
                 variant="circular"
                 size="xxl"
                 className="rounded-full bg-kiiraText/50 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40"

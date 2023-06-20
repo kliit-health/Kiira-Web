@@ -8,14 +8,6 @@ import { truncate } from 'src/utils/truncate';
 import isEmpty from 'src/utils/isEmpty';
 
 const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscription }) => {
-  console.log(
-    ' \n 🚀 ~ file: SubscriptionPlans.jsx:11 ~ SubscriptionPlans ~ currentSubscription:',
-    currentSubscription
-  );
-  console.log(
-    ' \n 🚀 ~ file: SubscriptionPlans.jsx:8 ~ SubscriptionPlans ~ subscription:',
-    subscription
-  );
   const isAuthenticated = Auth.isAuthenticated();
   const Icon = subscription?.planIcon || IMAGES.subscriptionOval1;
 

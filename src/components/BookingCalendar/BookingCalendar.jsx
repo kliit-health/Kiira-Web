@@ -1,10 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppTypography, CalendarWrapper, ContentContainer } from '../shared/styledComponents';
 import { Calendar, utils } from '@amir04lm26/react-modern-calendar-date-picker';
-import { element, func } from 'prop-types';
+import { element, func, object } from 'prop-types';
+import { useAvailableDates } from 'src/queries/queryHooks';
+import moment from 'moment-timezone';
+import isEmpty from 'src/utils/isEmpty';
 
-const BookingCalendar = ({ dateLabel, onTimeSelect }) => {
+const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) => {
+  // console.log(' \n 🚀 ~ file: BookingCalendar.jsx:7 ~ BookingCalendar ~ doctor:', doctor);
+  // console.log(
+  //   ' \n 🚀 ~ file: BookingCalendar.jsx:7 ~ BookingCalendar ~ appointmentType:',
+  //   appointmentType
+  // );
   const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  console.log(
+    ' \n 🚀 ~ file: BookingCalendar.jsx:15 ~ BookingCalendar ~ selectedDay:',
+    selectedDay
+  );
+
+  const payload = {
+    month: selectedDay || moment(new Date()).format('YYYY-MM-DD'),
+    appointmentTypeID: appointmentType.id
+  };
+  const { data, isLoading, error, refetch } = useAvailableDates(payload);
+  console.log(' \n 🚀 ~ file: BookingCalendar.jsx:27 ~ BookingCalendar ~ isLoading:', isLoading);
+  console.log(' \n 🚀 ~ file: BookingCalendar.jsx:26 ~ BookingCalendar ~ error:', error);
+  console.log(' \n 🚀 ~ file: BookingCalendar.jsx:26 ~ BookingCalendar ~ data:', data);
+
+  useEffect(() => {
+    refetch();
+  }, [selectedDay, appointmentType, doctor]);
+
   return (
     <>
       {dateLabel ? (
@@ -25,14 +52,50 @@ const BookingCalendar = ({ dateLabel, onTimeSelect }) => {
           calendarClassName="w-full lg:w-1/2 p-2 min-w-min shadow-none lg:rounded-r-none "
           calendarSelectedDayClassName="h-4 w-8 md:h-10 md:w-10 rounded-full"
           colorPrimary="#3F84FF"
+          shouldHighlightWeekends
+          disabledDays={[
+            {
+              year: 2023,
+              month: 6,
+              day: 27
+            },
+            {
+              year: 2023,
+              month: 6,
+              day: 30
+            },
+            {
+              year: 2023,
+              month: 6,
+              day: 20
+            }
+          ]}
         />
         <ContentContainer className="w-full lg:w-1/2 px-6 py-3 rounded-2xl lg:rounded-l-none bg-white flex col gap-4">
           <ContentContainer>
+            {!isEmpty(selectedDay) ? (
+              <AppTypography variant="lead" className="font-medium text-xs">
+                {moment(
+                  `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
+                  'D-MM-YYY'
+                ).format('dddd')}
+                ,{' '}
+                {moment(
+                  `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
+                  'D-MM-YYY'
+                ).format('MMMM DD,')}
+              </AppTypography>
+            ) : (
+              <AppTypography variant="lead" className="font-medium text-xs">
+                {moment().format('dddd')}, {moment().format('MMMM DD,')}
+              </AppTypography>
+            )}
             <AppTypography variant="lead" className="font-medium text-xs">
-              Thursday, April 16
-            </AppTypography>
-            <AppTypography variant="lead" className="font-medium text-xs">
-              TIME ZONE: <b>LAGOS (GMT+01:00)</b>
+              TIME ZONE:{' '}
+              <b className="uppercase">
+                {moment.tz.guess(true).split('/')[1]} (
+                {moment.tz(moment.tz.guess(true)).format('zZ')})
+              </b>
             </AppTypography>
           </ContentContainer>
 
@@ -70,10 +133,14 @@ const BookingCalendar = ({ dateLabel, onTimeSelect }) => {
 
 BookingCalendar.propTypes = {
   dateLabel: element,
-  onTimeSelect: func
+  onTimeSelect: func,
+  doctor: object,
+  appointmentType: object
 };
 BookingCalendar.defaultProps = {
-  onTimeSelect: () => {}
+  onTimeSelect: () => {},
+  doctor: {},
+  appointmentType: {}
 };
 
 export default BookingCalendar;

@@ -65,6 +65,11 @@ const Subscription = () => {
               />
             </ContentContainer>
           ) : null}
+          {isEmpty(products) && !isLoading ? (
+            <ContentContainer className="h-28 w-full flex items-center justify-center">
+              <Empty />
+            </ContentContainer>
+          ) : null}
         </ContentContainer>
         <ContentContainer col className="w-full lg:w-auto min-w-[30vw] gap-3">
           <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none px-4 py-4 rounded-lg">

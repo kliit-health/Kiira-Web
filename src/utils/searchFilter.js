@@ -8,10 +8,6 @@ export const searchFilter = (
   searchData,
   updateFilteredData
 ) => {
-  console.log(" \n 🚀 ~ file: searchFilter.js:11 ~ updateFilteredData:", updateFilteredData)
-  console.log(" \n 🚀 ~ file: searchFilter.js:11 ~ setSearchText:", setSearchText)
-  console.log(" \n 🚀 ~ file: searchFilter.js:11 ~ searchParams:", searchParams)
-  console.log(" \n 🚀 ~ file: searchFilter.js:11 ~ searchText:", searchText)
   setSearchText(searchText);
   let filter = searchParams;
 

@@ -140,8 +140,7 @@ export const hideScrollbar = () => css`
 `;
 
 export const AppAvatar = styled(Avatar)`
-  ${tw`p-[4px] object-cover rounded-full mt-6 border border-solid`}
-  /* border-color: ${({
+  ${tw`p-[4px] object-cover rounded-full mt-6 border border-solid`}/* border-color: ${({
     status
   }) => (status === profileState.online ? tw`border-[#6467CE]` : tw`border-[#DFDFDF]`)}; */
 `;
@@ -194,5 +193,9 @@ export const CalendarWrapper = styled(ContentContainer)`
       min-height: 4.75em;
       font-size: 1em;
     }
+  }
+
+  .Calendar__day.-selected {
+    margin: 0px 1.3rem;
   }
 `;

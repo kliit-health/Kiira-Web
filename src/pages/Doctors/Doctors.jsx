@@ -1,10 +1,11 @@
 import { Button, ButtonGroup, Select, Option } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { DoctorsCard, SearchInput, ServiceCard } from 'src/components';
+import { DoctorsCard, Empty, SearchInput, ServiceCard } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { kiiraDoctors } from 'src/data';
 import { MainLayout } from 'src/layouts';
 import { useDoctorsCalendars } from 'src/queries/queryHooks';
+import isEmpty from 'src/utils/isEmpty';
 import { searchFilter } from 'src/utils/searchFilter';
 
 const Doctors = () => {
@@ -83,7 +84,7 @@ const Doctors = () => {
                 ]}>
                 ON SITE
               </Button>
-            <Button
+              <Button
                 onClick={() => handleSelectedFilter('virtual')}
                 className={[
                   selectedFilter === 'virtual'
@@ -111,12 +112,18 @@ const Doctors = () => {
                       key={index.toString()}
                       loading={isLoading}
                       disabled={isLoading}
+                      selected={true}
                     />
                   );
                 })
               : null}
           </div>
         </ContentContainer>
+        {isEmpty(filteredDoctors) && !isLoading ? (
+          <ContentContainer className="h-40 w-full">
+            <Empty />
+          </ContentContainer>
+        ) : null}
       </ContentContainer>
     </MainLayout>
   );

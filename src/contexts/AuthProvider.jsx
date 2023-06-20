@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
   const userData = Auth?.getUser();
-  const [user, setUser] = useState({});  
+  const [user, setUser] = useState({});
 
   const logout = () => {
     Auth?.destroyToken();
@@ -25,9 +25,7 @@ export const AuthProvider = ({ children }) => {
     getAuth();
   }, []);
 
-  useEffect(() => {
-    console.log('isAuth', isAuthenticated);
-  }, [isAuthenticated]);
+  useEffect(() => {}, [isAuthenticated]);
 
   const value = {
     user,

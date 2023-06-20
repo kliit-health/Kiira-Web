@@ -19,7 +19,23 @@ const Api = {
   },
   bookings: {
     getProducts: () => ApiHandler.get(`/products`),
-    getCalendars: () => ApiHandler.get(`/calendars`)
+    getCalendars: () => ApiHandler.get(`/calendars`),
+    getAppointmentTypes: () => ApiHandler.get(`/appointment-types`),
+    getAllAppointments: () => ApiHandler.get(`/appointments`),
+    getAppointmentById: (id) => ApiHandler.get(`/appointments/${id}`),
+    createAppointment: (data) => ApiHandler.post(`/appointments`, data),
+    updateAppointment: (id, data) => ApiHandler.put(`/appointments/${id}`, data),
+    cancelAppointment: (id) => ApiHandler.put(`/appointments/${id}/cancel`),
+    rescheduleAppointment: (id, data) => ApiHandler.put(`/appointments/${id}/reschedule`, data),
+    getAvailableDates: (month, appointmentTypeID) =>
+      ApiHandler.get(`/availability/dates?month=${month}&appointmentTypeID=${appointmentTypeID}`),
+    getAvailableTimes: (date, appointmentTypeID) =>
+      ApiHandler.get(`/availability/dates?date=${date}&appointmentTypeID=${appointmentTypeID}`),
+    validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data)
+  },
+  payment: {
+    viewPayments: (id) => ApiHandler.get(`/appointments/${id}/payments`),
+    subscribe: (data) => ApiHandler.post(`/subscriptions`, data)
   }
 };
 export default Api;

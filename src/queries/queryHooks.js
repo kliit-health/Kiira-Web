@@ -9,7 +9,14 @@ import {
   verifyEmail
 } from 'src/services/authServices';
 import { fetchUserProfile } from 'src/services/userServices';
-import { fetchDoctorsCalendars, fetchKiiraProducts } from 'src/services/bookingServices';
+import {
+  fetchAppointmentTypes,
+  fetchAvailableDates,
+  fetchAvailableTimes,
+  fetchDoctorsCalendars,
+  fetchKiiraProducts
+} from 'src/services/bookingServices';
+import isEmpty from 'src/utils/isEmpty';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -92,5 +99,33 @@ export const useProducts = () => {
 
 export const useDoctorsCalendars = () => {
   const data = useQuery({ queryKey: [KEYS.DOCTORS], queryFn: fetchDoctorsCalendars });
+  return data;
+};
+
+export const useAppointmentTypes = () => {
+  const data = useQuery({ queryKey: [KEYS.APPOINTMENT_TYPES], queryFn: fetchAppointmentTypes });
+  return data;
+};
+
+export const useAvailableDates = (payload) => {
+  console.log(
+    ' \n 🚀 ~ file: queryHooks.js:111 ~ useAvailableDates ~ payload:',
+    !isEmpty(payload?.month) && !isEmpty(payload?.appointmentTypeID),
+    payload
+  );
+  const data = useQuery({
+    queryKey: [KEYS.AVAILABLE_DATES],
+    queryFn: () => fetchAvailableDates(payload),
+    enabled: !isEmpty(payload?.month) && !isEmpty(payload?.appointmentTypeID)
+  });
+  return data;
+};
+
+export const useAvailableTimes = (payload) => {
+  const data = useQuery({
+    queryKey: [KEYS.AVAILABLE_TIMES],
+    queryFn: () => fetchAvailableTimes(payload),
+    enabled: !isEmpty(payload?.date) && !isEmpty(payload?.appointmentTypeID)
+  });
   return data;
 };
