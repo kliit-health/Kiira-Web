@@ -3,25 +3,36 @@ import { AppButton, AppTypography, ContentContainer } from '../shared/styledComp
 import { ReactComponent as Badge } from 'src/assets/icons/check-badge.svg';
 import propTypes from 'prop-types';
 import Auth from 'src/middleware/storage';
+import { IMAGES } from 'src/data';
+import { truncate } from 'src/utils/truncate';
+import isEmpty from 'src/utils/isEmpty';
 
-const SubscriptionPlans = ({ plan }) => {
+const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscription }) => {
+  console.log(
+    ' \n 🚀 ~ file: SubscriptionPlans.jsx:11 ~ SubscriptionPlans ~ currentSubscription:',
+    currentSubscription
+  );
+  console.log(
+    ' \n 🚀 ~ file: SubscriptionPlans.jsx:8 ~ SubscriptionPlans ~ subscription:',
+    subscription
+  );
   const isAuthenticated = Auth.isAuthenticated();
-  const Icon = plan?.planIcon;
+  const Icon = subscription?.planIcon || IMAGES.subscriptionOval1;
 
   return (
     <ContentContainer className="flex flex-col w-full h-auto min-h-[459px] max-w-max min-w-[285px] max-h-max overflow-hidden">
       <ContentContainer
-        background={plan?.colorCode}
+        background={subscription?.colorCode || '#E2EDFF'}
         className="h-[178px] relative rounded-t-full shadow-md flex flex-col items-center justify-between gap-4 px-2 py-10 overflow-hidden">
         <ContentContainer
-          color={plan?.colorCodeBold}
-          className={`flex rounded-lg bg-white w-24 h-8 items-center text-xs justify-center font-semibold my-auto`}>
-          {plan?.cycle}
+          color={subscription?.colorCodeBold || '#3F84FF'}
+          className={`flex rounded-lg bg-white py-2 w-40 h-auto items-center text-xs justify-center font-semibold my-auto`}>
+          {subscription?.name}
         </ContentContainer>
         <div className="text-[#AFB6C0] font-bold text-4xl flex flex-row items-center justify-center text-center my-auto">
-          {plan?.currencyCode}
-          <span className="text-kiiraDark">{plan?.amount}</span>
-          <span className="text-[#AFB6C0] text-sm">{plan?.currency}</span>
+          {subscription?.currencyCode || '$'}
+          <span className="text-kiiraDark">{Math.ceil(subscription?.price)}</span>
+          <span className="text-[#AFB6C0] text-sm">{subscription?.currency || 'USD'}</span>
         </div>
 
         <span className="absolute -bottom-6">
@@ -30,20 +41,20 @@ const SubscriptionPlans = ({ plan }) => {
       </ContentContainer>
       <ContentContainer
         className={[
-          plan?.cycle === 'Monthly'
-            ? 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl border border-kiiraBlue/20'
-            : 'bg-white gap-3 h-auto min-h-[420px] p-4 rounded rounded-b-2xl'
+          (selected?.id || currentSubscription.id) === subscription?.id
+            ? 'bg-white gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl border border-kiiraBlue/20'
+            : 'bg-white gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl'
         ]}>
-        <AppTypography className="text-kiiraText text-xs min-h-[36px]" variant="small">
-          {plan?.description}
-        </AppTypography>
+        {/* <AppTypography className="text-kiiraText text-xs min-h-[36px]" variant="small">
+          {subscription?.description}
+        </AppTypography> */}
 
         <AppTypography className="p-2 w-full bg-[#E2EDFF] text-kiiraBlue text-xs text-center font-semibold rounded-md">
-          Kiira Membership Plan Features:
+          {subscription?.name} Features:
         </AppTypography>
 
-        <ContentContainer className="flex flex-col gap-y-2">
-          {plan?.package?.map((item, index) => {
+        <ContentContainer className="flex flex-col gap-y-2 overflow-x-hidden">
+          {/* {subscription?.package?.map((item, index) => {
             return (
               <ContentContainer className="flex flex-row flex-nowrap gap-4" key={index?.toString()}>
                 <span className="w-1">
@@ -57,31 +68,51 @@ const SubscriptionPlans = ({ plan }) => {
                 </AppTypography>
               </ContentContainer>
             );
-          })}
+          })} */}
+          <AppTypography
+            className="text-kiiraText text-xs min-h-[36px] whitespace-pre-wrap"
+            variant="small">
+            {truncate(subscription?.description || '', 575)}
+          </AppTypography>
         </ContentContainer>
 
         <AppButton
           size="sm"
           fullWidth
+          onClick={() => {
+            isEmpty(currentSubscription)
+              ? setSelected(currentSubscription)
+              : setSelected(subscription);
+          }}
           className={
             (['px-4 py-2 text-white capitalize text-[10px] shadow-transparent mt-auto'],
-            plan?.cycle === 'Monthly' ? 'bg-kiiraBlue' : 'bg-kiiraText')
+            subscription?.cycle === 'Monthly' ? 'bg-kiiraBlue' : 'bg-kiiraText')
           }>
           Choose Plan
         </AppButton>
 
-        {isAuthenticated && plan?.cycle === 'Monthly' ? (
+        {/* {isAuthenticated && subscription?.cycle === 'Monthly' ? (
           <AppTypography variant="small" className="text-[0.675rem] text-center text-kiiraText">
             Expires Apr 30th, 2023
           </AppTypography>
-        ) : null}
+        ) : null} */}
       </ContentContainer>
     </ContentContainer>
   );
 };
 
 SubscriptionPlans.propTypes = {
-  plan: propTypes.shape({})
+  subscription: propTypes.shape({}),
+  selected: propTypes.shape({}),
+  setSelected: propTypes.func,
+  currentSubscription: propTypes.shape({})
+};
+
+SubscriptionPlans.defaultProps = {
+  currentSubscription: {},
+  setSelected: () => {},
+  selected: {},
+  subscription: {}
 };
 
 export default SubscriptionPlans;

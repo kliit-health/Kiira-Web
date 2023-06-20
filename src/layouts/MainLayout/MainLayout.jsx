@@ -8,6 +8,7 @@ import {
 import gradientBg from 'src/assets/images/gradientBg.png';
 import { Card } from '@material-tailwind/react';
 import useAuth from 'src/hooks/useAuth';
+import { node } from 'prop-types';
 
 const MainLayout = ({ children, hideScroll }) => {
   const { user } = useAuth();
@@ -51,6 +52,6 @@ const MainLayout = ({ children, hideScroll }) => {
 export default MainLayout;
 
 MainLayout.propTypes = {
-  children: element,
+  children: node.isRequired,
   hideScroll: bool
 };

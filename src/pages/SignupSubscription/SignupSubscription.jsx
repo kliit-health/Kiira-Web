@@ -7,9 +7,16 @@ import { ReactComponent as Visa } from 'src/assets/icons/visa.svg';
 import useAuth from 'src/hooks/useAuth';
 import { SubscriptionPlans } from 'src/components';
 import { kiiraSubscriptions } from 'src/data';
+import { useProducts } from 'src/queries/queryHooks';
 
 const SignupSubscription = () => {
   const navigate = useNavigate();
+  const { data, isLoading } = useProducts();
+  const products = data?.data?.products;
+  console.log(
+    ' \n 🚀 ~ file: SignupSubscription.jsx:16 ~ SignupSubscription ~ products:',
+    products
+  );
 
   return (
     <AuthLayout hideScroll>
@@ -29,8 +36,9 @@ const SignupSubscription = () => {
               </AppTypography>
 
               <ContentContainer className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5">
-                {kiiraSubscriptions?.map((plan, index) => {
-                  return <SubscriptionPlans plan={plan} key={index?.toString()} />;
+
+                {products?.map((plan, index) => {
+                  return <SubscriptionPlans subscription={plan} key={index?.toString()} />;
                 })}
               </ContentContainer>
             </CardBody>

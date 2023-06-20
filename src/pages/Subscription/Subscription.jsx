@@ -1,47 +1,83 @@
-import { Card, CardBody, Dialog, DialogBody, DialogHeader, Radio } from '@material-tailwind/react';
+import { Card, Dialog, DialogBody } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import { AddButton, SavedCards, SubscriptionPlans } from 'src/components';
-import {
-  AppTypography,
-  BorderedContainer,
-  ContentContainer
-} from 'src/components/shared/styledComponents';
-import { kiiraSubscriptions } from 'src/data';
+import { Empty, SavedCards, SubscriptionPlans } from 'src/components';
+import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
 import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
-import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
-import { ReactComponent as RadioChecked } from 'src/assets/icons/radioChecked.svg';
-import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
+import { useProducts } from 'src/queries/queryHooks';
+import { ThreeDots } from 'react-loader-spinner';
+import isEmpty from 'src/utils/isEmpty';
+import { useEffect } from 'react';
 
 const Subscription = () => {
   const [open, setOpen] = useState(false);
-
+  const [selected, setSelected] = useState({});
   const handleOpen = () => setOpen(!open);
+
+  const { data, isLoading } = useProducts();
+  const products = data?.data?.products;
+
+  useEffect(() => {
+    console.log(' \n 🚀 ~ file: Subscription.jsx:15 ~ Subscription ~ selected:', selected);
+  }, [selected]);
   return (
     <MainLayout>
       <ContentContainer className="flex p-4 md:p-0 mb-10">
-        <AppTypography variant="h6" className="text-kiiraDark">
-          You are currently on a <span className="text-kiiraBlue">monthly plan</span>
-        </AppTypography>
-        <AppTypography variant="small" className="text-kiiraText text-sm">
-          Next payment on <span className="text-kiiraDark">Apr 30th, 2023</span>
-        </AppTypography>
+        {isEmpty('') ? null : (
+          <>
+            <AppTypography variant="h6" className="text-kiiraDark">
+              You are currently on a <span className="text-kiiraBlue">monthly plan</span>
+            </AppTypography>
+            <AppTypography variant="small" className="text-kiiraText text-sm">
+              Next payment on <span className="text-kiiraDark">Apr 30th, 2023</span>
+            </AppTypography>
+          </>
+        )}
       </ContentContainer>
       <ContentContainer className="h-full min-h-[40vh] w-full flex flex-row gap-4 flex-wrap md:flex-nowrap">
         <ContentContainer className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5">
-          {kiiraSubscriptions?.map((plan, index) => {
-            return <SubscriptionPlans plan={plan} key={index?.toString()} />;
-          })}
+          {!isLoading
+            ? products?.map((plan, index) => {
+                return (
+                  <SubscriptionPlans
+                    currentSubscription={products[0]}
+                    subscription={plan}
+                    key={index?.toString()}
+                    selected={selected}
+                    setSelected={(d) => setSelected(d)}
+                  />
+                );
+              })
+            : null}
+
+          {isLoading ? (
+            <ContentContainer className="flex h-full w-full min-h-min items-center justify-center">
+              <ThreeDots
+                height="80"
+                width="80"
+                radius="9"
+                color="#005eff"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            </ContentContainer>
+          ) : null}
         </ContentContainer>
         <ContentContainer col className="w-full lg:w-auto min-w-[30vw] gap-3">
           <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none px-4 py-4 rounded-lg">
             <AppTypography variant="h5" className="text-lg font-semibold text-kiiraDark">
               Subscription history
             </AppTypography>
-            {[1, 2].map((history, index) => {
+            <ContentContainer className="h-28 w-full flex items-center justify-center">
+              <Empty />
+            </ContentContainer>
+            {/* {[1, 2].map((history, index) => {
               return (
                 <ContentContainer
+                  key={index?.toString()}
                   onClick={handleOpen}
                   className="rounded-2xl bg-white p-2 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-75 hover:cursor-pointer">
                   <ContentContainer className="flex flex-row flex-nowrap gap-1.5 items-center">
@@ -67,7 +103,7 @@ const Subscription = () => {
                   </ContentContainer>
                 </ContentContainer>
               );
-            })}
+            })} */}
           </Card>
 
           <SavedCards />

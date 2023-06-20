@@ -19,6 +19,7 @@ import sliderImg2 from 'src/assets/images/sliderImg2.png';
 import MessageProfilePicture from 'src/assets/images/inbox_profile.png';
 import cardPic1 from 'src/assets/images/cardPicture1.png';
 import cardPic2 from 'src/assets/images/cardPicture2.png';
+import Empty from 'src/assets/images/empty-box.png';
 import girl from 'src/assets/images/girl.png';
 import girlBg from 'src/assets/images/girlPurpleBg.png';
 import aid from 'src/assets/images/aid.png';
@@ -89,7 +90,9 @@ export const IMAGES = {
   QR,
   DividerIcon,
   PenIcon,
-  EditIcon
+  EditIcon,
+  subscriptionOval1: OvalPlan1,
+  Empty
 };
 
 export const userData = {

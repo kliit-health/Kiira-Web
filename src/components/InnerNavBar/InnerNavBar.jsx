@@ -117,7 +117,7 @@ export default function InnerNavBar() {
                       <AppTypography
                         variant="small"
                         className="text-kiiraText text-xs font-medium tracking-tight hidden sm:flex">
-                        {user?.first_name}
+                        {user?.first_name || ''}
                       </AppTypography>
                     </ContentContainer>
                   </MenuHandler>

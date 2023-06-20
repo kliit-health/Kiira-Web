@@ -30,7 +30,7 @@ const SavedCards = () => {
   return (
     <>
       <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none p-4 rounded-lg">
-        <ContentContainer className="rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
+        {/* <ContentContainer className="rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
           <ContentContainer className="flex flex-row flex-nowrap gap-5 items-center">
             <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-kiiraBlue p-1 md:h-8 md:w-8 rounded-full">
               <VisaIcon className="h-10 w-10" />
@@ -40,11 +40,11 @@ const SavedCards = () => {
             </AppTypography>
           </ContentContainer>
           <ContentContainer className="flex flex-row flex-nowrap gap-0.5 items-center">
-            <ContentContainer className="flex flex-row items-center justify-center p-0.5 h-8 w-8 rounded-full">
+            <ContentContainer className="flex flex-row items-center justify-center p-0.5 h-4 w-4  md:h-8 md:w-8 rounded-full">
               {true ? <RadioCheckedIcon /> : <Radio id="white" name="color" color="white" />}
             </ContentContainer>
           </ContentContainer>
-        </ContentContainer>
+        </ContentContainer> */}
 
         <AddButton label="Add a new card" onAddClick={handleOpen} />
       </Card>
