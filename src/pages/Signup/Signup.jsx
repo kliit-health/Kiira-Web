@@ -29,7 +29,6 @@ const Signup = () => {
 
   const onSubmit = (data) => {
     console.log('🚀 ~ file: Login.jsx:35 ~ onSubmit ~ data:', data);
-    console.log(' \n 🚀 ~ file: Signup.jsx:20 ~ Signup ~ checked:', checked);
 
     if (!checked) {
       Toast.fire({
@@ -53,7 +52,10 @@ const Signup = () => {
         Auth.setToken(response.data?.token);
         reset();
         if (!response.data?.user?.is_email_verified) {
-          Api.auth.resendVerification(response.data?.user?.email);
+          const emailData = {
+            email: response.data?.user?.email
+          };
+          Api.auth.resendVerification(emailData);
           navigate(ROUTES.VERIFY_ACCOUNT);
           return;
         }

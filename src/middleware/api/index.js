@@ -1,3 +1,4 @@
+import isEmpty from 'src/utils/isEmpty';
 import ApiHandler from './ApiHandler';
 
 const Api = {
@@ -27,15 +28,30 @@ const Api = {
     updateAppointment: (id, data) => ApiHandler.put(`/appointments/${id}`, data),
     cancelAppointment: (id) => ApiHandler.put(`/appointments/${id}/cancel`),
     rescheduleAppointment: (id, data) => ApiHandler.put(`/appointments/${id}/reschedule`, data),
-    getAvailableDates: (month, appointmentTypeID) =>
-      ApiHandler.get(`/availability/dates?month=${month}&appointmentTypeID=${appointmentTypeID}`),
-    getAvailableTimes: (date, appointmentTypeID) =>
-      ApiHandler.get(`/availability/dates?date=${date}&appointmentTypeID=${appointmentTypeID}`),
+    getAvailableDates: (data) => {
+      let queryString;
+
+      queryString = Object.keys(data)
+        .map((key) => !isEmpty(data[key]) && `${key}=${data[key]}`)
+        .join('&');
+
+      return ApiHandler.get(`/availability/dates?${queryString}`);
+    },
+    getAvailableTimes: (data) => {
+      let queryString;
+
+      queryString = Object.keys(data)
+        .map((key) => !isEmpty(data[key]) && `${key}=${data[key]}`)
+        .join('&');
+      return ApiHandler.get(`/availability/times?${queryString}`);
+    },
     validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data)
   },
   payment: {
+    initialisePayment: (data) => ApiHandler.post(`/appointments/book/initialize`, data),
     viewPayments: (id) => ApiHandler.get(`/appointments/${id}/payments`),
-    subscribe: (data) => ApiHandler.post(`/subscriptions`, data)
+    subscribe: (data) => ApiHandler.post(`/subscriptions`, data),
+    confirmPayment: (id) => ApiHandler.get(`/appointments/book/confirmation/${id}`)
   }
 };
 export default Api;

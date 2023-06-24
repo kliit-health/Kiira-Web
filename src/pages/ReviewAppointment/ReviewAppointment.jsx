@@ -1,7 +1,7 @@
 import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { BookingCard, SavedCards } from 'src/components';
+import { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BookingCard, Loader, SavedCards } from 'src/components';
 import {
   AppButton,
   AppLink,
@@ -10,30 +10,78 @@ import {
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraServices } from 'src/data';
-import { MainLayout } from 'src/layouts';
+import { IMAGES } from 'src/data';
+import { useInitialisePayment } from 'src/queries/queryHooks';
+import KEYS from 'src/queries/queryKeys';
 import { ROUTES } from 'src/routes/Paths';
+import { useLocalStore } from 'src/store';
+import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
 const ReviewAppointment = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const location = useLocation();
+  const [checked, setChecked] = useState(false);
+  const [reserveBooking, setReserveBooking] = useState(false);
+  const bookingParams = location.state?.data;
+  const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
 
-  const [serviceSelected, setServiceSelected] = useState({});
+  const { mutate, isLoading } = useInitialisePayment();
 
-  useEffect(() => {
-    if (isEmpty(id)) return;
+  const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
+  console.log(
+    ' \n 🚀 ~ file: ReviewAppointment.jsx:26 ~ ReviewAppointment ~ bookingData:',
+    bookingData
+  );
 
-    let service;
+  const handleInitialisePayment = () => {
+    if (!checked) {
+      Toast.fire({
+        icon: 'warning',
+        title: `Please checkout our terms and conditions before you proceed`,
+        width: '70vw'
+      });
+      return;
+    }
 
-    kiiraServices?.filter((service) => {
-      if (service._id === id) {
-        setServiceSelected(service);
-        return true;
+    const payload = {
+      datetime: bookingData?.bookingCheckout?.time,
+      appointmentTypeID: bookingData?.appointmentType.id,
+      success_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
+      cancel_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
+      book_on_hold: reserveBooking,
+      ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
+    };
+
+    console.log(
+      ' \n 🚀 ~ file: ReviewAppointment.jsx:49 ~ handleInitialisePayment ~ payload:',
+      payload
+    );
+
+    mutate(payload, {
+      onSuccess: (response) => {
+        console.log(
+          ' \n 🚀 ~ file: ReviewAppointment.jsx:46 ~ handleInitialisePayment ~ response:',
+          response?.data
+        );
+        Toast.fire({
+          icon: 'success',
+          title: `${response?.data?.message}: \nYou are now been redirected to payment checkout`
+        });
+        setTimeout(() => {
+          window.open(response?.data?.checkout_session?.url, '_blank');
+        }, 3500);
+        navigate(ROUTES.INDEX, { replace: true });
+        return;
+      },
+      onError: (error) => {
+        Toast.fire({
+          icon: 'error',
+          title: error.response?.data?.message
+        });
       }
-      return false;
     });
-  }, [id]);
+  };
 
   return (
     <ContentContainer
@@ -72,7 +120,7 @@ const ReviewAppointment = () => {
                 variant="h6"
                 color="blue"
                 className="capitalise text-kiiraBlackishGreen text-xl lg:text-2xl font-semibold">
-                {serviceSelected?.title || 'General Health Assessment'}
+                {bookingData?.appointmentType?.name}
               </AppTypography>
             </ContentContainer>
 
@@ -80,7 +128,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                {serviceSelected?.fee || '$150.00'}
+                ${bookingData?.appointmentType?.price}
               </AppTypography>
             </ContentContainer>
           </ContentContainer>
@@ -131,12 +179,13 @@ const ReviewAppointment = () => {
           </ContentContainer>
 
           {/* Card Options */}
-          <SavedCards />
+          {/* <SavedCards /> */}
         </ContentContainer>
 
         {/* Booking Cart review */}
         <ContentContainer className="w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
-          <BookingCard review />
+          <BookingCard review bookingData={bookingData} />
+
           <AppTypography
             variant="lead"
             className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center">
@@ -156,7 +205,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                $150
+                ${bookingData?.appointmentType?.price}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -168,7 +217,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                $0
+                ${bookingData?.appointmentType?.discount || 0}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -180,7 +229,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                $20
+                ${bookingData?.appointmentType?.taxes || 0}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -192,7 +241,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                $5
+                ${bookingData?.appointmentType?.serviceFee || 0}
               </AppTypography>
             </ContentContainer>
           </ContentContainer>
@@ -208,21 +257,51 @@ const ReviewAppointment = () => {
             <AppTypography
               variant="h6"
               className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-              $175
+              ${bookingData?.appointmentType?.price}
             </AppTypography>
           </ContentContainer>
 
+          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
+            <Checkbox
+              name="booking"
+              color="orange"
+              iconProps={{ size: 'xs' }}
+              labelProps={{ className: 'py-0.5 rounded' }}
+              checked={reserveBooking}
+              className="p-1"
+              onChange={() => setReserveBooking(!reserveBooking)}
+            />
+            <span
+              className={[
+                reserveBooking
+                  ? 'text-xs text-orange-400  font-bold uppercase'
+                  : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
+              ]}>
+              Reserve Appointment
+            </span>
+          </ContentContainer>
+
           <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
-            <Checkbox iconProps={{ size: 'xs' }} labelProps={{ className: 'p-1 rounded' }} />
+            <Checkbox
+              name="agreement"
+              iconProps={{ size: 'xs' }}
+              labelProps={{ className: 'p-1 rounded' }}
+              checked={checked}
+              onChange={() => setChecked(!checked)}
+            />
             <span className="text-xs text-kiiraText">
               I agree to all the <AppLink className="text-kiiraBlue text-xs">Terms</AppLink> and
               <AppLink className="text-kiiraBlue text-xs"> Privacy Policies</AppLink>
             </span>
           </ContentContainer>
 
-          <AppButton className="text-xs" onClick={() => navigate(ROUTES.CONFIRM_BOOKING)}>
-            Confirm Booking
-          </AppButton>
+          {isLoading ? (
+            <Loader className="" />
+          ) : (
+            <AppButton className="text-xs" onClick={handleInitialisePayment}>
+              {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+            </AppButton>
+          )}
         </ContentContainer>
       </ContentContainer>
     </ContentContainer>

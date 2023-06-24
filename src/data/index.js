@@ -12,7 +12,8 @@ import { ReactComponent as AccountIcon } from 'src/assets/icons/AccountIcon.svg'
 import { ReactComponent as CloseIcon } from 'src/assets/icons/Close.svg';
 import { ReactComponent as ShareIcon } from 'src/assets/icons/ShareIcon.svg';
 import { ReactComponent as PenIcon } from 'src/assets/icons/Pen.svg';
-import dummyProfilePhoto from 'src/assets/images/profilePhoto.png';
+import { ReactComponent as CautionIcon } from 'src/assets/icons/caution.svg';
+import Alarm from 'src/assets/icons/Alarm.gif';
 import { ReactComponent as KiiraBirdieBlack } from 'src/assets/icons/KiiraBirdieBlack.svg';
 import sliderImg1 from 'src/assets/images/sliderImg1.png';
 import sliderImg2 from 'src/assets/images/sliderImg2.png';
@@ -92,7 +93,9 @@ export const IMAGES = {
   PenIcon,
   EditIcon,
   subscriptionOval1: OvalPlan1,
-  Empty
+  Empty,
+  CautionIcon,
+  Alarm
 };
 
 export const userData = {

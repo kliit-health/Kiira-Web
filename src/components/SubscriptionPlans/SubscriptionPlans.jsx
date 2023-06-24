@@ -18,7 +18,7 @@ const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscri
         className="h-[178px] relative rounded-t-full shadow-md flex flex-col items-center justify-between gap-4 px-2 py-10 overflow-hidden">
         <ContentContainer
           color={subscription?.colorCodeBold || '#3F84FF'}
-          className={`flex rounded-lg bg-white py-2 w-40 h-auto items-center text-xs justify-center font-semibold my-auto`}>
+          className={`flex rounded-lg bg-white py-2 w-40 h-auto items-center text-xs justify-center font-semibold my-auto text-center`}>
           {subscription?.name}
         </ContentContainer>
         <div className="text-[#AFB6C0] font-bold text-4xl flex flex-row items-center justify-center text-center my-auto">

@@ -12,12 +12,23 @@ import {
 import { IMAGES } from 'src/data';
 import { useDoctorsCalendars } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
+import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
 const ChooseAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, isLoading } = useDoctorsCalendars();
+  const { data, isLoading, error } = useDoctorsCalendars();
+
+  const errorMsg = error?.response?.data?.message || error?.message;
+  useEffect(() => {
+    if (!error) return;
+    Toast.fire({
+      icon: 'error',
+      title: errorMsg
+    });
+  }, [error]);
+
   const doctors = data?.data?.calendars;
   const [doctorsData, setDoctorsData] = useState(doctors);
   const [hideDoctors, setHideDoctors] = useState(false);
@@ -217,21 +228,27 @@ const ChooseAppointment = () => {
 
           {!isEmpty(selectedDoctor) && !hideDoctors ? (
             <BookingCalendar
-              onTimeSelect={() => navigate(ROUTES.REVIEW_APPOINTMENT)}
+              onTimeSelect={(bookingParams) =>
+                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
+              }
               appointmentType={service}
-              doctor={selectedDoctor}
+              doctor={!hideDoctors ? selectedDoctor : {}}
             />
           ) : isEmpty(selectedDoctor) && hideDoctors ? (
             <BookingCalendar
-              onTimeSelect={() => navigate(ROUTES.REVIEW_APPOINTMENT)}
+              onTimeSelect={(bookingParams) =>
+                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
+              }
               appointmentType={service}
-              doctor={selectedDoctor}
+              doctor={!hideDoctors ? selectedDoctor : {}}
             />
           ) : hideDoctors ? (
             <BookingCalendar
-              onTimeSelect={() => navigate(ROUTES.REVIEW_APPOINTMENT)}
+              onTimeSelect={(bookingParams) =>
+                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
+              }
               appointmentType={service}
-              doctor={selectedDoctor}
+              doctor={!hideDoctors ? selectedDoctor : {}}
             />
           ) : null}
         </ContentContainer>

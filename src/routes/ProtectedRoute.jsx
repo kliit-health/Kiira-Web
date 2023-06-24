@@ -9,10 +9,10 @@ export const ProtectedRoute = () => {
   const isAuthenticated = Auth.isAuthenticated();
 
   useEffect(() => {
-    console.log(
-      ' \n 🚀 ~ file: ProtectedRoute.jsx:9 ~ ProtectedRoute ~ isAuthenticated:',
-      isAuthenticated
-    );
+    // console.log(
+    //   ' \n 🚀 ~ file: ProtectedRoute.jsx:9 ~ ProtectedRoute ~ isAuthenticated:',
+    //   isAuthenticated
+    // );
   }, [isAuthenticated]);
 
   return isAuthenticated ? (

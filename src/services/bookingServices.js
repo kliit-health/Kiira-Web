@@ -21,16 +21,26 @@ export const fetchAllAppointment = async (id) => {
 };
 
 export const fetchAvailableDates = async (data) => {
-  const res = await Api.bookings.getAvailableDates(data?.month, data?.appointmentTypeID);
+  const res = await Api.bookings.getAvailableDates(data);
   return res;
 };
 
 export const fetchAvailableTimes = async (data) => {
-  const res = await Api.bookings.getAvailableTimes(data?.date, data?.appointmentTypeID);
+  const res = await Api.bookings.getAvailableTimes(data);
   return res;
 };
 
 export const validateAvailableTimes = async (data) => {
   const res = await Api.bookings.validateAvailableTimes(data);
+  return res;
+};
+
+export const initialiseBookingPayment = async (data) => {
+  const res = await Api.payment.initialisePayment(data);
+  return res;
+};
+
+export const confirmPayment = async (id) => {
+  const res = await Api.payment.confirmPayment(id);
   return res;
 };

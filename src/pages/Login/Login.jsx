@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { Link, redirect, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import {
   AppButton,
@@ -17,11 +17,14 @@ import isEmpty from 'src/utils/isEmpty';
 import Api from 'src/middleware/api';
 import Auth from 'src/middleware/storage';
 import { useLocalStore } from 'src/store';
+import { useQueryClient } from '@tanstack/react-query';
+import KEYS from 'src/queries/queryKeys';
 
 const Login = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
+  const queryClient = useQueryClient();
   const { mutate, isLoading } = useLogin();
 
   const {
@@ -34,6 +37,7 @@ const Login = () => {
     mutate(data, {
       onSuccess: (response) => {
         console.log('🚀 ~ file: Login.jsx:46 ~ onSubmit ~ response:', response?.data);
+        queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
         setStoredEmail({ email: data?.email });
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
@@ -41,16 +45,16 @@ const Login = () => {
           icon: 'success',
           title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
         });
-
-        if (!response.data?.user?.is_email_verified) {
+        const { user } = response?.data;
+        if (!user?.is_email_verified) {
           const emailData = {
             email: response.data?.user?.email
           };
           Api.auth.resendVerification(emailData);
-          redirect(ROUTES.VERIFY_ACCOUNT);
+          navigate(ROUTES.VERIFY_ACCOUNT);
+
           return;
         }
-
         navigate(ROUTES.INDEX);
         return;
       },

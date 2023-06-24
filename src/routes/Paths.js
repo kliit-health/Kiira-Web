@@ -12,7 +12,7 @@ export const ROUTES = {
   BOOK_APPOINTMENT: '/book-appointment',
   CHOOSE_APPOINTMENT: '/book-appointment/choose-appointment',
   REVIEW_APPOINTMENT: '/book-appointment/review-appointment',
-  CONFIRM_BOOKING: '/book-appointment/confirm-booking',
+  CONFIRM_BOOKING: '/confirm-booking',
   DOCTORS: '/doctors',
   VIEW_BOOKING: '/history/view-booking',
   RESCHEDULE_APPOINTMENT: '/reschedule-appointment',

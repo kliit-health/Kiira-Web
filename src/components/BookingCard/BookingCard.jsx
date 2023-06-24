@@ -2,14 +2,17 @@ import React from 'react';
 import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES } from 'src/data';
 import { Avatar } from '@material-tailwind/react';
-import { bool, func } from 'prop-types';
+import { bool, func, object } from 'prop-types';
 import tw, { styled } from 'twin.macro';
+import moment from 'moment-timezone';
+import isEmpty from 'src/utils/isEmpty';
 
 const BookingContainer = styled(ContentContainer)(({ disabled }) => [
   disabled && tw`cursor-not-allowed opacity-50`
 ]);
 
-const BookingCard = ({ disabled, review, bookingAction }) => {
+const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
+  console.log(' \n 🚀 ~ file: BookingCard.jsx:13 ~ BookingCard ~ bookingData:', bookingData);
   return (
     <BookingContainer
       className={
@@ -25,7 +28,7 @@ const BookingCard = ({ disabled, review, bookingAction }) => {
             : 'h-full w-28 shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
         }>
         <img
-          src={IMAGES?.medicalAid}
+          src={bookingData?.appointmentType?.image}
           alt="image"
           className={
             !review
@@ -44,16 +47,16 @@ const BookingCard = ({ disabled, review, bookingAction }) => {
             className={
               !review
                 ? 'capitalise text-kiiraBlackishGreen text-lg lg:text-2xl font-semibold'
-                : '"capitalise text-kiiraBlackishGreen text-sm font-semibold"'
+                : 'capitalise text-kiiraBlackishGreen text-sm font-semibold'
             }>
-            General Health Assessment
+            {bookingData?.appointmentType?.name}
           </AppTypography>
           {!review ? (
             <ContentContainer col className="-mt-1">
               <AppTypography
                 variant="h4"
                 className="text-right font-montserrat text-kiiraBlue font-bold">
-                $150.00
+                ${bookingData?.appointmentType?.price}
               </AppTypography>
               <AppTypography
                 variant="small"
@@ -72,7 +75,7 @@ const BookingCard = ({ disabled, review, bookingAction }) => {
                 ? 'text-kiiraBlackishGreen/75 font-semibold'
                 : 'font-medium text-xs md:text-base'
             }>
-            April 21, 2023 at
+            {moment(bookingData?.bookingCheckout?.time).format('MMM D, YYYY')} at
           </AppTypography>
           <AppTypography
             variant={!review ? 'h6' : 'small'}
@@ -81,42 +84,89 @@ const BookingCard = ({ disabled, review, bookingAction }) => {
                 ? 'font-semibold text-kiiraBlackishGreen/75 -mt-1'
                 : 'mt-0 font-medium text-xs md:text-base'
             }>
-            12:00am
+            {moment(bookingData?.bookingCheckout?.time).format('H:mma')}
           </AppTypography>
         </ContentContainer>
 
-        <ContentContainer
-          className={
-            !review
-              ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center'
-              : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center'
-          }>
-          <Avatar src={IMAGES.inboxImg} alt="pic" size="sm" className="rounded-full" />
+        {review && !isEmpty(bookingData?.doctor) ? (
           <ContentContainer
-            row
             className={
-              !review ? 'gap-1.5 items-center' : 'gap-0.5 md:gap-1.5 flex-wrap items-center'
+              !review
+                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center'
+                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center'
             }>
-            <AppTypography
-              variant="small"
+            <Avatar
+              src={bookingData?.doctor?.thumbnail}
+              alt="pic"
+              size="sm"
+              className="rounded-full"
+            />
+            <ContentContainer
+              row
               className={
-                !review
-                  ? 'text-sm md:text-sm text-kiiraText font-semibold'
-                  : 'text-xs md:text-sm text-kiiraText font-semibold'
+                !review ? 'gap-1.5 items-center' : 'gap-0.5 md:gap-1.5 flex-wrap items-center'
               }>
-              With
-            </AppTypography>
-            <AppTypography
-              variant="lead"
-              className={
-                !review
-                  ? 'text-sm md:text-base text-kiiraBlackishGreen/75 font-semibold'
-                  : 'text-xs md:text-base text-kiiraBlackishGreen/75 font-semibold'
-              }>
-              Dr. Candice Fraser
-            </AppTypography>
+              <AppTypography
+                variant="small"
+                className={
+                  !review
+                    ? 'text-sm md:text-sm text-kiiraText font-semibold'
+                    : 'text-xs md:text-sm text-kiiraText font-semibold'
+                }>
+                With
+              </AppTypography>
+              <AppTypography
+                variant="lead"
+                className={
+                  !review
+                    ? 'text-sm md:text-base text-kiiraBlackishGreen/75 font-semibold'
+                    : 'text-xs md:text-base text-kiiraBlackishGreen/75 font-semibold'
+                }>
+                {bookingData?.doctor?.name}
+              </AppTypography>
+            </ContentContainer>
           </ContentContainer>
-        </ContentContainer>
+        ) : (
+          <ContentContainer
+            className={
+              !review
+                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center'
+                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center'
+            }>
+            {review && isEmpty(bookingData?.doctor) ? null : (
+              <Avatar
+                src={bookingData?.doctor?.thumbnail}
+                alt="pic"
+                size="sm"
+                className="rounded-full"
+              />
+            )}
+            <ContentContainer
+              row
+              className={
+                !review ? 'gap-1.5 items-center' : 'gap-0.5 md:gap-1.5 flex-wrap items-center'
+              }>
+              <AppTypography
+                variant="small"
+                className={
+                  !review
+                    ? 'text-sm md:text-sm text-kiiraText font-semibold'
+                    : 'text-xs md:text-sm text-kiiraText font-semibold'
+                }>
+                With
+              </AppTypography>
+              <AppTypography
+                variant="lead"
+                className={
+                  !review
+                    ? 'text-sm md:text-base text-kiiraBlackishGreen/75 font-semibold'
+                    : 'text-xs md:text-base text-kiiraBlackishGreen/75 font-semibold'
+                }>
+                {bookingData?.doctor?.name}
+              </AppTypography>
+            </ContentContainer>
+          </ContentContainer>
+        )}
 
         {!review ? (
           <>
@@ -141,13 +191,15 @@ const BookingCard = ({ disabled, review, bookingAction }) => {
 BookingCard.propTypes = {
   disabled: bool,
   review: bool,
-  bookingAction: func
+  bookingAction: func,
+  bookingData: object
 };
 
 BookingCard.defaultProps = {
   disabled: false,
   review: false,
-  bookingAction: () => {}
+  bookingAction: () => {},
+  bookingData: {}
 };
 
 export default BookingCard;

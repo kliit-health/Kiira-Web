@@ -109,7 +109,7 @@ const Home = () => {
             </Button>
           </ContentContainer>
 
-          {[1, 2].map((d, index) => {
+          {/* {[1, 2].map((d, index) => {
             return (
               <BookingCard
                 disabled={index !== 0}
@@ -117,7 +117,7 @@ const Home = () => {
                 bookingAction={() => navigate(`${ROUTES.VIEW_BOOKING}/booking`)}
               />
             );
-          })}
+          })} */}
         </Card>
       </ContentContainer>
     </MainLayout>

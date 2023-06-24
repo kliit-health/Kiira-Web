@@ -1,9 +1,4 @@
-import {
-  Avatar,
-  Breadcrumbs,
-  Button,
-  IconButton
-} from '@material-tailwind/react';
+import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -25,7 +20,6 @@ const ViewBooking = () => {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const [serviceSelected, setServiceSelected] = useState({});
-  console.log('🚀 ~ file: ViewBooking.jsx:20 ~ ViewBooking ~ serviceSelected:', serviceSelected);
 
   useEffect(() => {
     if (isEmpty(id)) return;

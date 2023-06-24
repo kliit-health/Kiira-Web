@@ -10,26 +10,20 @@ import {
 } from 'src/services/authServices';
 import { fetchUserProfile } from 'src/services/userServices';
 import {
+  confirmPayment,
   fetchAppointmentTypes,
   fetchAvailableDates,
   fetchAvailableTimes,
   fetchDoctorsCalendars,
-  fetchKiiraProducts
+  fetchKiiraProducts,
+  initialiseBookingPayment
 } from 'src/services/bookingServices';
 import isEmpty from 'src/utils/isEmpty';
 
 export const useLogin = () => {
-  const queryClient = useQueryClient();
   const data = useMutation({
     mutationFn: (data) => {
       return login(data);
-    },
-    onSuccess: (data) => {
-      // ✅ update profile data on login success
-      queryClient.setQueryData([[KEYS.PROFILE]], data?.data?.user);
-
-      // ✅ refetch profile data on login success
-      // queryClient.invalidateQueries({ queryKey: [KEYS.PROFILE] });
     }
   });
   return data;
@@ -108,24 +102,61 @@ export const useAppointmentTypes = () => {
 };
 
 export const useAvailableDates = (payload) => {
-  console.log(
-    ' \n 🚀 ~ file: queryHooks.js:111 ~ useAvailableDates ~ payload:',
-    !isEmpty(payload?.month) && !isEmpty(payload?.appointmentTypeID),
-    payload
-  );
+  const queryClient = useQueryClient();
+  const enabledQuery =
+    !isEmpty(payload?.month) &&
+    payload?.month !== 'Invalid date' &&
+    !isEmpty(payload?.appointmentTypeID);
+
   const data = useQuery({
     queryKey: [KEYS.AVAILABLE_DATES],
     queryFn: () => fetchAvailableDates(payload),
-    enabled: !isEmpty(payload?.month) && !isEmpty(payload?.appointmentTypeID)
+    enabled: enabledQuery,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [KEYS.AVAILABLE_TIMES] });
+    },
+    onError: (err) => {
+      console.log(' \n 🚀 ~ file: queryHooks.js:124 ~ useAvailableDates ~ err:', err);
+    }
   });
   return data;
 };
 
 export const useAvailableTimes = (payload) => {
+  const enabledQuery =
+    !isEmpty(payload?.date) &&
+    payload?.date !== 'Invalid date' &&
+    !isEmpty(payload?.appointmentTypeID);
+
   const data = useQuery({
     queryKey: [KEYS.AVAILABLE_TIMES],
     queryFn: () => fetchAvailableTimes(payload),
-    enabled: !isEmpty(payload?.date) && !isEmpty(payload?.appointmentTypeID)
+    enabled: enabledQuery
+  });
+  return data;
+};
+
+export const useInitialisePayment = () => {
+  const queryClient = useQueryClient();
+  const data = useMutation({
+    mutationFn: (data) => {
+      return initialiseBookingPayment(data);
+    },
+    onSuccess: () => {
+      // ✅ refetch booking history data on payment success
+      queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
+    }
+  });
+  return data;
+};
+
+export const useConfirmPayment = (id) => {
+  const enabledQuery = !isEmpty(id);
+
+  const data = useQuery({
+    queryKey: [KEYS.CONFIRM_BOOKING],
+    queryFn: () => confirmPayment(id),
+    enabled: enabledQuery
   });
   return data;
 };
