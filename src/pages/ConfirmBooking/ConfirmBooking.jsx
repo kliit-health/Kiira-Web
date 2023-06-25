@@ -181,7 +181,7 @@ const ConfirmBooking = () => {
             <AppTypography
               variant="lead"
               color="blue"
-              className="capitalise text-kiiraDark text-xl font-poppins lg:text-2xl font-medium text-center my-4  w-full xl:w-3/4">
+              className="capitalise text-kiiraDark text-xl font-poppins lg:text-2xl font-medium text-center my-4  w-full">
               ERROR
             </AppTypography>
             <Alert
@@ -208,7 +208,7 @@ const ConfirmBooking = () => {
             <Button
               variant="outlined"
               onClick={() => navigate(ROUTES.BOOK_APPOINTMENT, { replace: true })}
-              className="shadow-transparent mt-auto"
+              className="shadow-transparent mt-auto mb-4"
               size="sm">
               Return to Booking
             </Button>

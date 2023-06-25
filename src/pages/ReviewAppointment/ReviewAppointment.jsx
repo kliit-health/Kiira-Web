@@ -17,6 +17,7 @@ import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import Swal from 'sweetalert2';
 
 const ReviewAppointment = () => {
   const navigate = useNavigate();
@@ -64,14 +65,24 @@ const ReviewAppointment = () => {
           ' \n 🚀 ~ file: ReviewAppointment.jsx:46 ~ handleInitialisePayment ~ response:',
           response?.data
         );
-        Toast.fire({
+
+        // Toast.fire({
+        //   icon: 'success',
+        //   title: `${response?.data?.message}: \nYou are now been redirected to payment checkout`
+        // });
+        Swal.fire({
           icon: 'success',
-          title: `${response?.data?.message}: \nYou are now been redirected to payment checkout`
+          title: 'Payment Initialised',
+          html: `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
+          confirmButtonColor: 'blue',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.open(response?.data?.checkout_session?.url, '_blank');
+            navigate(ROUTES.INDEX, { replace: true });
+          }
         });
-        setTimeout(() => {
-          window.open(response?.data?.checkout_session?.url, '_blank');
-        }, 3500);
-        navigate(ROUTES.INDEX, { replace: true });
         return;
       },
       onError: (error) => {
@@ -277,7 +288,7 @@ const ReviewAppointment = () => {
                   ? 'text-xs text-orange-400  font-bold uppercase'
                   : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
               ]}>
-              Reserve Appointment
+              Reserve this Appointment booking
             </span>
           </ContentContainer>
 

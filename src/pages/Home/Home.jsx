@@ -1,20 +1,18 @@
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader } from '@material-tailwind/react';
+import { Avatar, Button, Card, CardBody, CardHeader } from '@material-tailwind/react';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AddButton, BookingCard } from 'src/components';
-import {
-  AddCircleIcon,
-  AppButton,
-  AppTypography,
-  BorderedContainer,
-  ContentContainer
-} from 'src/components/shared/styledComponents';
+import { AddButton, BookingCard, Empty } from 'src/components';
+import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraUpdates } from 'src/data';
 import { MainLayout } from 'src/layouts';
+import { useAppointments } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
+import isEmpty from 'src/utils/isEmpty';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { data, isLoading } = useAppointments();
+  const appointments = data?.data?.appointments;
   return (
     <MainLayout>
       <ContentContainer
@@ -102,6 +100,7 @@ const Home = () => {
               Booking History
             </AppTypography>
             <Button
+              onClick={() => navigate(ROUTES.HISTORY)}
               variant="text"
               size="sm"
               className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
@@ -109,15 +108,25 @@ const Home = () => {
             </Button>
           </ContentContainer>
 
-          {/* {[1, 2].map((d, index) => {
-            return (
-              <BookingCard
-                disabled={index !== 0}
-                key={index?.toString()}
-                bookingAction={() => navigate(`${ROUTES.VIEW_BOOKING}/booking`)}
-              />
-            );
-          })} */}
+          {!isLoading && !isEmpty(appointments) ? (
+            <>
+              {appointments
+                .map((booking, index) => {
+                  return (
+                    <BookingCard
+                      bookingData={booking}
+                      bookingAction={(data) =>
+                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.id}`, { state: data })
+                      }
+                      key={index?.toString()}
+                    />
+                  );
+                })
+                .splice(0, 5)}
+            </>
+          ) : null}
+
+          {!isLoading && isEmpty(appointments) ? <Empty /> : null}
         </Card>
       </ContentContainer>
     </MainLayout>

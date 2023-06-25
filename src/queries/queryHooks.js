@@ -11,6 +11,7 @@ import {
 import { fetchUserProfile } from 'src/services/userServices';
 import {
   confirmPayment,
+  fetchAllAppointment,
   fetchAppointmentTypes,
   fetchAvailableDates,
   fetchAvailableTimes,
@@ -157,6 +158,14 @@ export const useConfirmPayment = (id) => {
     queryKey: [KEYS.CONFIRM_BOOKING],
     queryFn: () => confirmPayment(id),
     enabled: enabledQuery
+  });
+  return data;
+};
+
+export const useAppointments = () => {
+  const data = useQuery({
+    queryKey: [KEYS.APPOINTMENTS],
+    queryFn: () => fetchAllAppointment()
   });
   return data;
 };
