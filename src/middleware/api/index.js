@@ -22,7 +22,7 @@ const Api = {
     getProducts: () => ApiHandler.get(`/products`),
     getCalendars: () => ApiHandler.get(`/calendars`),
     getAppointmentTypes: () => ApiHandler.get(`/appointment-types`),
-    getAllAppointments: () => ApiHandler.get(`/appointments`),
+    getAllAppointments: () => ApiHandler.get(`/appointments/book/history`),
     getAppointmentById: (id) => ApiHandler.get(`/appointments/${id}`),
     createAppointment: (data) => ApiHandler.post(`/appointments`, data),
     updateAppointment: (id, data) => ApiHandler.put(`/appointments/${id}`, data),
@@ -45,7 +45,8 @@ const Api = {
         .join('&');
       return ApiHandler.get(`/availability/times?${queryString}`);
     },
-    validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data)
+    validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data),
+    getBlogCollections: () => ApiHandler.get(`/collections?limit=10`)
   },
   payment: {
     initialisePayment: (data) => ApiHandler.post(`/appointments/book/initialize`, data),

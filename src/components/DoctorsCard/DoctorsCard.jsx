@@ -73,7 +73,7 @@ const DoctorsCard = ({
         }>
         <AppAvatar
           size="xxl"
-          src={doctor?.image ? doctor?.image : IMAGES.dummyProfilePhoto}
+          src={doctor?.image && !isEmpty(doctor?.image) ? doctor?.image : IMAGES.Penguin}
           alt="avatar"
           status={doctor?.status}
           withBorder={true}

@@ -1,6 +1,6 @@
 import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   AppLink,
   AppNavLink,
@@ -13,37 +13,33 @@ import isEmpty from 'src/utils/isEmpty';
 import { DividerIcon, ShareIcon } from 'src/components/shared/AppIcons/AppIcons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import moment from 'moment-timezone';
+import { truncate } from 'src/utils/truncate';
+import useAuth from 'src/hooks/useAuth';
+import { useAppointmentById } from 'src/queries/queryHooks';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
-  const [selectedDay, setSelectedDay] = useState(null);
+  const booking = location?.state;
+  const { user } = useAuth();
 
-  const [serviceSelected, setServiceSelected] = useState({});
+  const { data } = useAppointmentById(id);
+  console.log('\n 🚀 ~ file: ViewBooking.jsx:29 ~ ViewBooking ~ data:', data?.data);
 
-  useEffect(() => {
-    if (isEmpty(id)) return;
-
-    let filteredService = {};
-
-    kiiraServices.filter((service) => {
-      if (service._id === id) {
-        filteredService = service;
-        return true;
-      }
-      setServiceSelected(filteredService);
-      return false;
-    });
-  }, [id]);
+  console.log('\n 🚀 ~ file: ViewBooking.jsx:22 ~ ViewBooking ~ bookingData:', booking);
 
   const downloadPdfDocument = () => {
     const element = document.getElementById('pdfRefId');
+
     html2canvas(element, {
       scrollX: -window.scrollX,
       scrollY: -window.scrollY,
       windowWidth: document.documentElement.offsetWidth,
       windowHeight: document.documentElement.offsetHeight
     });
+
     html2canvas(element).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
@@ -74,7 +70,7 @@ const ViewBooking = () => {
             History
           </AppNavLink>
           <AppNavLink to="#" className="opacity-75 text-xs font-medium cursor-default">
-            {serviceSelected?.title || 'General Health Assessment'}
+            {booking?.bookingData?.type}
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
@@ -85,13 +81,13 @@ const ViewBooking = () => {
             variant="h6"
             color="blue"
             className="capitalise text-kiiraBlackishGreen text-lg lg:text-xl font-semibold">
-            {serviceSelected?.title || 'General Health Assessment'}
+            {booking?.bookingData?.type}
           </AppTypography>
           <ContentContainer className="gap-2">
             <AppTypography
               variant="h4"
               className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-              {serviceSelected?.fee || '$150.00'}
+              ${booking?.bookingData?.price}
             </AppTypography>
             <ContentContainer row className="gap-2 items-center flex-wrap md:justify-end">
               <Button
@@ -124,7 +120,7 @@ const ViewBooking = () => {
             <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                 <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                  Thur, Dec 8
+                  {moment(booking?.bookingData?.datetime).format('ddd MMM D,')}
                 </AppTypography>
                 <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                   Date
@@ -133,7 +129,7 @@ const ViewBooking = () => {
               <DividerIcon className="rotate-0 sm:rotate-90 md:rotate-0 w-full xs:w-auto md:max-w-min " />
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                 <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                  1:00 PM
+                  {moment(booking?.bookingData?.datetime).format('HH:mm A')}
                 </AppTypography>
                 <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                   Time
@@ -145,7 +141,7 @@ const ViewBooking = () => {
               <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 flex-wrap">
                 <ContentContainer className="flex flex-row 1tems-center gap-1" alignItems="center">
                   <Avatar
-                    src={IMAGES?.inboxImg}
+                    src={IMAGES?.Penguin}
                     alt=""
                     loading="lazy"
                     variant="circular"
@@ -156,28 +152,30 @@ const ViewBooking = () => {
                     variant="h6"
                     color="blue"
                     className="text-white text-xs font-semibold font-poppins">
-                    James Doe
+                    {user?.first_name} {user?.last_name}
                   </AppTypography>
                 </ContentContainer>
                 <AppTypography
                   variant="h6"
                   color="blue"
                   className="text-white text-xs text-right font-normal font-poppins">
-                  General Health Assessment
+                  {booking?.bookingData?.type}
                 </AppTypography>
               </ContentContainer>
 
               <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
                 <ContentContainer>
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    Dr. Candice Fraser
+                    {booking?.doctor?.name}
                   </AppTypography>
-                  <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">
-                    Obstetrician and Gynecologist
-                  </AppTypography>
+                  {!isEmpty(booking?.doctor?.description) ? (
+                    <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">
+                      {truncate(booking?.doctor?.description, 100)}
+                    </AppTypography>
+                  ) : null}
                 </ContentContainer>
 
-                <ContentContainer className="h-24 w-24">
+                <ContentContainer className="h-24 w-24 min-w-[100px] min-h-[100px]">
                   <img
                     src={IMAGES.QR}
                     alt=""
@@ -196,8 +194,8 @@ const ViewBooking = () => {
             <AppTypography
               variant="lead"
               className="text-sm text-kiiraBlackishGreen  w-full font-montserrat font-semibold">
-              {/* {serviceSelected?.description} */}
-              Kiira Health Inc. (“Kiira”, “we,” “us,” or “our”) respects your privacy and understand
+              {booking?.appointment?.description}
+              {/* Kiira Health Inc. (“Kiira”, “we,” “us,” or “our”) respects your privacy and understand
               the importance of privacy to our users. We developed this Privacy Policy to explain
               how we collect, use, share, and protect Personal Information (defined below), and your
               choices about the collection and use of Personal Information. ‍ This Privacy Policy
@@ -212,12 +210,12 @@ const ViewBooking = () => {
               under HIPAA) that you share with the Provider, whether or not through the Site or
               Services, in the course of receiving health services. For more information on your
               Provider’s use and disclosure of your PHI, please refer to your Provider’s Notice of
-              Health Information Privacy Practices.
+              Health Information Privacy Practices. */}
             </AppTypography>
 
-            <AppLink to="#" className="font-poppins text-kiiraBlue font-medium text-sm">
+            <Button variant="text" className="font-poppins text-kiiraBlue font-medium text-sm">
               Read more
-            </AppLink>
+            </Button>
           </ContentContainer>
         </ContentContainer>
       </ContentContainer>

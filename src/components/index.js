@@ -20,6 +20,7 @@ import PaymentCard from './PaymentCard/PaymentCard';
 import BookingCalendar from './BookingCalendar/BookingCalendar';
 import Loader from './shared/Loader/Loader';
 import Empty from './shared/Empty/Empty';
+import BlogItem from './BlogItem/BlogItem';
 
 export {
   AppNavBar,
@@ -41,5 +42,6 @@ export {
   CloseIcon,
   BookingCalendar,
   Loader,
-  Empty
+  Empty,
+  BlogItem
 };

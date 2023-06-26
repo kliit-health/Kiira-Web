@@ -6,23 +6,15 @@ import { bool, func, object } from 'prop-types';
 import tw, { styled } from 'twin.macro';
 import moment from 'moment-timezone';
 import isEmpty from 'src/utils/isEmpty';
-import { useAppointmentTypes, useDoctorsCalendars } from 'src/queries/queryHooks';
 
 const BookingContainer = styled(ContentContainer)(({ disabled }) => [
   disabled && tw`cursor-not-allowed opacity-50`
 ]);
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
-  const { data } = useDoctorsCalendars();
-  const { data: appointmenData } = useAppointmentTypes();
+  const doctor = bookingData?.calendar;
 
-  const doctors = data?.data?.calendars;
-  const appointment_types = appointmenData?.data?.appointment_types;
-
-  const doctor = doctors?.filter((doc) => doc?.id === bookingData?.calendarID)[0];
-  const appointment = appointment_types?.filter(
-    (appmnt) => appmnt?.id === bookingData?.appointmentTypeID
-  )[0];
+  // const aptData = { bookingData, doctor, appointment };
 
   return (
     <BookingContainer
@@ -40,10 +32,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
         }>
         <img
           src={
-            !review && appointment?.image
-              ? appointment?.image
-              : bookingData?.appointmentType?.image
-              ? bookingData?.appointmentType?.image
+            !isEmpty(bookingData?.appointment_type?.image) && bookingData?.appointment_type?.image
+              ? bookingData?.appointment_type?.image
               : IMAGES.Penguin
           }
           alt="image"
@@ -72,14 +62,17 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 ? 'capitalise text-kiiraBlackishGreen text-lg lg:text-2xl font-semibold text-justify'
                 : 'capitalise text-kiiraBlackishGreen text-sm font-semibold'
             }>
-            {!review ? bookingData?.type : bookingData?.appointmentType?.name}
+            {!review ? bookingData?.appointment_type?.name : bookingData?.appointmentType?.name}
           </AppTypography>
           {!review ? (
             <ContentContainer col className="-mt-1">
               <AppTypography
                 variant="h4"
                 className="text-right font-montserrat text-kiiraBlue font-bold">
-                ${!review ? bookingData?.price : bookingData?.appointmentType?.price}
+                $
+                {!review
+                  ? bookingData?.appointment_type?.price
+                  : bookingData?.appointmentType?.price}
               </AppTypography>
               <AppTypography
                 variant="small"
@@ -98,9 +91,9 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 ? 'text-kiiraBlackishGreen/75 font-semibold'
                 : 'font-medium text-xs md:text-base'
             }>
-            {moment(!review ? bookingData?.datetime : bookingData?.bookingCheckout?.time).format(
-              'MMM D, YYYY'
-            )}{' '}
+            {moment(
+              !review ? bookingData?.appointment_datetime : bookingData?.bookingCheckout?.time
+            ).format('MMM D, YYYY')}{' '}
             at
           </AppTypography>
           <AppTypography
@@ -110,9 +103,9 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 ? 'font-semibold text-kiiraBlackishGreen/75 -mt-1'
                 : 'mt-0 font-medium text-xs md:text-base'
             }>
-            {moment(!review ? bookingData?.datetime : bookingData?.bookingCheckout?.time).format(
-              'H:mma'
-            )}
+            {moment(
+              !review ? bookingData?.appointment_datetime : bookingData?.bookingCheckout?.time
+            ).format('H:mma')}
           </AppTypography>
         </ContentContainer>
 
@@ -125,9 +118,9 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             }>
             <Avatar
               src={
-                !review
+                !review && !isEmpty(doctor?.thumbnail) && doctor?.thumbnail
                   ? doctor?.thumbnail
-                  : bookingData?.doctor?.thumbnail
+                  : !isEmpty(bookingData?.doctor?.thumbnail) && bookingData?.doctor?.thumbnail
                   ? bookingData?.doctor?.thumbnail
                   : IMAGES.Penguin
               }
@@ -158,7 +151,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     : 'text-xs md:text-base text-kiiraBlackishGreen/75 font-semibold'
                 }>
                 {!isEmpty(bookingData?.calendar)
-                  ? bookingData?.calendar
+                  ? bookingData?.calendar?.name
                   : !isEmpty(bookingData?.doctor?.name)
                   ? bookingData?.doctor?.name
                   : 'Any available doctor'}
@@ -174,9 +167,9 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             }>
             <Avatar
               src={
-                !review
+                !review && !isEmpty(doctor?.thumbnail) && doctor?.thumbnail
                   ? doctor?.thumbnail
-                  : bookingData?.doctor?.thumbnail
+                  : !isEmpty(bookingData?.doctor?.thumbnail) && bookingData?.doctor?.thumbnail
                   ? bookingData?.doctor?.thumbnail
                   : IMAGES.Penguin
               }
@@ -207,7 +200,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     : 'text-xs md:text-base text-kiiraBlackishGreen/75 font-semibold'
                 }>
                 {!isEmpty(bookingData?.calendar)
-                  ? bookingData?.calendar
+                  ? bookingData?.calendar?.name
                   : !isEmpty(bookingData?.doctor?.name)
                   ? bookingData?.doctor?.name
                   : 'Any available doctor'}
@@ -221,7 +214,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             <AppTypography
               variant="small"
               className="text-sm md:text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
-              <IMAGES.LocationIcon /> <span>{!review ? bookingData?.category : 'Virtual'}</span>
+              <IMAGES.LocationIcon />{' '}
+              <span>{!review ? bookingData?.appointment_type?.category : 'Virtual'}</span>
             </AppTypography>
 
             <hr className="bg-kiiraText" />
@@ -230,7 +224,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
               size="md"
               fullWidth
               disabled={disabled}
-              onClick={() => bookingAction({ bookingData, doctor, appointment })}>
+              onClick={() => bookingAction(bookingData)}>
               View Booking
             </AppButton>
           </>

@@ -12,7 +12,7 @@ const History = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useAppointments();
-  const appointments = data?.data?.appointments;
+  const appointments = data?.data?.booking_history;
   return (
     <ContentContainer
       width="100%"
@@ -36,7 +36,7 @@ const History = () => {
       {!isLoading ? (
         <>
           <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
-          {appointments.map((booking, index) => {
+          {appointments?.map((booking, index) => {
             return (
               <BookingCard
                 bookingData={booking}

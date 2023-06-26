@@ -61,15 +61,6 @@ const ReviewAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        console.log(
-          ' \n 🚀 ~ file: ReviewAppointment.jsx:46 ~ handleInitialisePayment ~ response:',
-          response?.data
-        );
-
-        // Toast.fire({
-        //   icon: 'success',
-        //   title: `${response?.data?.message}: \nYou are now been redirected to payment checkout`
-        // });
         Swal.fire({
           icon: 'success',
           title: 'Payment Initialised',
@@ -200,7 +191,7 @@ const ReviewAppointment = () => {
           <AppTypography
             variant="lead"
             className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center">
-            Your booking is protected by <b>Acuity</b>
+            Secure payment by <b>Stripe</b>
           </AppTypography>
 
           <ContentContainer className="flex-col gap-4">

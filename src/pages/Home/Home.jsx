@@ -1,18 +1,22 @@
 import { Avatar, Button, Card, CardBody, CardHeader } from '@material-tailwind/react';
 import React from 'react';
+import { ThreeDots } from 'react-loader-spinner';
 import { Link, useNavigate } from 'react-router-dom';
-import { AddButton, BookingCard, Empty } from 'src/components';
+import { AddButton, BlogItem, BookingCard, Empty } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraUpdates } from 'src/data';
 import { MainLayout } from 'src/layouts';
-import { useAppointments } from 'src/queries/queryHooks';
+import { useAppointments, useBlogCollections } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 
 const Home = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useAppointments();
-  const appointments = data?.data?.appointments;
+  const { data: blogResponse, isLoading: blogLoading } = useBlogCollections();
+  const blogCollections = blogResponse?.data?.collections;
+  const appointments = data?.data?.booking_history;
+  
   return (
     <MainLayout>
       <ContentContainer
@@ -27,63 +31,16 @@ const Home = () => {
           hideScroll
           width="100%"
           className="overflow-hidden overflow-x-auto flex flex-row items-center gap-4 space-x-2">
-          {kiiraUpdates?.map((item, index) => {
-            return (
-              <ContentContainer
-                className="p-0 md:p-2 bg-kiiraBg2 rounded-2xl"
-                key={index?.toString()}>
-                <Card className="w-[235px] md:w-[256px] h-[376px] overflow-hidden shadow-none">
-                  <CardHeader
-                    floated={false}
-                    shadow={false}
-                    color="transparent"
-                    className="m-0 rounded-2xl rounded-b-none min-h-[150px]">
-                    <img src={item?.imageSrc} alt={item.title} loading="lazy" />
-                  </CardHeader>
-                  <CardBody className="bg-kiiraBg2 p-2 h-full flex flex-col gap-2 justify-between">
-                    <ContentContainer className="gap-2">
-                      <AppTypography
-                        variant="h4"
-                        color="blue-gray"
-                        className="text-[#252539] text-xl font-semibold">
-                        {item?.title}
-                      </AppTypography>
-                      <AppTypography
-                        variant="small"
-                        color="gray"
-                        className="font-normal text-[#93939A] text-[0.75rem] font-manrope leading-tight">
-                        {item?.content}
-                      </AppTypography>
-                    </ContentContainer>
-                    <ContentContainer className="flex flex-col gap-2 bg-kiiraBg2">
-                      <div className="flex flex-row items-center space-x-3">
-                        <Avatar
-                          size="md"
-                          variant="rounded"
-                          alt="natali craig"
-                          src={IMAGES?.girlAvatarBg}
-                          className="rounded-full"
-                        />
-
-                        <AppTypography className="font-normal text-kiiraDark text-sm">
-                          {item?.author}
-                        </AppTypography>
-                      </div>
-                    </ContentContainer>
-                    <ContentContainer className="flex flex-col gap-2 bg-kiiraBg2">
-                      <Link to="#" className="flex flex-row items-center space-x-3">
-                        <AppTypography
-                          variant="small"
-                          className="font-normal text-kiiraBlue text-xs">
-                          Read more <i className="fa fa-long-arrow-right" aria-hidden="true"></i>
-                        </AppTypography>
-                      </Link>
-                    </ContentContainer>
-                  </CardBody>
-                </Card>
-              </ContentContainer>
-            );
-          })}
+          {blogLoading
+            ? Array.apply(null, Array(8)).map((item, index) => {
+                return <BlogItem item={item} loading={true} key={index.toString()} />;
+              })
+            : null}
+          {!blogLoading && !isEmpty(blogCollections)
+            ? blogCollections?.map((item, index) => {
+                return <BlogItem item={item} loading={blogLoading} key={index.toString()} />;
+              })
+            : null}
         </ContentContainer>
 
         <Card className="w-full h-full bg-kiiraBg2 p-4 lg:px-5 lg:py-4 gap-4 shadow-none">
@@ -127,6 +84,21 @@ const Home = () => {
           ) : null}
 
           {!isLoading && isEmpty(appointments) ? <Empty /> : null}
+
+          {isLoading ? (
+            <ContentContainer className="flex h-full w-full min-h-[150px] items-center justify-center">
+              <ThreeDots
+                height="80"
+                width="80"
+                radius="9"
+                color="#005eff"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClassName=""
+                visible={true}
+              />
+            </ContentContainer>
+          ) : null}
         </Card>
       </ContentContainer>
     </MainLayout>

@@ -49,3 +49,8 @@ export const confirmPayment = async (id) => {
   const res = await Api.payment.confirmPayment(id);
   return res;
 };
+
+export const fetchBlogCollections = async () => {
+  const res = await Api.bookings.getBlogCollections();
+  return res;
+};

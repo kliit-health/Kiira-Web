@@ -12,9 +12,11 @@ import { fetchUserProfile } from 'src/services/userServices';
 import {
   confirmPayment,
   fetchAllAppointment,
+  fetchAppointmentByID,
   fetchAppointmentTypes,
   fetchAvailableDates,
   fetchAvailableTimes,
+  fetchBlogCollections,
   fetchDoctorsCalendars,
   fetchKiiraProducts,
   initialiseBookingPayment
@@ -166,6 +168,23 @@ export const useAppointments = () => {
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENTS],
     queryFn: () => fetchAllAppointment()
+  });
+  return data;
+};
+
+export const useAppointmentById = (id) => {
+  const enabledQuery = !isEmpty(id);
+  const data = useQuery({
+    queryKey: [KEYS.APPOINTMENTS_BY_ID, id],
+    queryFn: () => fetchAppointmentByID(id),
+    enabled: enabledQuery
+  });
+  return data;
+};
+export const useBlogCollections = () => {
+  const data = useQuery({
+    queryKey: [KEYS.BLOG_COLLECTIONS],
+    queryFn: () => fetchBlogCollections()
   });
   return data;
 };
