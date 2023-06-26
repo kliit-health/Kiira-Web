@@ -25,9 +25,6 @@ const ViewBooking = () => {
   const booking = location?.state;
   const { user } = useAuth();
 
-  const { data } = useAppointmentById(id);
-  console.log('\n 🚀 ~ file: ViewBooking.jsx:29 ~ ViewBooking ~ data:', data?.data);
-
   console.log('\n 🚀 ~ file: ViewBooking.jsx:22 ~ ViewBooking ~ bookingData:', booking);
 
   const downloadPdfDocument = () => {
@@ -70,7 +67,7 @@ const ViewBooking = () => {
             History
           </AppNavLink>
           <AppNavLink to="#" className="opacity-75 text-xs font-medium cursor-default">
-            {booking?.bookingData?.type}
+            {booking?.appointment_type?.name}
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
@@ -81,19 +78,19 @@ const ViewBooking = () => {
             variant="h6"
             color="blue"
             className="capitalise text-kiiraBlackishGreen text-lg lg:text-xl font-semibold">
-            {booking?.bookingData?.type}
+            {booking?.appointment_type?.name}
           </AppTypography>
           <ContentContainer className="gap-2">
             <AppTypography
               variant="h4"
               className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-              ${booking?.bookingData?.price}
+              ${booking?.appointment_type?.price}
             </AppTypography>
             <ContentContainer row className="gap-2 items-center flex-wrap md:justify-end">
               <Button
                 to="#"
                 onClick={() =>
-                  navigate(`${ROUTES.HISTORY}/mentalHealth${ROUTES.RESCHEDULE_APPOINTMENT}`)
+                  navigate(`${ROUTES.HISTORY}/${booking?.id}${ROUTES.RESCHEDULE_APPOINTMENT}`)
                 }
                 variant="sm"
                 className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
@@ -120,7 +117,7 @@ const ViewBooking = () => {
             <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                 <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                  {moment(booking?.bookingData?.datetime).format('ddd MMM D,')}
+                  {moment(booking?.appointment_datetime).format('ddd MMM D,')}
                 </AppTypography>
                 <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                   Date
@@ -129,7 +126,7 @@ const ViewBooking = () => {
               <DividerIcon className="rotate-0 sm:rotate-90 md:rotate-0 w-full xs:w-auto md:max-w-min " />
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                 <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                  {moment(booking?.bookingData?.datetime).format('HH:mm A')}
+                  {moment(booking?.appointment_datetime).format('HH:mm A')}
                 </AppTypography>
                 <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                   Time
@@ -141,7 +138,7 @@ const ViewBooking = () => {
               <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 flex-wrap">
                 <ContentContainer className="flex flex-row 1tems-center gap-1" alignItems="center">
                   <Avatar
-                    src={IMAGES?.Penguin}
+                    src={IMAGES?.dummyProfilePhoto}
                     alt=""
                     loading="lazy"
                     variant="circular"
@@ -159,18 +156,18 @@ const ViewBooking = () => {
                   variant="h6"
                   color="blue"
                   className="text-white text-xs text-right font-normal font-poppins">
-                  {booking?.bookingData?.type}
+                  {booking?.appointment_type?.name}
                 </AppTypography>
               </ContentContainer>
 
               <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
                 <ContentContainer>
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {booking?.doctor?.name}
+                    {booking?.calendar?.name }
                   </AppTypography>
-                  {!isEmpty(booking?.doctor?.description) ? (
+                  {!isEmpty(booking?.calendar?.description) ? (
                     <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">
-                      {truncate(booking?.doctor?.description, 100)}
+                      {truncate(booking?.calendar?.description, 100)}
                     </AppTypography>
                   ) : null}
                 </ContentContainer>
@@ -195,7 +192,7 @@ const ViewBooking = () => {
               variant="lead"
               className="text-sm text-kiiraBlackishGreen  w-full font-montserrat font-semibold">
               {booking?.appointment?.description}
-              {/* Kiira Health Inc. (“Kiira”, “we,” “us,” or “our”) respects your privacy and understand
+              Kiira Health Inc. (“Kiira”, “we,” “us,” or “our”) respects your privacy and understand
               the importance of privacy to our users. We developed this Privacy Policy to explain
               how we collect, use, share, and protect Personal Information (defined below), and your
               choices about the collection and use of Personal Information. ‍ This Privacy Policy
@@ -210,7 +207,7 @@ const ViewBooking = () => {
               under HIPAA) that you share with the Provider, whether or not through the Site or
               Services, in the course of receiving health services. For more information on your
               Provider’s use and disclosure of your PHI, please refer to your Provider’s Notice of
-              Health Information Privacy Practices. */}
+              Health Information Privacy Practices.
             </AppTypography>
 
             <Button variant="text" className="font-poppins text-kiiraBlue font-medium text-sm">
