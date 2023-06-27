@@ -30,10 +30,6 @@ const ReviewAppointment = () => {
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
-  console.log(
-    ' \n 🚀 ~ file: ReviewAppointment.jsx:26 ~ ReviewAppointment ~ bookingData:',
-    bookingData
-  );
 
   const handleInitialisePayment = () => {
     if (!checked) {
@@ -53,11 +49,6 @@ const ReviewAppointment = () => {
       book_on_hold: reserveBooking,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
     };
-
-    console.log(
-      ' \n 🚀 ~ file: ReviewAppointment.jsx:49 ~ handleInitialisePayment ~ payload:',
-      payload
-    );
 
     mutate(payload, {
       onSuccess: (response) => {

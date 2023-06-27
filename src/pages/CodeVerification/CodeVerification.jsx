@@ -3,12 +3,11 @@ import { AppButton, AppTypography, ContentContainer } from 'src/components/share
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { useNavigate } from 'react-router-dom';
-import useAuth from 'src/hooks/useAuth';
 import Api from 'src/middleware/api';
 import { useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { Toast } from 'src/utils';
-import { useVerifyEmail } from 'src/queries/queryHooks';
+import { useProfile, useVerifyEmail } from 'src/queries/queryHooks';
 import { useForm } from 'react-hook-form';
 import { Loader } from 'src/components';
 import isEmpty from 'src/utils/isEmpty';
@@ -16,10 +15,15 @@ import { useLocalStore } from 'src/store';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
   const { mutate, isLoading } = useVerifyEmail();
+  const [loading, setLoading] = useState(false);
   const getStoredEmail = useLocalStore((state) => state.email);
+  console.log(
+    '\n 🚀 ~ file: CodeVerification.jsx:24 ~ CodeVerification ~ getStoredEmail:',
+    getStoredEmail
+  );
 
   const {
     register,
@@ -29,7 +33,7 @@ const CodeVerification = () => {
 
   const onSubmit = (data) => {
     const payload = {
-      email: getStoredEmail?.email,
+      email: !isEmpty(getStoredEmail?.email) ? getStoredEmail?.email : profile?.email,
       code: data?.code
     };
     mutate(payload, {
@@ -38,7 +42,7 @@ const CodeVerification = () => {
           icon: 'success',
           title: response?.data?.message
         });
-        if (isEmpty(user?.subscription_id) && isEmpty(user?.subscription_type)) {
+        if (isEmpty(profile?.subscription_id) && isEmpty(profile?.subscription_type)) {
           navigate(ROUTES.SIGINUP_SUBSCRIPTION);
           return;
         }
@@ -57,7 +61,7 @@ const CodeVerification = () => {
   const resendCode = async () => {
     setLoading(true);
     const email = {
-      email: user?.email
+      email: profile?.email
     };
     try {
       const response = await Api.auth.resendVerification(email);

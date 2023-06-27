@@ -9,16 +9,16 @@ import {
 } from 'src/components/shared/styledComponents';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
-import useAuth from 'src/hooks/useAuth';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
-import { useChangePassword } from 'src/queries/queryHooks';
+import { useChangePassword, useProfile } from 'src/queries/queryHooks';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { user } = useAuth();
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
 
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
@@ -43,7 +43,7 @@ const ChangePassword = () => {
     }
 
     const payload = {
-      email: user?.email,
+      email: profile?.email,
       ...data
     };
 

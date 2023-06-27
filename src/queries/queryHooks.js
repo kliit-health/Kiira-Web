@@ -40,7 +40,7 @@ export const useSignup = () => {
     },
     onSuccess: (data) => {
       // ✅ refetch profile data on login success
-      queryClient.invalidateQueries({ queryKey: [KEYS.PROFILE] });
+      queryClient.invalidateQueries({ queryKey: [KEYS.PROFILE, KEYS.HISTORY] });
     }
   });
   return data;

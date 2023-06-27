@@ -2,12 +2,11 @@ import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/reac
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
-  AppLink,
   AppNavLink,
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraServices } from 'src/data';
+import { IMAGES } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import { DividerIcon, ShareIcon } from 'src/components/shared/AppIcons/AppIcons';
@@ -15,17 +14,16 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
-import useAuth from 'src/hooks/useAuth';
-import { useAppointmentById } from 'src/queries/queryHooks';
+import { useProfile } from 'src/queries/queryHooks';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const booking = location?.state;
-  const { user } = useAuth();
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
 
-  console.log('\n 🚀 ~ file: ViewBooking.jsx:22 ~ ViewBooking ~ bookingData:', booking);
 
   const downloadPdfDocument = () => {
     const element = document.getElementById('pdfRefId');
@@ -149,7 +147,7 @@ const ViewBooking = () => {
                     variant="h6"
                     color="blue"
                     className="text-white text-xs font-semibold font-poppins">
-                    {user?.first_name} {user?.last_name}
+                    {profile?.first_name} {profile?.last_name}
                   </AppTypography>
                 </ContentContainer>
                 <AppTypography
@@ -163,7 +161,7 @@ const ViewBooking = () => {
               <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
                 <ContentContainer>
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {booking?.calendar?.name }
+                    {booking?.calendar?.name}
                   </AppTypography>
                   {!isEmpty(booking?.calendar?.description) ? (
                     <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">

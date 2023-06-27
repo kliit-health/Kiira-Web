@@ -9,6 +9,7 @@ import Api from 'src/middleware/api';
 import Auth from 'src/middleware/storage';
 import { useSignup } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
+import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
@@ -17,6 +18,7 @@ const Signup = () => {
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
   const [checked, setChecked] = useState(false);
+  const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
 
   const { mutate, isLoading } = useSignup();
 
@@ -28,12 +30,12 @@ const Signup = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log('🚀 ~ file: Login.jsx:35 ~ onSubmit ~ data:', data);
 
     if (!checked) {
       Toast.fire({
         icon: 'warning',
-        title: `Please checkout our terms and conditions before you proceed`
+        title: `Please checkout our terms and conditions before you proceed`,
+        width: '80vw'
       });
       return;
     }
@@ -47,16 +49,17 @@ const Signup = () => {
     }
     mutate(data, {
       onSuccess: (response) => {
-        console.log(' \n 🚀 ~ file: Signup.jsx:32 ~ onSubmit ~ response:', response?.data);
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
+        setStoredEmail({ email: data?.email });
         reset();
+
         if (!response.data?.user?.is_email_verified) {
           const emailData = {
             email: response.data?.user?.email
           };
           Api.auth.resendVerification(emailData);
-          navigate(ROUTES.VERIFY_ACCOUNT);
+          navigate(ROUTES.VERIFY_ACCOUNT, {replace: true});
           return;
         }
       },

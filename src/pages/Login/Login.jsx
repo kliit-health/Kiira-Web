@@ -36,30 +36,33 @@ const Login = () => {
   const onSubmit = (data) => {
     mutate(data, {
       onSuccess: (response) => {
-        console.log('🚀 ~ file: Login.jsx:46 ~ onSubmit ~ response:', response?.data);
         queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
+        queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
+
         setStoredEmail({ email: data?.email });
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
+
         Toast.fire({
           icon: 'success',
           title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
         });
+
         const { user } = response?.data;
         if (!user?.is_email_verified) {
           const emailData = {
             email: response.data?.user?.email
           };
           Api.auth.resendVerification(emailData);
-          navigate(ROUTES.VERIFY_ACCOUNT);
-
+          navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
           return;
         }
+
         navigate(ROUTES.INDEX);
         return;
       },
       onError: (error) => {
-        console.log('🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error);
+        console.log('\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error, error?.response);
         Toast.fire({
           icon: 'error',
           title: error.response?.data?.message

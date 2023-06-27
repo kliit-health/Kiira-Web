@@ -4,9 +4,7 @@ import { AppButton, AppTypography, ContentContainer } from 'src/components/share
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { ReactComponent as Visa } from 'src/assets/icons/visa.svg';
-import useAuth from 'src/hooks/useAuth';
 import { SubscriptionPlans } from 'src/components';
-import { kiiraSubscriptions } from 'src/data';
 import { useProducts } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -14,10 +12,6 @@ const SignupSubscription = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useProducts();
   const products = data?.data?.products;
-  console.log(
-    ' \n 🚀 ~ file: SignupSubscription.jsx:16 ~ SignupSubscription ~ products:',
-    products
-  );
 
   return (
     <AuthLayout hideScroll>

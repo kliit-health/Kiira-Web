@@ -7,11 +7,13 @@ import {
 } from 'src/components/shared/styledComponents';
 import gradientBg from 'src/assets/images/gradientBg.png';
 import { Card } from '@material-tailwind/react';
-import useAuth from 'src/hooks/useAuth';
 import { node } from 'prop-types';
+import { useProfile } from 'src/queries/queryHooks';
 
 const MainLayout = ({ children, hideScroll }) => {
-  const { user } = useAuth();
+  const { data } = useProfile();
+  const profile = data?.data?.user;
+
   return (
     <ContentContainer width="100vw" className="h-full overflow-y-auto">
       <img
@@ -28,7 +30,7 @@ const MainLayout = ({ children, hideScroll }) => {
           <AppTypography
             variant="h2"
             className="text-kiiraBlackText text-3xl md:text-4xl lg:text-4xl">
-            Hello {user?.firstName},
+            Hello {profile?.first_name},
             <br />
             Welcome back 👋🏾
           </AppTypography>

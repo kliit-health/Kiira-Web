@@ -13,9 +13,6 @@ const BookingContainer = styled(ContentContainer)(({ disabled }) => [
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
   const doctor = bookingData?.calendar;
-
-  // const aptData = { bookingData, doctor, appointment };
-
   return (
     <BookingContainer
       className={
@@ -211,12 +208,40 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
 
         {!review ? (
           <>
-            <AppTypography
-              variant="small"
-              className="text-sm md:text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
-              <IMAGES.LocationIcon />{' '}
-              <span>{!review ? bookingData?.appointment_type?.category : 'Virtual'}</span>
-            </AppTypography>
+            <ContentContainer row className="items-center justify-between gap-4 flex-wrap">
+              <AppTypography
+                variant="small"
+                className="text-sm md:text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
+                <IMAGES.LocationIcon />{' '}
+                <span>{!review ? bookingData?.appointment_type?.category : 'Virtual'}</span>
+              </AppTypography>
+
+              <AppTypography
+                variant="small"
+                className="text-xs text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
+                {bookingData?.status === 'payment_failed' ? (
+                  <i className="fa-sharp fa-solid fa-triangle-exclamation text-red-500 font-semibold"></i>
+                ) : null}
+
+                {bookingData?.status === 'pending' ? (
+                  <i className="fa-solid fa-clock text-amber-500 font-semibold"></i>
+                ) : null}
+
+                {bookingData?.status === 'payment_successful' ? (
+                  <i className="fa-solid fa-circle-check text-green-500 font-semibold"></i>
+                ) : null}
+                <span>
+                  Status:{' '}
+                  {bookingData?.status === 'payment_failed'
+                    ? 'Failed'
+                    : bookingData?.status === 'pending'
+                    ? 'Pending'
+                    : bookingData?.status === 'payment_successful'
+                    ? 'Success'
+                    : null}
+                </span>
+              </AppTypography>
+            </ContentContainer>
 
             <hr className="bg-kiiraText" />
 

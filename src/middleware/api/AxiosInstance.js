@@ -33,7 +33,7 @@ axiosApiInstance.interceptors.response.use(
 
     // if (error?.response?.status === 401 && refreshurl) {
     if (error?.response?.status === 401) {
-      Auth.destroyToken();
+      Auth?.destroyToken();
       redirect(ROUTES.LOGIN);
       return;
     }
