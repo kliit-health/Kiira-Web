@@ -169,7 +169,7 @@ const ChooseAppointment = () => {
 
           {!hideDoctors && !isLoading && isEmpty(selectedDoctor) ? (
             <ContentContainer className="text-red-500 font-medium text-xs text-right">
-              Please select a doctor to continue
+              Please select your doctor to continue or Choose any available
             </ContentContainer>
           ) : null}
 

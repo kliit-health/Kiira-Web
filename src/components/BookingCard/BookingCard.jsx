@@ -25,7 +25,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
         className={
           !review
             ? 'w-full sm:w-1/4  shrink-0 m-0 rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none bg-[#E2EDFF] bg-blend-darken'
-            : 'h-full w-28 shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
+            : 'h-full sm:w-1/4  shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
         }>
         <img
           src={
@@ -37,7 +37,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
           className={
             !review
               ? 'w-full h-[150px] sm:h-full object-cover rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none'
-              : 'w-full h-full object-cover rounded-xl'
+              : 'w-full max-h-[150px] sm:h-full object-cover rounded-xl'
           }
           loading="lazy"
         />
@@ -110,8 +110,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
           <ContentContainer
             className={
               !review
-                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center'
-                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center'
+                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center mt-auto'
+                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center mt-auto'
             }>
             <Avatar
               src={
@@ -159,8 +159,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
           <ContentContainer
             className={
               !review
-                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center'
-                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center'
+                ? 'flex flex-row flex-wrap md:flex-nowrap gap-4 lg:gap-2 items-center mt-auto'
+                : 'flex flex-row flex-nowrap md:flex-nowrap gap-4 lg:gap-2 items-center mt-auto'
             }>
             <Avatar
               src={

@@ -28,6 +28,9 @@ const Api = {
     updateAppointment: (id, data) => ApiHandler.put(`/appointments/${id}`, data),
     cancelAppointment: (id) => ApiHandler.put(`/appointments/${id}/cancel`),
     rescheduleAppointment: (id, data) => ApiHandler.put(`/appointments/${id}/reschedule`, data),
+    validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data),
+    getBlogCollections: () => ApiHandler.get(`/collections?limit=10`),
+    getBookingForms: () => ApiHandler.get(`/forms`),
     getAvailableDates: (data) => {
       let queryString;
 
@@ -45,8 +48,6 @@ const Api = {
         .join('&');
       return ApiHandler.get(`/availability/times?${queryString}`);
     },
-    validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data),
-    getBlogCollections: () => ApiHandler.get(`/collections?limit=10`)
   },
   payment: {
     initialisePayment: (data) => ApiHandler.post(`/appointments/book/initialize`, data),

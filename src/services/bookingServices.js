@@ -54,3 +54,8 @@ export const fetchBlogCollections = async () => {
   const res = await Api.bookings.getBlogCollections();
   return res;
 };
+
+export const fetchBookingForms = async () => {
+  const res = await Api.bookings.getBookingForms();
+  return res;
+};

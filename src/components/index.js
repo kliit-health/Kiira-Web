@@ -21,6 +21,7 @@ import BookingCalendar from './BookingCalendar/BookingCalendar';
 import Loader from './shared/Loader/Loader';
 import Empty from './shared/Empty/Empty';
 import BlogItem from './BlogItem/BlogItem';
+import DynamicForms from './DynamicForms/DynamicForms';
 
 export {
   AppNavBar,
@@ -43,5 +44,6 @@ export {
   BookingCalendar,
   Loader,
   Empty,
-  BlogItem
+  BlogItem,
+  DynamicForms
 };

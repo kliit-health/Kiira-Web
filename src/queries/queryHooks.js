@@ -17,6 +17,7 @@ import {
   fetchAvailableDates,
   fetchAvailableTimes,
   fetchBlogCollections,
+  fetchBookingForms,
   fetchDoctorsCalendars,
   fetchKiiraProducts,
   initialiseBookingPayment
@@ -185,6 +186,13 @@ export const useBlogCollections = () => {
   const data = useQuery({
     queryKey: [KEYS.BLOG_COLLECTIONS],
     queryFn: () => fetchBlogCollections()
+  });
+  return data;
+};
+export const useBookingForms = () => {
+  const data = useQuery({
+    queryKey: [KEYS.BOOKING_FORMS],
+    queryFn: () => fetchBookingForms()
   });
   return data;
 };
