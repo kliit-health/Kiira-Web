@@ -10,6 +10,7 @@ import { Toast } from 'src/utils';
 import { getDisabledDate } from 'src/utils/dateUtil';
 import { Empty } from '..';
 import { useLocalStore } from 'src/store';
+import { Alert } from '@material-tailwind/react';
 
 const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) => {
   const defaultDate = {
@@ -189,7 +190,30 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
             ) : null}
 
             {!timesDatesLoading && isEmpty(timesDates) && !availableDatesLoading && !isFetching ? (
-              <Empty label="No time slot available for selected date" />
+              <Empty
+                label={
+                  <Alert color='pink' className='text-white bg-opacity-85'>
+                    No time slot available for selected date:
+                    <b>
+                      {' '}
+                      {
+                        moment(
+                          `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
+                          'D-MM-YYY'
+                        ).format('dddd')
+                        // moment(
+                        //   `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
+                        //   'D-MM-YYY'
+                        // ).format('MMMM DD,')
+                      }
+                      {moment(
+                        `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
+                        'D-MM-YYY'
+                      ).format('MMMM DD,')}
+                    </b>
+                  </Alert>
+                }
+              />
             ) : null}
 
             {!timesDatesLoading && !isFetching ? (

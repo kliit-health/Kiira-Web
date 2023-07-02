@@ -296,3 +296,17 @@ export const kiiraDoctors = [
     status: profileState.online
   }
 ];
+
+export const INPUT_TYPES = {
+  CHECKBOX: 'checkbox',
+  TEXTBOX: 'textbox',
+  YESNO: 'yesno',
+  FILE: 'file',
+  DROPDOWN: 'dropdown',
+  CHECKBOXLIST: 'checkboxlist'
+};
+
+export const INPUT_NAMES = {
+  full_name: 'Full Name',
+  email: 'Email Address'
+};

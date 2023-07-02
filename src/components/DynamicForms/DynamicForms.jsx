@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useBookingForms } from 'src/queries/queryHooks';
+import React, { useEffect, useState } from 'react';
+import { useBookingForms, useProfile } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import isEmpty from 'src/utils/isEmpty';
 import { AppTypography, ContentContainer } from '../shared/styledComponents';
@@ -9,77 +9,104 @@ import {
   AccordionHeader,
   Button,
   Checkbox,
-  Collapse,
-  Input
+  Input,
+  Option,
+  Radio,
+  Select,
+  input
 } from '@material-tailwind/react';
 import { truncate } from 'src/utils/truncate';
-import { useForm } from 'react-hook-form';
+import { INPUT_NAMES, INPUT_TYPES } from 'src/data';
+import { Empty } from '..';
+import { array, func } from 'prop-types';
 
-const DynamicForms = ({ appointmentFormIDs, setFieldValues }) => {
-  const { data: fData, isLoading: loadingForms, error } = useBookingForms();
-  const [open, setOpen] = useState(false);
-  const toggleOpen = () => setOpen((cur) => !cur);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm();
-
+const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
+  const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
   const formsData = fData?.data.forms;
-  const [formValues, setFormValues] = useState([]);
-  console.log('\n 🚀 ~ file: DynamicForms.jsx:23 ~ formValues:', [...new Set(formValues)]);
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
   );
 
-  const handleInputChange = (event, data) => {
-    console.log('\n 🚀 ~ file: DynamicForms.jsx:38 ~ handleInputChange ~ data:', data);
-    event?.preventDefault();
-    const { id } = data;
-    let newArray = [];
+  let formValues = filteredFormData?.reduce((acc, formdata) => {
+    formdata.fields?.forEach((form) => {
+      form.type === INPUT_TYPES.CHECKBOX
+        ? (acc['_' + form.id] = false)
+        : form.type === INPUT_TYPES.YESNO
+        ? (acc['_' + form.id] = false)
+        : form.type === INPUT_TYPES.FILE
+        ? (acc['_' + form.id] = [])
+        : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.email
+        ? (acc['_' + form.id] = profile?.email)
+        : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.full_name
+        ? (acc['_' + form.id] = `${profile?.first_name} ${profile?.last_name}`)
+        : (acc['_' + form.id] = '');
+    });
 
-    console.log(
-      '\n 🚀 ~ file: DynamicForms.jsx:30 ~ handleInputChange ~ event:',
-      event?.target?.value
-    );
+    return acc;
+  }, {});
 
-    if (data.type === 'checkbox') {
-      formValues[id] = { id: id, value: event?.target?.value };
-      newArray.push(formValues[id]);
-      setFormValues([...new Set(newArray)]);
+  const [fieldValues, setFieldValues] = useState(formValues);
+
+  useEffect(() => {
+    if (isEmpty(fieldValues) && !isEmpty(formValues)) {
+      setFieldValues(formValues);
+      return;
+    }
+  }, [formValues]);
+
+  const [selectedInput, setSelectedInput] = useState({});
+  // console.log('\n 🚀 ~ file: DynamicForms.jsx:60 ~ DynamicForms ~ selectedInput:', selectedInput);
+
+  const [open, setOpen] = useState(false);
+  const toggleOpen = () => setOpen((cur) => !cur);
+
+  const handleInputChange = (event) => {
+    if (selectedInput?.type === INPUT_TYPES.DROPDOWN) {
+      setFieldValues({ ...fieldValues, ['_' + selectedInput?.id]: event });
       return;
     }
 
-    newArray.push({ id: id, value: event?.target?.value });
-    setFormValues([...new Set(newArray)]);
+    event?.preventDefault();
+
+    if (selectedInput?.type === INPUT_TYPES.CHECKBOX) {
+      setFieldValues({ ...fieldValues, [event.target.name]: event.target.checked });
+    } else if (selectedInput?.type === INPUT_TYPES.FILE) {
+      setFieldValues({ ...fieldValues, [event.target.name]: event.target.files[0] });
+    } else if (selectedInput?.type === INPUT_TYPES.DROPDOWN) {
+      setFieldValues({ ...fieldValues, [event.target.name]: event.target.selected });
+    } else {
+      if (selectedInput?.name === INPUT_NAMES.full_name) {
+        setFieldValues({
+          ...fieldValues,
+          [event.target.name]: `${profile?.first_name} ${profile?.last_name}`
+        });
+        return;
+      }
+      if (selectedInput?.name === INPUT_NAMES.email) {
+        setFieldValues({
+          ...fieldValues,
+          [event.target.name]: profile?.email
+        });
+        return;
+      }
+      setFieldValues({ ...fieldValues, [event.target.name]: event.target.value });
+    }
   };
 
-  const customAnimation = {
-    mount: { scale: 1 },
-    unmount: { scale: 0.9 }
-  };
+  useEffect(() => {
+    if (isEmpty(fieldValues)) {
+      return;
+    }
+    setFormResult(fieldValues);
+  }, [fieldValues]);
 
   return (
     <>
-      {loadingForms ? (
-        <ContentContainer className="flex h-full w-full min-h-[100px] items-center justify-center">
-          <ThreeDots
-            height="80"
-            width="80"
-            radius="9"
-            color="#005eff"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{}}
-            wrapperClassName=""
-            visible={true}
-          />
-        </ContentContainer>
-      ) : null}
-
-      {!isEmpty(filteredFormData) ? (
-        <form onSubmit={handleSubmit(handleInputChange)}>
+      {!isEmpty(filteredFormData) && !loadingForms ? (
+        <form>
           <ContentContainer className="min-h-[50px] gap-10">
             {filteredFormData?.map((field, index) => {
               const { id, description, hidden, name, fields } = field;
@@ -98,7 +125,12 @@ const DynamicForms = ({ appointmentFormIDs, setFieldValues }) => {
 
                     {!isEmpty(description) ? (
                       <>
-                        <Accordion open={open} animate={customAnimation}>
+                        <Accordion
+                          open={open}
+                          animate={{
+                            mount: { scale: 1 },
+                            unmount: { scale: 0.85 }
+                          }}>
                           <AccordionHeader className="border-b-0 text-sm text-kiiraBlackishGreen/75  w-full font-montserrat font-semibold whitespace-pre-wrap">
                             <AppTypography
                               variant="lead"
@@ -128,72 +160,253 @@ const DynamicForms = ({ appointmentFormIDs, setFieldValues }) => {
                     ) : null}
                   </ContentContainer>
 
-                  {fields?.map((inputs, index) => {
-                    const { id: fid, name: fname, required, type, options, lines } = inputs;
-                    const val = formValues.filter((val) => val.id === fid);
-                    console.log('\n 🚀 ~ file: DynamicForms.jsx:123 ~ fields?.map ~:', val[0]?.value);
-                    // if (isEmpty(val)) return;
+                  {!isEmpty(fieldValues) &&
+                    fields?.map((inputs, index) => {
+                      const { id, name: fname, required, type, options, lines } = inputs;
 
-                    if (type === 'checkbox') {
-                      return (
-                        <ContentContainer key={index?.toString()} className="flex flex-col gap-1">
-                          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
-                            <Checkbox
-                              name={fid}
-                              value={val[0]?.value || false}
-                              color="orange"
-                              iconProps={{ size: 'xs' }}
-                              labelProps={{ className: 'py-0.5 rounded' }}
-                              checked={val[0]?.value || false}
-                              className="p-1"
-                              required={required}
-                              onChange={(event) => handleInputChange(event, inputs)}
-                            />
-                            <span
-                              className={[
-                                false
-                                  ? 'text-xs text-orange-400  font-bold uppercase'
-                                  : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
-                              ]}>
-                              {fname}
-                            </span>
+                      const fid = '_' + id?.toString();
+                      const disabled =
+                        inputs?.name === INPUT_NAMES.email ||
+                        inputs?.name === INPUT_NAMES.full_name;
+
+                      if (type === INPUT_TYPES.CHECKBOX) {
+                        return (
+                          <ContentContainer
+                            key={index?.toString()}
+                            className="flex flex-col gap-1"
+                            onClick={() => setSelectedInput(inputs)}>
+                            <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
+                              <Checkbox
+                                key={fid?.toString()}
+                                name={fid}
+                                color="orange"
+                                checked={fieldValues[fid]}
+                                iconProps={{ size: 'xs' }}
+                                labelProps={{ className: 'py-0.5 rounded' }}
+                                className="p-1"
+                                onChange={(e) => {
+                                  setFieldValues({
+                                    ...fieldValues,
+                                    [e.target.name]: !fieldValues[fid]
+                                  });
+                                }}
+                              />
+
+                              <span
+                                className={[
+                                  fieldValues[fid]
+                                    ? 'text-xs text-orange-400  font-bold uppercase'
+                                    : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
+                                ]}>
+                                {fname}
+                              </span>
+                            </ContentContainer>
                           </ContentContainer>
+                        );
+                      }
+
+                      if (type === INPUT_TYPES.YESNO) {
+                        return (
+                          <ContentContainer
+                            key={index?.toString()}
+                            className="flex flex-col mb-2"
+                            onClick={() => setSelectedInput(inputs)}>
+                            <span className={[' w-auto px-4 py-2 rounded-lg']}>{fname}</span>
+                            <ContentContainer className="flex flex-row flex-nowrap items-center">
+                              <Radio
+                                name={fid}
+                                color="orange"
+                                label="Yes"
+                                value={true}
+                                className="p-1"
+                                onChange={(e) => {
+                                  setFieldValues({
+                                    ...fieldValues,
+                                    [e.target.name]: true
+                                  });
+                                }}
+                              />
+                              <Radio
+                                name={fid}
+                                color="orange"
+                                label="No"
+                                value={false}
+                                className="p-1"
+                                onChange={(e) => {
+                                  setFieldValues({
+                                    ...fieldValues,
+                                    [e.target.name]: false
+                                  });
+                                }}
+                              />
+                            </ContentContainer>
+                          </ContentContainer>
+                        );
+                      }
+
+                      if (type === INPUT_TYPES.DROPDOWN) {
+                        return (
+                          <ContentContainer
+                            key={index?.toString()}
+                            className="flex flex-col gap-1"
+                            onClick={() => setSelectedInput(inputs)}>
+                            <ContentContainer className="flex flex-row flex-nowrap items-center my-2">
+                              <Select
+                                size="lg"
+                                color="orange"
+                                label={fname}
+                                className="p-1 py-5"
+                                onChange={handleInputChange}
+                                animate={{
+                                  mount: { y: 0 },
+                                  unmount: { y: 25 }
+                                }}
+                                selected={(element) =>
+                                  element &&
+                                  React.cloneElement(element, {
+                                    className: 'flex items-center px-0 gap-2 pointer-events-none'
+                                  })
+                                }>
+                                {!isEmpty(options) ? (
+                                  options?.map((opt, i) => {
+                                    return (
+                                      <Option key={i?.toString()} name={fid} value={opt}>
+                                        {opt}
+                                      </Option>
+                                    );
+                                  })
+                                ) : (
+                                  <Option value=""></Option>
+                                )}
+                              </Select>
+                            </ContentContainer>
+                          </ContentContainer>
+                        );
+                      }
+
+                      if (type === INPUT_TYPES.FILE) {
+                        return (
+                          <ContentContainer
+                            key={index?.toString()}
+                            className="flex flex-col gap-1"
+                            onClick={() => setSelectedInput(inputs)}>
+                            <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
+                              <Input
+                                variant="static"
+                                type="file"
+                                name={fid}
+                                label={fname}
+                                labelProps={{ className: ' rounded' }}
+                                className="p-4 border-b-0"
+                                onChange={handleInputChange}
+                              />
+                            </ContentContainer>
+                          </ContentContainer>
+                        );
+                      }
+
+                      if (type === INPUT_TYPES.CHECKBOXLIST) {
+                        return (
+                          <ContentContainer
+                            key={index?.toString()}
+                            className="flex flex-col gap-1 my-4"
+                            onClick={() => setSelectedInput(inputs)}>
+                            <span className={[' w-auto pt-2 rounded-lg']}>{fname}</span>
+
+                            {options?.map((option, i) => {
+                              return (
+                                <ContentContainer
+                                  key={i?.toString()}
+                                  className="flex flex-row flex-nowrap items-center -ml-2.5">
+                                  <Checkbox
+                                    name={fid}
+                                    label={option}
+                                    color="orange"
+                                    checked={fieldValues[fid] === option}
+                                    iconProps={{ size: 'xs' }}
+                                    labelProps={{ className: 'py-0.5 rounded' }}
+                                    className="p-1"
+                                    onChange={(e) => {
+                                      setFieldValues({
+                                        ...fieldValues,
+                                        [fid]: option
+                                      });
+                                    }}
+                                  />
+                                </ContentContainer>
+                              );
+                            })}
+                          </ContentContainer>
+                        );
+                      }
+
+                      return (
+                        <ContentContainer
+                          key={index?.toString()}
+                          className="flex flex-col gap-1 mt-2"
+                          onClick={() => setSelectedInput(inputs)}>
+                          <div className="flex flex-col gap-5">
+                            <Input
+                              type="text"
+                              variant="outlined"
+                              disabled={disabled}
+                              autoFocus
+                              name={fid}
+                              label={fname}
+                              value={
+                                inputs?.name === INPUT_NAMES.email
+                                  ? profile?.email
+                                  : inputs?.name === INPUT_NAMES.full_name
+                                  ? `${profile?.first_name} ${profile?.last_name}`
+                                  : fieldValues[fid]
+                              }
+                              size="lg"
+                              className="ring-transparent ring-0"
+                              onChange={handleInputChange}
+                            />
+                          </div>
                         </ContentContainer>
                       );
-                    }
-
-                    return (
-                      <ContentContainer key={index?.toString()} className="flex flex-col gap-1">
-                        <div className="flex flex-col gap-5">
-                          <Input
-                            variant="outlined"
-                            autoFocus
-                            // placeholder={fname}
-                            label={fname}
-                            size="lg"
-                            className="ring-transparent ring-0"
-                            onChange={(event) => handleInputChange(event, inputs)}
-                            error={!isEmpty(errors[fid]?.message)}
-                          />
-                          {errors[fid]?.message && (
-                            <ContentContainer className="text-red-500 font-medium text-xs -mt-4 mb-2">
-                              {errors[fid]?.message}
-                            </ContentContainer>
-                          )}
-                        </div>
-                        {/* <Input type={type} id={id} name={id} onChange={handleInputChange} /> */}
-                      </ContentContainer>
-                    );
-                  })}
+                    })}
                 </ContentContainer>
               );
             })}
-            <button type="submit">Submit</button>
           </ContentContainer>
         </form>
+      ) : null}
+
+      {loadingForms ? (
+        <ContentContainer className="flex h-full w-full min-h-[100px] items-center justify-center">
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#005eff"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+        </ContentContainer>
+      ) : null}
+
+      {!loadingForms && !isEmpty(bookingFormError) ? (
+        <Empty
+          label={`Unable to fetch required forms \nMessage: ${bookingFormError?.response?.data.message}`}
+        />
       ) : null}
     </>
   );
 };
 
 export default DynamicForms;
+
+DynamicForms.propTypes = {
+  setFormResult: func,
+  appointmentFormIDs: array
+};
+
+DynamicForms.defaultProps = {
+  setFormResult: () => {},
+  appointmentFormIDs: []
+};

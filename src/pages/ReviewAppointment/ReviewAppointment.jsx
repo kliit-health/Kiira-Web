@@ -1,7 +1,7 @@
 import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
-import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BookingCard, Loader, SavedCards } from 'src/components';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
 import {
   AppButton,
   AppLink,
@@ -12,7 +12,6 @@ import {
 } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
 import { useInitialisePayment } from 'src/queries/queryHooks';
-import KEYS from 'src/queries/queryKeys';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
@@ -23,6 +22,8 @@ const ReviewAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [checked, setChecked] = useState(false);
+  const [formResult, setFormResult] = useState(false);
+  console.log("\n 🚀 ~ file: ReviewAppointment.jsx:26 ~ formResult:", formResult)
   const [reserveBooking, setReserveBooking] = useState(false);
   const bookingParams = location.state?.data;
   const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
@@ -30,6 +31,19 @@ const ReviewAppointment = () => {
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
+
+  useEffect(() => {
+    if (isEmpty(bookingData)) {
+      Toast.fire({
+        icon: 'error',
+        title: 'No booking data found'
+      });
+
+      setTimeout(() => {
+        navigate(-1, { replace: true });
+      }, 1000);
+    }
+  }, [bookingData]);
 
   const handleInitialisePayment = () => {
     if (!checked) {
@@ -106,6 +120,7 @@ const ReviewAppointment = () => {
       </ContentContainer>
 
       <ContentContainer className="w-full h-full flex md:grid grid-flow-col md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap">
+        {/* {orms Area */}
         <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4 ">
           <ContentContainer row className="flex justify-between flex-wrap md:flex-nowrap gap-4">
             <ContentContainer className="flex flex-col gap-3">
@@ -173,10 +188,60 @@ const ReviewAppointment = () => {
 
           {/* Card Options */}
           {/* <SavedCards /> */}
+
+          <DynamicForms
+            appointmentFormIDs={bookingData?.appointmentType?.formIDs}
+            setFormResult={setFormResult}
+          />
+
+          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
+            <Checkbox
+              name="booking"
+              color="orange"
+              iconProps={{ size: 'xs' }}
+              labelProps={{ className: 'py-0.5 rounded' }}
+              checked={reserveBooking}
+              className="p-1"
+              onChange={() => setReserveBooking(!reserveBooking)}
+            />
+            <span
+              className={[
+                reserveBooking
+                  ? 'text-xs text-orange-400  font-bold uppercase'
+                  : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
+              ]}>
+              Reserve this Appointment booking
+            </span>
+          </ContentContainer>
+
+          {/* <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
+            <Checkbox
+              name="agreement"
+              iconProps={{ size: 'xs' }}
+              labelProps={{ className: 'p-1 rounded' }}
+              checked={checked}
+              onChange={() => setChecked(!checked)}
+            />
+            <span className="text-xs text-kiiraText">
+              I agree to all the <AppLink className="text-kiiraBlue text-xs">Terms</AppLink> and
+              <AppLink className="text-kiiraBlue text-xs"> Privacy Policies</AppLink>
+            </span>
+          </ContentContainer> */}
+
+          <ContentContainer className="sticky top-10">
+            {isLoading ? (
+              <Loader className="" />
+            ) : (
+              <AppButton className="text-xs" onClick={handleInitialisePayment}>
+                {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+              </AppButton>
+            )}
+          </ContentContainer>
         </ContentContainer>
 
         {/* Booking Cart review */}
-        <ContentContainer className="w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
+
+        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
           <BookingCard review bookingData={bookingData} />
 
           <AppTypography
@@ -253,48 +318,6 @@ const ReviewAppointment = () => {
               ${bookingData?.appointmentType?.price}
             </AppTypography>
           </ContentContainer>
-
-          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
-            <Checkbox
-              name="booking"
-              color="orange"
-              iconProps={{ size: 'xs' }}
-              labelProps={{ className: 'py-0.5 rounded' }}
-              checked={reserveBooking}
-              className="p-1"
-              onChange={() => setReserveBooking(!reserveBooking)}
-            />
-            <span
-              className={[
-                reserveBooking
-                  ? 'text-xs text-orange-400  font-bold uppercase'
-                  : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
-              ]}>
-              Reserve this Appointment booking
-            </span>
-          </ContentContainer>
-
-          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
-            <Checkbox
-              name="agreement"
-              iconProps={{ size: 'xs' }}
-              labelProps={{ className: 'p-1 rounded' }}
-              checked={checked}
-              onChange={() => setChecked(!checked)}
-            />
-            <span className="text-xs text-kiiraText">
-              I agree to all the <AppLink className="text-kiiraBlue text-xs">Terms</AppLink> and
-              <AppLink className="text-kiiraBlue text-xs"> Privacy Policies</AppLink>
-            </span>
-          </ContentContainer>
-
-          {isLoading ? (
-            <Loader className="" />
-          ) : (
-            <AppButton className="text-xs" onClick={handleInitialisePayment}>
-              {reserveBooking ? 'Reserve' : ' Confirm Booking'}
-            </AppButton>
-          )}
         </ContentContainer>
       </ContentContainer>
     </ContentContainer>

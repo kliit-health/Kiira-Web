@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppTypography, ContentContainer } from '../styledComponents';
 import { IMAGES } from 'src/data';
-import { string } from 'prop-types';
+import { element, string } from 'prop-types';
 
 const Empty = ({ label }) => {
   return (
@@ -13,6 +13,6 @@ const Empty = ({ label }) => {
   );
 };
 
-Empty.propTypes = { label: string };
+Empty.propTypes = { label: element };
 
 export default Empty;
