@@ -10,27 +10,44 @@ import {
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES } from 'src/data';
-import { useInitialisePayment } from 'src/queries/queryHooks';
+import { IMAGES, INPUT_TYPES } from 'src/data';
+import { useBookingForms, useInitialisePayment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { truncate } from 'src/utils/truncate';
 import Swal from 'sweetalert2';
 
 const ReviewAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [checked, setChecked] = useState(false);
-  const [formResult, setFormResult] = useState(false);
-  console.log("\n 🚀 ~ file: ReviewAppointment.jsx:26 ~ formResult:", formResult)
+  const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
+  const formsData = fData?.data.forms;
+
   const [reserveBooking, setReserveBooking] = useState(false);
+  const [formResult, setFormResult] = useState(false);
+  // console.log('\n 🚀 ~ file: ReviewAppointment.jsx:26 ~ formResult:', formResult);
+
   const bookingParams = location.state?.data;
   const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
 
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
+  const appointmentFormIDs = bookingData?.appointmentType?.formIDs;
+
+  const filteredFormData = formsData?.filter((elem) =>
+    appointmentFormIDs?.find((id) => elem.id === id)
+  );
+
+  let requiredValidator = filteredFormData?.reduce((acc, formdata) => {
+    formdata.fields?.forEach((form) => {
+      return (acc[form.id] = form);
+    });
+
+    return acc;
+  }, {});
 
   useEffect(() => {
     if (isEmpty(bookingData)) {
@@ -46,14 +63,39 @@ const ReviewAppointment = () => {
   }, [bookingData]);
 
   const handleInitialisePayment = () => {
-    if (!checked) {
+    const keys = Object.keys(formResult);
+    console.log(
+      '\n 🚀 ~ file: ReviewAppointment.jsx:67 ~ handleInitialisePayment ~ formResult:',
+      formResult
+    );
+
+    const isRequired = keys.filter((key) => {
+      if (requiredValidator[key]?.required && isEmpty(formResult[key])) {
+        return true;
+      }
+      return false;
+    });
+
+    if (!isEmpty(isRequired)) {
+      const validateData = isRequired[0];
       Toast.fire({
-        icon: 'warning',
-        title: `Please checkout our terms and conditions before you proceed`,
+        icon: 'error',
+        title: `Kindly complete all required forms to proceed...\n"${truncate(
+          requiredValidator[validateData]?.name,
+          50
+        )}" is required`,
         width: '70vw'
       });
       return;
     }
+
+    let field = [];
+
+    Object.entries(formResult).forEach(([key, value]) => {
+      if (isEmpty(value)) return;
+      console.log(`${key}: ${value}`);
+      field.push({ id: key, value: value });
+    });
 
     const payload = {
       datetime: bookingData?.bookingCheckout?.time,
@@ -61,6 +103,7 @@ const ReviewAppointment = () => {
       success_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       cancel_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       book_on_hold: reserveBooking,
+      field: field,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
     };
 
@@ -119,8 +162,7 @@ const ReviewAppointment = () => {
         </Breadcrumbs>
       </ContentContainer>
 
-      <ContentContainer className="w-full h-full flex md:grid grid-flow-col md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap">
-        {/* {orms Area */}
+      <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse  ">
         <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4 ">
           <ContentContainer row className="flex justify-between flex-wrap md:flex-nowrap gap-4">
             <ContentContainer className="flex flex-col gap-3">
@@ -190,57 +232,49 @@ const ReviewAppointment = () => {
           {/* <SavedCards /> */}
 
           <DynamicForms
-            appointmentFormIDs={bookingData?.appointmentType?.formIDs}
+            formsData={formsData}
+            loadingForms={loadingForms}
+            bookingFormError={bookingFormError}
+            appointmentFormIDs={appointmentFormIDs}
             setFormResult={setFormResult}
           />
 
-          <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
-            <Checkbox
-              name="booking"
-              color="orange"
-              iconProps={{ size: 'xs' }}
-              labelProps={{ className: 'py-0.5 rounded' }}
-              checked={reserveBooking}
-              className="p-1"
-              onChange={() => setReserveBooking(!reserveBooking)}
-            />
-            <span
-              className={[
-                reserveBooking
-                  ? 'text-xs text-orange-400  font-bold uppercase'
-                  : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
-              ]}>
-              Reserve this Appointment booking
-            </span>
-          </ContentContainer>
+          {!loadingForms && isEmpty(bookingFormError) ? (
+            <>
+              <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
+                <Checkbox
+                  name="booking"
+                  color="orange"
+                  iconProps={{ size: 'xs' }}
+                  labelProps={{ className: 'py-0.5 rounded' }}
+                  checked={reserveBooking}
+                  className="p-1"
+                  onChange={() => setReserveBooking(!reserveBooking)}
+                />
+                <span
+                  className={[
+                    reserveBooking
+                      ? 'text-xs text-orange-400  font-bold uppercase'
+                      : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
+                  ]}>
+                  Reserve this Appointment booking
+                </span>
+              </ContentContainer>
 
-          {/* <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
-            <Checkbox
-              name="agreement"
-              iconProps={{ size: 'xs' }}
-              labelProps={{ className: 'p-1 rounded' }}
-              checked={checked}
-              onChange={() => setChecked(!checked)}
-            />
-            <span className="text-xs text-kiiraText">
-              I agree to all the <AppLink className="text-kiiraBlue text-xs">Terms</AppLink> and
-              <AppLink className="text-kiiraBlue text-xs"> Privacy Policies</AppLink>
-            </span>
-          </ContentContainer> */}
-
-          <ContentContainer className="sticky top-10">
-            {isLoading ? (
-              <Loader className="" />
-            ) : (
-              <AppButton className="text-xs" onClick={handleInitialisePayment}>
-                {reserveBooking ? 'Reserve' : ' Confirm Booking'}
-              </AppButton>
-            )}
-          </ContentContainer>
+              <ContentContainer className="sticky top-10">
+                {isLoading ? (
+                  <Loader className="" />
+                ) : (
+                  <AppButton className="text-xs" onClick={handleInitialisePayment}>
+                    {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+                  </AppButton>
+                )}
+              </ContentContainer>
+            </>
+          ) : null}
         </ContentContainer>
 
         {/* Booking Cart review */}
-
         <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
           <BookingCard review bookingData={bookingData} />
 

@@ -151,14 +151,6 @@ const ConfirmBooking = () => {
                   </AppTypography>
                 </ContentContainer>
               </ContentContainer>
-              {/* 
-              <AppButton
-                onClick={() => navigate(ROUTES.HISTORY, { replace: true })}
-                className="shadow-transparent mt-auto"
-                size="lg"
-                fullWidth>
-                Add to your calender
-              </AppButton> */}
             </ContentContainer>
           </ContentContainer>
           {isEmpty(error) ? (

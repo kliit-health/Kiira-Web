@@ -18,13 +18,18 @@ import {
 import { truncate } from 'src/utils/truncate';
 import { INPUT_NAMES, INPUT_TYPES } from 'src/data';
 import { Empty } from '..';
-import { array, func } from 'prop-types';
+import { array, bool, func, object } from 'prop-types';
 
-const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
+const DynamicForms = ({
+  appointmentFormIDs,
+  setFormResult,
+  bookingFormError,
+  formsData,
+  loadingForms
+}) => {
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
-  const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
-  const formsData = fData?.data.forms;
+  const [field, setField] = useState([]);
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
@@ -33,16 +38,16 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
   let formValues = filteredFormData?.reduce((acc, formdata) => {
     formdata.fields?.forEach((form) => {
       form.type === INPUT_TYPES.CHECKBOX
-        ? (acc['_' + form.id] = false)
-        : form.type === INPUT_TYPES.YESNO
-        ? (acc['_' + form.id] = false)
-        : form.type === INPUT_TYPES.FILE
-        ? (acc['_' + form.id] = [])
+        ? (acc[form.id] = "")
+        : // : form.type === INPUT_TYPES.YESNO
+        // ? (acc[form.id] = false)
+        form.type === INPUT_TYPES.FILE
+        ? (acc[form.id] = [])
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.email
-        ? (acc['_' + form.id] = profile?.email)
+        ? (acc[form.id] = profile?.email)
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.full_name
-        ? (acc['_' + form.id] = `${profile?.first_name} ${profile?.last_name}`)
-        : (acc['_' + form.id] = '');
+        ? (acc[form.id] = `${profile?.first_name} ${profile?.last_name}`)
+        : (acc[form.id] = '');
     });
 
     return acc;
@@ -58,14 +63,13 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
   }, [formValues]);
 
   const [selectedInput, setSelectedInput] = useState({});
-  // console.log('\n 🚀 ~ file: DynamicForms.jsx:60 ~ DynamicForms ~ selectedInput:', selectedInput);
-
   const [open, setOpen] = useState(false);
+
   const toggleOpen = () => setOpen((cur) => !cur);
 
   const handleInputChange = (event) => {
     if (selectedInput?.type === INPUT_TYPES.DROPDOWN) {
-      setFieldValues({ ...fieldValues, ['_' + selectedInput?.id]: event });
+      setFieldValues({ ...fieldValues, [selectedInput?.id]: event });
       return;
     }
 
@@ -164,7 +168,7 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                     fields?.map((inputs, index) => {
                       const { id, name: fname, required, type, options, lines } = inputs;
 
-                      const fid = '_' + id?.toString();
+                      const fid = id?.toString();
                       const disabled =
                         inputs?.name === INPUT_NAMES.email ||
                         inputs?.name === INPUT_NAMES.full_name;
@@ -182,7 +186,7 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                                 color="orange"
                                 checked={fieldValues[fid]}
                                 iconProps={{ size: 'xs' }}
-                                labelProps={{ className: 'py-0.5 rounded' }}
+                                required={required}
                                 className="p-1"
                                 onChange={(e) => {
                                   setFieldValues({
@@ -198,7 +202,8 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                                     ? 'text-xs text-orange-400  font-bold uppercase'
                                     : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
                                 ]}>
-                                {fname}
+                                {fname}{' '}
+                                {required ? <span className="text-red-500 text-xs">*</span> : null}
                               </span>
                             </ContentContainer>
                           </ContentContainer>
@@ -209,9 +214,12 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                         return (
                           <ContentContainer
                             key={index?.toString()}
-                            className="flex flex-col mb-2"
+                            className="flex gap-1 mb-2"
                             onClick={() => setSelectedInput(inputs)}>
-                            <span className={[' w-auto px-4 py-2 rounded-lg']}>{fname}</span>
+                            <ContentContainer className="flex-row gap-0.5">
+                              {fname}{' '}
+                              {required ? <span className="text-red-500 text-xs">*</span> : null}{' '}
+                            </ContentContainer>
                             <ContentContainer className="flex flex-row flex-nowrap items-center">
                               <Radio
                                 name={fid}
@@ -248,14 +256,18 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                         return (
                           <ContentContainer
                             key={index?.toString()}
-                            className="flex flex-col gap-1"
+                            className="flex flex-col"
                             onClick={() => setSelectedInput(inputs)}>
-                            <ContentContainer className="flex flex-row flex-nowrap items-center my-2">
+                            <ContentContainer className="flex flex-row flex-nowrap items-center">
                               <Select
                                 size="lg"
                                 color="orange"
                                 label={fname}
-                                className="p-1 py-5"
+                                required={required}
+                                className=""
+                                labelProps={{
+                                  className: 'overflow-hidden truncate'
+                                }}
                                 onChange={handleInputChange}
                                 animate={{
                                   mount: { y: 0 },
@@ -295,8 +307,11 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                                 variant="static"
                                 type="file"
                                 name={fid}
+                                required={required}
                                 label={fname}
-                                labelProps={{ className: ' rounded' }}
+                                labelProps={{
+                                  className: 'overflow-hidden truncate text-xs md:text-base'
+                                }}
                                 className="p-4 border-b-0"
                                 onChange={handleInputChange}
                               />
@@ -311,31 +326,37 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                             key={index?.toString()}
                             className="flex flex-col gap-1 my-4"
                             onClick={() => setSelectedInput(inputs)}>
-                            <span className={[' w-auto pt-2 rounded-lg']}>{fname}</span>
+                            <ContentContainer className={['w-auto rounded-lg flex-row gap-0.5']}>
+                              {fname}{' '}
+                              {required ? <span className="text-red-500 text-xs">*</span> : null}
+                            </ContentContainer>
 
-                            {options?.map((option, i) => {
-                              return (
-                                <ContentContainer
-                                  key={i?.toString()}
-                                  className="flex flex-row flex-nowrap items-center -ml-2.5">
-                                  <Checkbox
-                                    name={fid}
-                                    label={option}
-                                    color="orange"
-                                    checked={fieldValues[fid] === option}
-                                    iconProps={{ size: 'xs' }}
-                                    labelProps={{ className: 'py-0.5 rounded' }}
-                                    className="p-1"
-                                    onChange={(e) => {
-                                      setFieldValues({
-                                        ...fieldValues,
-                                        [fid]: option
-                                      });
-                                    }}
-                                  />
-                                </ContentContainer>
-                              );
-                            })}
+                            <ContentContainer className="flex flex-col flex-nowrap -ml-2.5 max-h-[45vh] overflow-hidden overflow-y-scroll bg-white rounded ">
+                              {options?.map((option, i) => {
+                                return (
+                                  <ContentContainer
+                                    key={i?.toString()}
+                                    className="flex flex-row flex-nowrap items-center mx-5">
+                                    <Checkbox
+                                      name={fid}
+                                      color="orange"
+                                      required={required}
+                                      checked={fieldValues[fid] === option}
+                                      iconProps={{ size: 'xs' }}
+                                      labelProps={{ className: 'overflow-hidden' }}
+                                      className=""
+                                      onChange={(e) => {
+                                        setFieldValues({
+                                          ...fieldValues,
+                                          [fid]: option
+                                        });
+                                      }}
+                                    />
+                                    <span className={['text-sm uppercase']}>{option}</span>
+                                  </ContentContainer>
+                                );
+                              })}
+                            </ContentContainer>
                           </ContentContainer>
                         );
                       }
@@ -350,8 +371,14 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                               type="text"
                               variant="outlined"
                               disabled={disabled}
-                              autoFocus
                               name={fid}
+                              required={
+                                inputs?.name === INPUT_NAMES.email ||
+                                inputs?.name === INPUT_NAMES.full_name
+                                  ? false
+                                  : required
+                              }
+                              labelProps={{ className: 'overflow-hidden truncate text-xs' }}
                               label={fname}
                               value={
                                 inputs?.name === INPUT_NAMES.email
@@ -361,7 +388,7 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
                                   : fieldValues[fid]
                               }
                               size="lg"
-                              className="ring-transparent ring-0"
+                              className="ring-transparent ring-0 "
                               onChange={handleInputChange}
                             />
                           </div>
@@ -392,7 +419,13 @@ const DynamicForms = ({ appointmentFormIDs, setFormResult, setFormErrors }) => {
 
       {!loadingForms && !isEmpty(bookingFormError) ? (
         <Empty
-          label={`Unable to fetch required forms \nMessage: ${bookingFormError?.response?.data.message}`}
+          label={
+            <AppTypography className="text-center text-red-800 w-full">
+              <i className="fa fa-exclamation-triangle text-red-500" aria-hidden="true"></i> Error
+              fetching booking forms <br />
+              <span className="text-red-400 font-bold">{bookingFormError?.message}</span>
+            </AppTypography>
+          }
         />
       ) : null}
     </>
@@ -403,10 +436,14 @@ export default DynamicForms;
 
 DynamicForms.propTypes = {
   setFormResult: func,
-  appointmentFormIDs: array
+  appointmentFormIDs: array,
+  bookingFormError: object,
+  formsData: array,
+  loadingForms: bool
 };
 
 DynamicForms.defaultProps = {
   setFormResult: () => {},
-  appointmentFormIDs: []
+  appointmentFormIDs: [],
+  formsData: []
 };
