@@ -331,7 +331,7 @@ const DynamicForms = ({
                               {required ? <span className="text-red-500 text-xs">*</span> : null}
                             </ContentContainer>
 
-                            <ContentContainer className="flex flex-col flex-nowrap -ml-2.5 max-h-[45vh] overflow-hidden overflow-y-scroll bg-white rounded ">
+                            <ContentContainer className="flex flex-col flex-nowrap -ml-2.5 max-h-[35vh] overflow-hidden overflow-y-scroll bg-white rounded ">
                               {options?.map((option, i) => {
                                 return (
                                   <ContentContainer

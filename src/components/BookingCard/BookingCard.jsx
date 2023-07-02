@@ -219,16 +219,17 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
               <AppTypography
                 variant="small"
                 className="text-xs text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
+                {bookingData?.status === 'payment_ticketed' ? (
+                  <i className="fa-solid fa-calendar-check text-green-500 font-semibold"></i>
+                ) : null}
                 {bookingData?.status === 'payment_failed' ? (
                   <i className="fa-sharp fa-solid fa-triangle-exclamation text-red-500 font-semibold"></i>
                 ) : null}
-
                 {bookingData?.status === 'pending' ? (
                   <i className="fa-solid fa-clock text-amber-500 font-semibold"></i>
                 ) : null}
-
                 {bookingData?.status === 'payment_successful' ? (
-                  <i className="fa-solid fa-circle-check text-green-500 font-semibold"></i>
+                  <i className="fa-solid fa-circle-check text-kiiraBlue  font-semibold"></i>
                 ) : null}
                 <span>
                   Status:{' '}
@@ -238,6 +239,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     ? 'Pending'
                     : bookingData?.status === 'payment_successful'
                     ? 'Success'
+                    : bookingData?.status === 'payment_ticketed'
+                    ? 'Ticket Booked'
                     : null}
                 </span>
               </AppTypography>

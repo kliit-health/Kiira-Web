@@ -82,7 +82,7 @@ const ConfirmBooking = () => {
             variant="gradient"
             color="light-blue"
             open={true}
-            className="uppercase whitespace-pre-wrap font-bold "
+            className="flex items-center uppercase whitespace-pre-wrap font-bold "
             icon={
               <IconButton variant="text">
                 <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
@@ -147,7 +147,7 @@ const ConfirmBooking = () => {
                   <AppTypography
                     variant="lead"
                     className="text-sm md:text-base text-kiiraBlackishGreen font-medium font-poppins">
-                    {booking_details?.calendar?.name}
+                    {booking_details?.calendar?.name || 'Any available doctor'}
                   </AppTypography>
                 </ContentContainer>
               </ContentContainer>

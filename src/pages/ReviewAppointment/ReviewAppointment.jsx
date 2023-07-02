@@ -64,10 +64,6 @@ const ReviewAppointment = () => {
 
   const handleInitialisePayment = () => {
     const keys = Object.keys(formResult);
-    console.log(
-      '\n 🚀 ~ file: ReviewAppointment.jsx:67 ~ handleInitialisePayment ~ formResult:',
-      formResult
-    );
 
     const isRequired = keys.filter((key) => {
       if (requiredValidator[key]?.required && isEmpty(formResult[key])) {
@@ -93,8 +89,7 @@ const ReviewAppointment = () => {
 
     Object.entries(formResult).forEach(([key, value]) => {
       if (isEmpty(value)) return;
-      console.log(`${key}: ${value}`);
-      field.push({ id: key, value: value });
+      field.push({ id: key, value: value?.toString() });
     });
 
     const payload = {
@@ -103,9 +98,13 @@ const ReviewAppointment = () => {
       success_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       cancel_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       book_on_hold: reserveBooking,
-      field: field,
+      fields: field,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
     };
+    console.log(
+      '\n 🚀 ~ file: ReviewAppointment.jsx:104 ~ handleInitialisePayment ~ payload:',
+      payload
+    );
 
     mutate(payload, {
       onSuccess: (response) => {
