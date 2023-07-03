@@ -41,7 +41,7 @@ const History = () => {
               <BookingCard
                 bookingData={booking}
                 bookingAction={(data) =>
-                  navigate(`${ROUTES.VIEW_BOOKING}/${booking?.id}`, { state: data })
+                  navigate(`${ROUTES.VIEW_BOOKING}/${booking?.reference}`, { state: data })
                 }
                 key={index?.toString()}
               />

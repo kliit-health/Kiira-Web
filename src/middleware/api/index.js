@@ -32,6 +32,10 @@ const Api = {
     getBlogCollections: () => ApiHandler.get(`/collections?limit=10`),
     getBookingForms: () => ApiHandler.get(`/forms`),
     getAvailableDates: (data) => {
+      console.log(
+        '\n 🚀 ~ file: index.js:59 ~ Api.bookings.getAvailableDates:',
+        isEmpty(data?.calendarID) && `calendarID=${data['calendarID']}`
+      );
       let queryString;
 
       queryString = Object.keys(data)
@@ -47,7 +51,7 @@ const Api = {
         .map((key) => !isEmpty(data[key]) && `${key}=${data[key]}`)
         .join('&');
       return ApiHandler.get(`/availability/times?${queryString}`);
-    },
+    }
   },
   payment: {
     initialisePayment: (data) => ApiHandler.post(`/appointments/book/initialize`, data),
@@ -56,4 +60,5 @@ const Api = {
     confirmPayment: (id) => ApiHandler.get(`/appointments/book/confirmation/${id}`)
   }
 };
+
 export default Api;

@@ -20,38 +20,20 @@ import { INPUT_NAMES, INPUT_TYPES } from 'src/data';
 import { Empty } from '..';
 import { array, bool, func, object } from 'prop-types';
 
-const DynamicForms = ({
+const DefaultFormInput = ({
   appointmentFormIDs,
   setFormResult,
   bookingFormError,
   formsData,
-  loadingForms
+  loadingForms,
+  formValues
 }) => {
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
-  const [field, setField] = useState([]);
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
   );
-
-  let formValues = filteredFormData?.reduce((acc, formdata) => {
-    formdata.fields?.forEach((form) => {
-      form.type === INPUT_TYPES.CHECKBOX
-        ? (acc[form.id] = '')
-        : // : form.type === INPUT_TYPES.YESNO
-        // ? (acc[form.id] = false)
-        form.type === INPUT_TYPES.FILE
-        ? (acc[form.id] = [])
-        : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.email
-        ? (acc[form.id] = profile?.email)
-        : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.full_name
-        ? (acc[form.id] = `${profile?.first_name} ${profile?.last_name}`)
-        : (acc[form.id] = '');
-    });
-
-    return acc;
-  }, {});
 
   const [fieldValues, setFieldValues] = useState(formValues);
 
@@ -366,62 +348,32 @@ const DynamicForms = ({
                           key={index?.toString()}
                           className="flex flex-col gap-1 mt-2"
                           onClick={() => setSelectedInput(inputs)}>
-                          {lines > 1 ? (
-                            <div className="flex flex-col gap-5">
-                              <textarea
-                                type="text"
-                                variant="outlined"
-                                disabled={disabled}
-                                name={fid}
-                                rows={lines}
-                                required={
-                                  inputs?.name === INPUT_NAMES.email ||
-                                  inputs?.name === INPUT_NAMES.full_name
-                                    ? false
-                                    : required
-                                }
-                                labelProps={{ className: 'overflow-hidden truncate text-xs' }}
-                                label={fname}
-                                value={
-                                  inputs?.name === INPUT_NAMES.email
-                                    ? profile?.email
-                                    : inputs?.name === INPUT_NAMES.full_name
-                                    ? `${profile?.first_name} ${profile?.last_name}`
-                                    : fieldValues[fid]
-                                }
-                                size="lg"
-                                className="ring-transparent ring-0 "
-                                onChange={handleInputChange}
-                              />
-                            </div>
-                          ) : (
-                            <div className="flex flex-col gap-5">
-                              <Input
-                                type="text"
-                                variant="outlined"
-                                disabled={disabled}
-                                name={fid}
-                                required={
-                                  inputs?.name === INPUT_NAMES.email ||
-                                  inputs?.name === INPUT_NAMES.full_name
-                                    ? false
-                                    : required
-                                }
-                                labelProps={{ className: 'overflow-hidden truncate text-xs' }}
-                                label={fname}
-                                value={
-                                  inputs?.name === INPUT_NAMES.email
-                                    ? profile?.email
-                                    : inputs?.name === INPUT_NAMES.full_name
-                                    ? `${profile?.first_name} ${profile?.last_name}`
-                                    : fieldValues[fid]
-                                }
-                                size="lg"
-                                className="ring-transparent ring-0 "
-                                onChange={handleInputChange}
-                              />
-                            </div>
-                          )}
+                          <div className="flex flex-col gap-5">
+                            <Input
+                              type="text"
+                              variant="outlined"
+                              disabled={disabled}
+                              name={fid}
+                              required={
+                                inputs?.name === INPUT_NAMES.email ||
+                                inputs?.name === INPUT_NAMES.full_name
+                                  ? false
+                                  : required
+                              }
+                              labelProps={{ className: 'overflow-hidden truncate text-xs' }}
+                              label={fname}
+                              value={
+                                inputs?.name === INPUT_NAMES.email
+                                  ? profile?.email
+                                  : inputs?.name === INPUT_NAMES.full_name
+                                  ? `${profile?.first_name} ${profile?.last_name}`
+                                  : fieldValues[fid]
+                              }
+                              size="lg"
+                              className="ring-transparent ring-0 "
+                              onChange={handleInputChange}
+                            />
+                          </div>
                         </ContentContainer>
                       );
                     })}
@@ -462,17 +414,18 @@ const DynamicForms = ({
   );
 };
 
-export default DynamicForms;
+export default DefaultFormInput;
 
-DynamicForms.propTypes = {
+DefaultFormInput.propTypes = {
   setFormResult: func,
   appointmentFormIDs: array,
   bookingFormError: object,
   formsData: array,
-  loadingForms: bool
+  loadingForms: bool,
+  formValues: object
 };
 
-DynamicForms.defaultProps = {
+DefaultFormInput.defaultProps = {
   setFormResult: () => {},
   appointmentFormIDs: [],
   formsData: []

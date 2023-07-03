@@ -35,6 +35,7 @@ const ChooseAppointment = () => {
 
   const { id } = useParams();
   const service = location.state?.service || {};
+  console.log("\n 🚀 ~ file: ChooseAppointment.jsx:38 ~ ChooseAppointment ~ service:", service)
   const doctorState = location.state?.doctor || {};
 
   useEffect(() => {

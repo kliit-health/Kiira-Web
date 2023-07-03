@@ -1,5 +1,5 @@
-import { Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
-import { useEffect, useState } from 'react';
+import { Alert, Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   AppNavLink,
@@ -15,18 +15,26 @@ import jsPDF from 'jspdf';
 import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
 import { useProfile } from 'src/queries/queryHooks';
+import { DefaultFormInput } from '../../components';
+import QRCode from 'react-qr-code';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const downloadRef = useRef(null);
+  console.log(
+    '\n 🚀 ~ file: ViewBooking.jsx:25 ~ ViewBooking ~ downloadRef:',
+    downloadRef?.current
+  );
   const { id } = useParams();
   const booking = location?.state;
+
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
 
-
   const downloadPdfDocument = () => {
-    const element = document.getElementById('pdfRefId');
+    if (isEmpty(downloadRef?.current)) return;
+    const element = downloadRef?.current;
 
     html2canvas(element, {
       scrollX: -window.scrollX,
@@ -84,33 +92,39 @@ const ViewBooking = () => {
               className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
               ${booking?.appointment_type?.price}
             </AppTypography>
-            <ContentContainer row className="gap-2 items-center flex-wrap md:justify-end">
-              <Button
-                to="#"
-                onClick={() =>
-                  navigate(`${ROUTES.HISTORY}/${booking?.id}${ROUTES.RESCHEDULE_APPOINTMENT}`)
-                }
-                variant="sm"
-                className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                Reschedule Appointment
-              </Button>
-              <ContentContainer row className="gap-2 items-center flex-wrap">
-                <IconButton variant="text" size="sm" className="border border-kiiraBlue">
-                  <ShareIcon />
-                </IconButton>
-
+            {booking?.status === 'payment_ticketed' ? (
+              <ContentContainer row className="gap-2 items-center flex-wrap md:justify-end">
                 <Button
-                  className="capitalize bg-kiiraBlue shadow-none hover:shadow-none"
-                  size="md"
-                  onClick={downloadPdfDocument}>
-                  Download
+                  to="#"
+                  onClick={() =>
+                    navigate(
+                      `${ROUTES.HISTORY}/${booking?.reference}${ROUTES.RESCHEDULE_APPOINTMENT}`,
+                      { state: { service: booking } }
+                    )
+                  }
+                  size="sm"
+                  variant="text"
+                  className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                  Reschedule Appointment
                 </Button>
+                <ContentContainer row className="gap-2 items-center flex-wrap">
+                  <IconButton variant="text" size="sm" className="border border-kiiraBlue">
+                    <ShareIcon />
+                  </IconButton>
+
+                  <Button
+                    className="capitalize bg-kiiraBlue shadow-none hover:shadow-none"
+                    size="md"
+                    onClick={downloadPdfDocument}>
+                    Download
+                  </Button>
+                </ContentContainer>
               </ContentContainer>
-            </ContentContainer>
+            ) : null}
           </ContentContainer>
         </ContentContainer>
 
-        <ContentContainer className="gap-5 w-full h-full" id="pdfRefId">
+        <ContentContainer ref={downloadRef} className="gap-5 w-full h-full">
           <ContentContainer className="flex-row w-full shadow-none rounded-2xl gap-0 overflow-hidden flex-wrap md:flex-nowrap">
             <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
               <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
@@ -133,7 +147,7 @@ const ViewBooking = () => {
             </ContentContainer>
 
             <ContentContainer col className="w-full md:-ml-0.5">
-              <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 flex-wrap">
+              <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 gap-2 flex-wrap">
                 <ContentContainer className="flex flex-row 1tems-center gap-1" alignItems="center">
                   <Avatar
                     src={IMAGES?.dummyProfilePhoto}
@@ -147,7 +161,7 @@ const ViewBooking = () => {
                     variant="h6"
                     color="blue"
                     className="text-white text-xs font-semibold font-poppins">
-                    {profile?.first_name} {profile?.last_name}
+                    {booking?.appointment?.firstName} {booking?.appointment?.lastName}
                   </AppTypography>
                 </ContentContainer>
                 <AppTypography
@@ -160,9 +174,15 @@ const ViewBooking = () => {
 
               <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
                 <ContentContainer>
-                  <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {booking?.calendar?.name}
-                  </AppTypography>
+                  {!isEmpty(booking?.calendar?.description) ? (
+                    <AppTypography variant="h4" color="blue-gray" className="text-2xl">
+                      {booking?.calendar?.name}
+                    </AppTypography>
+                  ) : (
+                    <AppTypography variant="h6" color="blue-gray" className="text-base">
+                      Any available doctor
+                    </AppTypography>
+                  )}
                   {!isEmpty(booking?.calendar?.description) ? (
                     <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">
                       {truncate(booking?.calendar?.description, 100)}
@@ -171,46 +191,55 @@ const ViewBooking = () => {
                 </ContentContainer>
 
                 <ContentContainer className="h-24 w-24 min-w-[100px] min-h-[100px]">
-                  <img
-                    src={IMAGES.QR}
-                    alt=""
-                    className="h-full w-full object-cover"
-                    loading="lazy"
+                  <QRCode
+                    value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.reference}`}
+                    size={256}
+                    style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+                    viewBox={`0 0 256 256`}
                   />
                 </ContentContainer>
               </ContentContainer>
             </ContentContainer>
           </ContentContainer>
 
-          <ContentContainer className="flex flex-col gap-4 w-full flex-wrap lg:flex-nowrap">
-            <AppTypography variant="h6" className="text-kiiraBlackishGreen font-semibold text-lg">
-              Terms and Conditions
-            </AppTypography>
-            <AppTypography
-              variant="lead"
-              className="text-sm text-kiiraBlackishGreen  w-full font-montserrat font-semibold">
-              {booking?.appointment?.description}
-              Kiira Health Inc. (“Kiira”, “we,” “us,” or “our”) respects your privacy and understand
-              the importance of privacy to our users. We developed this Privacy Policy to explain
-              how we collect, use, share, and protect Personal Information (defined below), and your
-              choices about the collection and use of Personal Information. ‍ This Privacy Policy
-              applies to Personal Information collected or processed through our products and
-              services (the “Services”), and https://kiira.io and any other Kiira-operated website,
-              app, or social media page that links to this Privacy Policy (collectively, the “Site
-              and Services”).
-              <br />
-              <br />
-              This Privacy Policy does not govern your healthcare provider’s (“Provider”) use of
-              Personal Information or Protected Health Information (“PHI”) (as that term is defined
-              under HIPAA) that you share with the Provider, whether or not through the Site or
-              Services, in the course of receiving health services. For more information on your
-              Provider’s use and disclosure of your PHI, please refer to your Provider’s Notice of
-              Health Information Privacy Practices.
-            </AppTypography>
-
-            <Button variant="text" className="font-poppins text-kiiraBlue font-medium text-sm">
-              Read more
-            </Button>
+          <ContentContainer className="flex flex-col gap-4 w-full flex-wrap lg:flex-nowrap whitespace-pre-wrap">
+            {/* <DefaultFormInput
+              // appointmentFormIDs={booking?.appointment_type?.}
+              formValues={booking?.fields?.formIDs}
+            /> */}
+            {booking?.status === 'payment_failed' ? (
+              <Alert
+                variant="gradient"
+                color="red"
+                open={true}
+                className="uppercase whitespace-pre-wrap font-bold"
+                icon={
+                  <IconButton variant="text" className="">
+                    <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
+                  </IconButton>
+                }>
+                <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
+                  Payment Booking Failed
+                </span>
+              </Alert>
+            ) : booking?.status !== 'payment_ticketed' ? (
+              <Alert
+                variant="gradient"
+                color="amber"
+                open={true}
+                className="uppercase whitespace-pre-wrap font-bold"
+                icon={
+                  <IconButton variant="text" className="">
+                    <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
+                  </IconButton>
+                }>
+                <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
+                  Booking process has not been completed...
+                </span>
+              </Alert>
+            ) : (
+              booking?.appointment?.formsText
+            )}
           </ContentContainer>
         </ContentContainer>
       </ContentContainer>

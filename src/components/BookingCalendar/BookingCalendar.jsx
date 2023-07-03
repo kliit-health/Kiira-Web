@@ -32,9 +32,9 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
 
   const datePayload = {
     month: monthDate,
-    appointmentTypeID: appointmentType?.id,
+    appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
-    calendarID: doctor?.id || null
+    ...(!isEmpty(doctor) && { calendarID: doctor.id })
   };
 
   const {
@@ -47,9 +47,9 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
 
   const timePayload = {
     date: timeDate,
-    appointmentTypeID: appointmentType?.id,
+    appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
-    calendarID: doctor?.id || null
+    ...(!isEmpty(doctor) && { calendarID: doctor.id })
   };
 
   const {
@@ -192,8 +192,8 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
             {!timesDatesLoading && isEmpty(timesDates) && !availableDatesLoading && !isFetching ? (
               <Empty
                 label={
-                  <Alert color='pink' className='text-white bg-opacity-85'>
-                    No time slot available for selected date:
+                  <Alert color="pink" className="text-white bg-opacity-85">
+                    {errorMsg || ' No time slot available for selected date:'}
                     <b>
                       {' '}
                       {

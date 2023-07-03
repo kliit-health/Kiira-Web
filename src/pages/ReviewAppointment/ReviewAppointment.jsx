@@ -10,7 +10,7 @@ import {
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, INPUT_TYPES } from 'src/data';
+import { IMAGES } from 'src/data';
 import { useBookingForms, useInitialisePayment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
@@ -26,8 +26,7 @@ const ReviewAppointment = () => {
   const formsData = fData?.data.forms;
 
   const [reserveBooking, setReserveBooking] = useState(false);
-  const [formResult, setFormResult] = useState(false);
-  // console.log('\n 🚀 ~ file: ReviewAppointment.jsx:26 ~ formResult:', formResult);
+  const [formResult, setFormResult] = useState({});
 
   const bookingParams = location.state?.data;
   const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
@@ -35,7 +34,14 @@ const ReviewAppointment = () => {
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
-  const appointmentFormIDs = bookingData?.appointmentType?.formIDs;
+  console.log(
+    '\n 🚀 ~ file: ReviewAppointment.jsx:37 ~ ReviewAppointment ~ bookingData:',
+    bookingData
+  );
+
+  const appointmentType =
+    bookingData?.appointmentType?.appointment_type || bookingData?.appointmentType;
+  const appointmentFormIDs = appointmentType?.formIDs;
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
@@ -94,7 +100,7 @@ const ReviewAppointment = () => {
 
     const payload = {
       datetime: bookingData?.bookingCheckout?.time,
-      appointmentTypeID: bookingData?.appointmentType.id,
+      appointmentTypeID: appointmentType.id,
       success_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       cancel_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
       book_on_hold: reserveBooking,
@@ -117,7 +123,7 @@ const ReviewAppointment = () => {
           allowEscapeKey: false
         }).then((result) => {
           if (result.isConfirmed) {
-            window.open(response?.data?.checkout_session?.url, '_blank');
+            window.open(response?.data?.checkout_session?.url);
             navigate(ROUTES.INDEX, { replace: true });
           }
         });
@@ -169,7 +175,7 @@ const ReviewAppointment = () => {
                 variant="h6"
                 color="blue"
                 className="capitalise text-kiiraBlackishGreen text-xl lg:text-2xl font-semibold">
-                {bookingData?.appointmentType?.name}
+                {appointmentType?.name}
               </AppTypography>
             </ContentContainer>
 
@@ -177,7 +183,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${bookingData?.appointmentType?.price}
+                ${appointmentType?.price}
               </AppTypography>
             </ContentContainer>
           </ContentContainer>
@@ -296,7 +302,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                ${bookingData?.appointmentType?.price}
+                ${appointmentType?.price}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -308,7 +314,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                ${bookingData?.appointmentType?.discount || 0}
+                ${appointmentType?.discount || 0}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -320,7 +326,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                ${bookingData?.appointmentType?.taxes || 0}
+                ${appointmentType?.taxes || 0}
               </AppTypography>
             </ContentContainer>
             <ContentContainer className="flex-row items-center justify-between m-0 p-0">
@@ -332,7 +338,7 @@ const ReviewAppointment = () => {
               <AppTypography
                 variant="h6"
                 className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-                ${bookingData?.appointmentType?.serviceFee || 0}
+                ${appointmentType?.serviceFee || 0}
               </AppTypography>
             </ContentContainer>
           </ContentContainer>
@@ -348,7 +354,7 @@ const ReviewAppointment = () => {
             <AppTypography
               variant="h6"
               className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
-              ${bookingData?.appointmentType?.price}
+              ${appointmentType?.price}
             </AppTypography>
           </ContentContainer>
         </ContentContainer>

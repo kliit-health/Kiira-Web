@@ -32,13 +32,17 @@ const ConfirmBooking = () => {
   }, [ref]);
 
   const booking_details = data?.data?.booking_details;
+  console.log(
+    '\n 🚀 ~ file: ConfirmBooking.jsx:35 ~ ConfirmBooking ~ booking_details:',
+    booking_details
+  );
 
   useEffect(() => {
     if (!isEmpty(error)) {
       Swal.fire({
         icon: 'error',
         title: 'Verification Failed',
-        html: `<div className='text-xs'>We could not confirm your transaction with \nPayment Ref: \n<b>${ref}</b></div>`,
+        html: `<div className='text-xs'>We could not confirm your booking with \nRef No: \n<b>${ref}</b></div>`,
         confirmButtonColor: 'red',
         showClass: {
           popup: 'animate__animated animate__fadeInDown'
@@ -90,12 +94,12 @@ const ConfirmBooking = () => {
             }>
             {data?.data?.message}
           </Alert>
-          <ContentContainer className="flex-col md:flex-row w-full max-w-max rounded-l-2xl lg:max-h-[450px] gap-1 md:gap-0">
-            <ContentContainer className="w-full sm:w-1/4 lg:w-2/5 min-[540px]:w-full max-[768px]:h-[100px] shadow-md md:shadow-none  shrink-0 m-0 rounded-2xl  md:rounded-r-none md:rounded-l-xl bg-[#E2EDFF] bg-blend-darken">
+          <ContentContainer className="flex-col md:flex-row w-full  rounded-l-2xl lg:max-h-[450px] gap-1 md:gap-0">
+            <ContentContainer className="w-full md:w-1/4 lg:w-2/5 min-[540px]:w-full max-[768px]:h-[100px] shadow-md md:shadow-none  shrink-0 m-0 rounded-2xl  md:rounded-r-none md:rounded-l-xl bg-[#E2EDFF] bg-blend-darken">
               <img
                 src={booking_details?.appointment_type?.image}
                 alt="image"
-                className="w-full h-[100px] sm:h-full object-cover rounded-2xl  md:rounded-r-none md:rounded-l-xl"
+                className="w-full h-[100px] md:h-full object-cover rounded-2xl  md:rounded-r-none md:rounded-l-xl"
                 loading="lazy"
               />
             </ContentContainer>
@@ -151,6 +155,16 @@ const ConfirmBooking = () => {
                   </AppTypography>
                 </ContentContainer>
               </ContentContainer>
+              <AppButton
+                size="md"
+                fullWidth
+                onClick={() =>
+                  navigate(`${ROUTES.VIEW_BOOKING}/${booking_details?.reference}`, {
+                    state: booking_details
+                  })
+                }>
+                View Booking
+              </AppButton>
             </ContentContainer>
           </ContentContainer>
           {isEmpty(error) ? (
@@ -198,11 +212,11 @@ const ConfirmBooking = () => {
             </AppTypography>
 
             <Button
-              variant="outlined"
-              onClick={() => navigate(ROUTES.BOOK_APPOINTMENT, { replace: true })}
+              variant="text"
+              onClick={() => navigate(ROUTES.HISTORY, { replace: true })}
               className="shadow-transparent mt-auto mb-4"
               size="sm">
-              Return to Booking
+              Return to Booking History
             </Button>
           </ContentContainer>
         </ContentContainer>

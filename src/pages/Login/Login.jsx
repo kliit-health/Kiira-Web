@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import {
   AppButton,
@@ -22,6 +22,10 @@ import KEYS from 'src/queries/queryKeys';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || ROUTES.INDEX;
+
   const appPasswordRef = useRef(null);
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
   const queryClient = useQueryClient();
@@ -58,7 +62,7 @@ const Login = () => {
           return;
         }
 
-        navigate(ROUTES.INDEX);
+        navigate(from, { replace: true });
         return;
       },
       onError: (error) => {

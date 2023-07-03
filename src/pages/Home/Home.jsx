@@ -16,7 +16,7 @@ const Home = () => {
   const { data: blogResponse, isLoading: blogLoading } = useBlogCollections();
   const blogCollections = blogResponse?.data?.collections;
   const appointments = data?.data?.booking_history;
-  
+
   return (
     <MainLayout>
       <ContentContainer
@@ -69,17 +69,29 @@ const Home = () => {
             <>
               {appointments
                 .map((booking, index) => {
+                  if ( booking?.status === 'payment_failed') return;
                   return (
                     <BookingCard
                       bookingData={booking}
                       bookingAction={(data) =>
-                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.id}`, { state: data })
+                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.reference}`, { state: data })
                       }
                       key={index?.toString()}
                     />
                   );
                 })
-                .splice(0, 5)}
+                .splice(0, 3)}
+              {appointments?.length > 3 ? (
+                <ContentContainer className="w-full flex-row justify-center">
+                  <Button
+                    onClick={() => navigate(ROUTES.HISTORY)}
+                    variant="text"
+                    size="sm"
+                    className="text-xs w-auto max-w-max  rounded-2xl text-white py-1 px-5">
+                    <span className="text-kiiraBlue ">View all</span>
+                  </Button>
+                </ContentContainer>
+              ) : null}
             </>
           ) : null}
 

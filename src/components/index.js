@@ -22,6 +22,7 @@ import Loader from './shared/Loader/Loader';
 import Empty from './shared/Empty/Empty';
 import BlogItem from './BlogItem/BlogItem';
 import DynamicForms from './DynamicForms/DynamicForms';
+import DefaultFormInput from './DefaultFormInput/DefaultFormInput';
 
 export {
   AppNavBar,
@@ -45,5 +46,6 @@ export {
   Loader,
   Empty,
   BlogItem,
-  DynamicForms
+  DynamicForms,
+  DefaultFormInput
 };
