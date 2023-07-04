@@ -3,15 +3,13 @@ import { ThreeDots } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import { AddButton, BookingCard, Empty } from 'src/components';
 import { ContentContainer } from 'src/components/shared/styledComponents';
-import { MainLayout } from 'src/layouts';
-import { useAppointments } from 'src/queries/queryHooks';
+import { useAppointmentsHistory } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
-import isEmpty from 'src/utils/isEmpty';
 
 const History = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useAppointments();
+  const { data, isLoading } = useAppointmentsHistory();
   const appointments = data?.data?.booking_history;
   return (
     <ContentContainer
@@ -37,11 +35,12 @@ const History = () => {
         <>
           <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
           {appointments?.map((booking, index) => {
+            // console.log("\n 🚀 ~ file: History.jsx:40 ~ {appointments?.map ~ booking:", booking)
             return (
               <BookingCard
                 bookingData={booking}
                 bookingAction={(data) =>
-                  navigate(`${ROUTES.VIEW_BOOKING}/${booking?.reference}`, { state: data })
+                  navigate(`${ROUTES.VIEW_BOOKING}/${booking?.appointment?.id}`, { state: data })
                 }
                 key={index?.toString()}
               />

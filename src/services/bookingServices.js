@@ -15,13 +15,13 @@ export const fetchAppointmentTypes = async () => {
   return res;
 };
 
-export const fetchAllAppointment = async () => {
-  const res = await Api.bookings.getAllAppointments();
+export const fetchAppointmentHistory = async () => {
+  const res = await Api.bookings.getAppointmentsHistory();
   return res;
 };
 
 export const fetchAppointmentByID = async (id) => {
-  const res = await Api.bookings.getAllAppointments(id);
+  const res = await Api.bookings.getAppointmentById(id);
   return res;
 };
 

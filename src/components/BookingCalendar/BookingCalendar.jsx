@@ -30,6 +30,36 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
     day: Number(moment(new Date()).add(1, 'day').format('DD'))
   };
 
+  // const handleNextMounth = () => {
+  //   if (selectedDay) {
+  //     const nextMounth = selectedDay.month;
+  //     if (nextMounth + 1 <= 12) {
+  //       const nextDate = { ...selectedDay, month: nextMounth + 1 };
+  //       setSelectedDay({ ...nextDate });
+  //     } else {
+  //       const nextDate = { ...selectedDay, month: 1, year: selectedDay.year + 1 };
+  //       setSelectedDay({ ...nextDate });
+  //     }
+  //   }
+  // };
+
+  // const handlePrevMounth = () => {
+  //   if (selectedDay) {
+  //     const nextMounth = selectedDay.month;
+  //     if (nextMounth - 1 > 0) {
+  //       const nextDate = { ...selectedDay, month: nextMounth - 1 };
+  //       setSelectedDay({ ...nextDate });
+  //     } else {
+  //       const nextDate = { ...selectedDay, month: 12, year: selectedDay.year - 1 };
+  //       setSelectedDay({ ...nextDate });
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   setSelectedDay(utils('en').getToday());
+  // }, []);
+
   const datePayload = {
     month: monthDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
@@ -90,8 +120,6 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
     refetchTimeData();
   }, [timeDate, doctor]);
 
-  useEffect(() => {}, [disabledDate]);
-
   const errorMsg =
     error?.response?.data?.message ||
     timeError?.response?.data?.message ||
@@ -105,6 +133,8 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
       title: errorMsg
     });
   }, [errorMsg]);
+
+  useEffect(() => {}, [disabledDate]);
 
   return (
     <>
@@ -137,12 +167,12 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
             value={selectedDay}
             onChange={setSelectedDay}
             minimumDate={minimumDate}
-            // minimumDate={utils().getToday()}
             calendarClassName="w-full lg:w-1/2 p-2 min-w-min shadow-none lg:rounded-r-none "
-            calendarSelectedDayClassName="h-4 w-8 md:h-10 md:w-10 rounded-full"
+            calendarSelectedDayClassName="m-0"
             colorPrimary="#3F84FF"
             shouldHighlightWeekends
             disabledDays={disabledDate}
+            locale={'en'}
           />
         )}
         <ContentContainer className="w-full lg:w-1/2 px-6 py-3 rounded-2xl lg:rounded-l-none bg-white flex col gap-4">

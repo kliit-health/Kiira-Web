@@ -1,18 +1,17 @@
-import { Avatar, Button, Card, CardBody, CardHeader } from '@material-tailwind/react';
+import { Button, Card } from '@material-tailwind/react';
 import React from 'react';
 import { ThreeDots } from 'react-loader-spinner';
-import { Link, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { AddButton, BlogItem, BookingCard, Empty } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraUpdates } from 'src/data';
 import { MainLayout } from 'src/layouts';
-import { useAppointments, useBlogCollections } from 'src/queries/queryHooks';
+import { useAppointmentsHistory, useBlogCollections } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useAppointments();
+  const { data, isLoading } = useAppointmentsHistory();
   const { data: blogResponse, isLoading: blogLoading } = useBlogCollections();
   const blogCollections = blogResponse?.data?.collections;
   const appointments = data?.data?.booking_history;
@@ -69,12 +68,14 @@ const Home = () => {
             <>
               {appointments
                 .map((booking, index) => {
-                  if ( booking?.status === 'payment_failed') return;
+                  if (booking?.status === 'payment_failed') return;
                   return (
                     <BookingCard
                       bookingData={booking}
                       bookingAction={(data) =>
-                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.reference}`, { state: data })
+                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.appointment?.id}`, {
+                          state: data
+                        })
                       }
                       key={index?.toString()}
                     />

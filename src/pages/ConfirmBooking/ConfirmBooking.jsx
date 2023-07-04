@@ -32,10 +32,6 @@ const ConfirmBooking = () => {
   }, [ref]);
 
   const booking_details = data?.data?.booking_details;
-  console.log(
-    '\n 🚀 ~ file: ConfirmBooking.jsx:35 ~ ConfirmBooking ~ booking_details:',
-    booking_details
-  );
 
   useEffect(() => {
     if (!isEmpty(error)) {
@@ -155,16 +151,19 @@ const ConfirmBooking = () => {
                   </AppTypography>
                 </ContentContainer>
               </ContentContainer>
-              <AppButton
-                size="md"
-                fullWidth
-                onClick={() =>
-                  navigate(`${ROUTES.VIEW_BOOKING}/${booking_details?.reference}`, {
-                    state: booking_details
-                  })
-                }>
-                View Booking
-              </AppButton>
+              {!isEmpty(data?.data?.appointment) ? (
+                <AppButton
+                  size="md"
+                  fullWidth
+                  onClick={() => {
+                    const booking = { ...booking_details, appointment: data?.data?.appointment };
+                    navigate(`${ROUTES.VIEW_BOOKING}/${data?.data?.appointment?.id}`, {
+                      state: booking
+                    });
+                  }}>
+                  View Booking
+                </AppButton>
+              ) : null}
             </ContentContainer>
           </ContentContainer>
           {isEmpty(error) ? (

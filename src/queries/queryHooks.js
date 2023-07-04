@@ -11,8 +11,8 @@ import {
 import { fetchUserProfile } from 'src/services/userServices';
 import {
   confirmPayment,
-  fetchAllAppointment,
   fetchAppointmentByID,
+  fetchAppointmentHistory,
   fetchAppointmentTypes,
   fetchAvailableDates,
   fetchAvailableTimes,
@@ -165,10 +165,10 @@ export const useConfirmPayment = (id) => {
   return data;
 };
 
-export const useAppointments = () => {
+export const useAppointmentsHistory = () => {
   const data = useQuery({
-    queryKey: [KEYS.APPOINTMENTS],
-    queryFn: () => fetchAllAppointment()
+    queryKey: [KEYS.HISTORY],
+    queryFn: () => fetchAppointmentHistory()
   });
   return data;
 };
