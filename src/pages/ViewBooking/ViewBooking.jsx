@@ -287,7 +287,11 @@ const ViewBooking = () => {
         </ContentContainer>
       ) : null}
 
-      {!isLoading && isEmpty(booking) ? <Empty /> : null}
+      {!isLoading && isEmpty(booking) ? (
+        <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
+          <Empty />
+        </ContentContainer>
+      ) : null}
     </ContentContainer>
   );
 };
