@@ -174,7 +174,8 @@ export const useAppointmentsHistory = () => {
 };
 
 export const useAppointmentById = (id) => {
-  const enabledQuery = !isEmpty(id);
+  const enabledQuery = !isEmpty(id) && id !== 'undefined';
+
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENTS_BY_ID, id],
     queryFn: () => fetchAppointmentByID(id),

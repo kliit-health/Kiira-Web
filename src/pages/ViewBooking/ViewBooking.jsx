@@ -19,6 +19,7 @@ import { useAppointmentById } from 'src/queries/queryHooks';
 import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
 import { Empty } from 'src/components';
+import { ConfirmBooking } from '..';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
@@ -27,8 +28,8 @@ const ViewBooking = () => {
   const [hiddenElement, setHiddenElement] = useState(false);
   const { id } = useParams();
   const { data, isLoading } = useAppointmentById(id);
-
-  const booking = location?.state || data?.data?.appointment;
+  const booking = location?.state;
+  const appointment = data?.data?.appointment;
 
   const downloadPdfDocument = async () => {
     if (isEmpty(downloadRef?.current)) return;
@@ -72,12 +73,12 @@ const ViewBooking = () => {
             History
           </AppNavLink>
           <AppNavLink to="#" className="opacity-75 text-xs font-medium cursor-default">
-            {booking?.appointment_type?.name}
+            {booking?.appointment_type?.name || appointment?.type}
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
 
-      {isLoading ? (
+      {isLoading && id !== 'undefined' ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <ThreeDots
             height="80"
@@ -98,7 +99,7 @@ const ViewBooking = () => {
         </ContentContainer>
       ) : null}
 
-      {!isLoading && !isEmpty(booking) ? (
+      {!isLoading && id !== 'undefined' ? (
         <ContentContainer
           ref={downloadRef}
           className="w-full h-full flex flex-col gap-6 p-8 rounded-lg">
@@ -107,21 +108,27 @@ const ViewBooking = () => {
               variant="h6"
               color="blue"
               className="capitalise text-kiiraBlackishGreen text-lg lg:text-xl font-semibold">
-              {booking?.appointment_type?.name}
+              {booking?.appointment_type?.name || appointment?.type}
             </AppTypography>
             <ContentContainer className="gap-2">
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${booking?.appointment_type?.price}
+                ${booking?.appointment_type?.price || appointment?.price}
               </AppTypography>
               {booking?.status === 'payment_ticketed' && !hiddenElement ? (
                 <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                   <Button
                     onClick={() =>
                       navigate(
-                        `${ROUTES.HISTORY}/${booking?.reference}${ROUTES.RESCHEDULE_APPOINTMENT}`,
-                        { state: { service: booking } }
+                        `${ROUTES.HISTORY}/${
+                          !isEmpty(booking?.appointment?.id)
+                            ? booking?.appointment?.id
+                            : appointment?.id
+                        }${ROUTES.RESCHEDULE_APPOINTMENT}`,
+                        {
+                          state: { service: booking }
+                        }
                       )
                     }
                     size="sm"
@@ -133,7 +140,11 @@ const ViewBooking = () => {
                     <IconButton
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `https://kiira-hmp.netlify.app/history/view-booking/${booking?.reference}`
+                          `https://kiira-hmp.netlify.app/history/view-booking/${
+                            !isEmpty(booking?.appointment?.id)
+                              ? booking?.appointment?.id
+                              : appointment?.id
+                          }`
                         );
                         Toast.fire({
                           icon: 'success',
@@ -169,7 +180,9 @@ const ViewBooking = () => {
               <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
                 <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {moment(booking?.appointment_datetime).format('ddd MMM D,')}
+                    {moment(booking?.appointment_datetime || appointment?.datetime).format(
+                      'ddd MMM D,'
+                    )}
                   </AppTypography>
                   <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                     Date
@@ -178,7 +191,9 @@ const ViewBooking = () => {
                 <DividerIcon className="rotate-0 sm:rotate-90 md:rotate-0 w-full xs:w-auto md:max-w-min " />
                 <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {moment(booking?.appointment_datetime).format('HH:mm A')}
+                    {moment(booking?.appointment_datetime || appointment?.datetime).format(
+                      'HH:mm A'
+                    )}
                   </AppTypography>
                   <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                     Time
@@ -203,22 +218,23 @@ const ViewBooking = () => {
                       variant="h6"
                       color="blue"
                       className="text-white text-xs font-semibold font-poppins">
-                      {booking?.appointment?.firstName} {booking?.appointment?.lastName}
+                      {booking?.appointment?.firstName || appointment?.firstName}{' '}
+                      {booking?.appointment?.lastName || appointment?.lastName}
                     </AppTypography>
                   </ContentContainer>
                   <AppTypography
                     variant="h6"
                     color="blue"
                     className="text-white text-xs text-right font-normal font-poppins">
-                    {booking?.appointment_type?.name}
+                    {booking?.appointment_type?.name || appointment?.type}
                   </AppTypography>
                 </ContentContainer>
 
                 <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
                   <ContentContainer>
-                    {!isEmpty(booking?.calendar?.description) ? (
+                    {!isEmpty(booking?.calendar?.description || appointment?.calendar) ? (
                       <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                        {booking?.calendar?.name}
+                        {booking?.calendar?.name || appointment?.calendar}
                       </AppTypography>
                     ) : (
                       <AppTypography variant="h6" color="blue-gray" className="text-base">
@@ -234,7 +250,7 @@ const ViewBooking = () => {
 
                   <ContentContainer className="h-24 w-24 min-w-[100px] min-h-[100px]">
                     <QRCode
-                      value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.reference}`}
+                      value={`https://kiira-hmp.netlify.app/history/view-booking/${appointment?.id}`}
                       size={256}
                       style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                       viewBox={`0 0 256 256`}
@@ -245,10 +261,6 @@ const ViewBooking = () => {
             </ContentContainer>
 
             <ContentContainer className="flex flex-col gap-4 w-full flex-wrap lg:flex-nowrap whitespace-pre-wrap">
-              {/* <DefaultFormInput
-              // appointmentFormIDs={booking?.appointment_type?.}
-              formValues={booking?.fields?.formIDs}
-            /> */}
               {booking?.status === 'payment_failed' ? (
                 <Alert
                   variant="gradient"
@@ -280,16 +292,22 @@ const ViewBooking = () => {
                   </span>
                 </Alert>
               ) : (
-                booking?.appointment?.formsText
+                booking?.appointment?.formsText || appointment?.formsText
               )}
             </ContentContainer>
           </ContentContainer>
         </ContentContainer>
       ) : null}
 
-      {!isLoading && isEmpty(booking) ? (
+      {!isLoading && isEmpty(booking) && isEmpty(appointment) ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty />
+        </ContentContainer>
+      ) : null}
+
+      {id === 'undefined' ? (
+        <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
+          <Empty label={<ConfirmBooking />} />
         </ContentContainer>
       ) : null}
     </ContentContainer>

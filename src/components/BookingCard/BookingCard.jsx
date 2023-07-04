@@ -251,7 +251,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             <AppButton
               size="md"
               fullWidth
-              disabled={disabled}
+              disabled={disabled || bookingData?.status !== 'payment_ticketed'}
               onClick={() => bookingAction(bookingData)}>
               View Booking
             </AppButton>

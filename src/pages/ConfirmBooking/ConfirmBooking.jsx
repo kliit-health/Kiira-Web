@@ -28,6 +28,7 @@ const ConfirmBooking = () => {
   const { data, isLoading, error, refetch } = useConfirmPayment(ref);
 
   useEffect(() => {
+
     refetch();
   }, [ref]);
 
