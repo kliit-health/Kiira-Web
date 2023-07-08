@@ -1,32 +1,55 @@
-import { Button, ButtonGroup, Select, Option } from '@material-tailwind/react';
+import { Button, ButtonGroup, Select, Option, Dialog, DialogBody } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { DoctorsCard, Empty, SearchInput, ServiceCard } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { kiiraDoctors } from 'src/data';
 import { MainLayout } from 'src/layouts';
-import { useDoctorsCalendars } from 'src/queries/queryHooks';
+import { useAppointmentTypes, useDoctorsCalendars } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { searchFilter } from 'src/utils/searchFilter';
+import { BookAppointment } from '..';
 
 const Doctors = () => {
   const { data, isLoading } = useDoctorsCalendars();
-  const doctors = data?.data?.calendars;
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const doctors = data?.data?.calendars ?? [];
+
   const [searchText, setSearchText] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
-
-  const handleSelectedFilter = (selected) => {
-    setSelectedFilter(selected);
-  };
 
   useEffect(() => {
     setFilteredDoctors(doctors);
   }, [doctors]);
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
   const handleSearch = (text) => {
     setSearchText(searchText);
     searchFilter(text, 'name', setSearchText, doctors, setFilteredDoctors);
   };
+
+  const { data: appointmentTypes, isLoading: typesLoading, error } = useAppointmentTypes();
+  const appointment_types = appointmentTypes?.data?.appointment_types ?? [];
+  const [docAppointmentType, setDocAppointmentType] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState({});
+
+  useEffect(() => {
+    if (isEmpty(selectedDoctor) || isEmpty(appointment_types)) return;
+    const filteredDocAppointment = appointment_types?.filter((elem) => {
+      if (elem?.calendarIDs?.includes(selectedDoctor?.id)) {
+        return true;
+      }
+      return false;
+    });
+
+    console.log(
+      '\n 🚀 ~ file: Doctors.jsx:18 ~ Doctors ~ docAppointmentType:',
+      filteredDocAppointment
+    );
+    setDocAppointmentType(filteredDocAppointment);
+    handleOpen();
+  }, [selectedDoctor, appointment_types]);
 
   return (
     <MainLayout>
@@ -64,37 +87,6 @@ const Doctors = () => {
               />
             </ContentContainer>
           </ContentContainer>
-          <ContentContainer className="flex flex-row items-center w-full md:w-1/4">
-            <ButtonGroup ripple={true} size="sm" className="shadow-none bg-kiiraBg3 rounded-lg">
-              <Button
-                onClick={() => handleSelectedFilter('all')}
-                className={[
-                  selectedFilter === 'all'
-                    ? 'bg-kiiraBlue text-white text-xs'
-                    : 'bg-transparent text-kiiraText  text-xs'
-                ]}>
-                ALL
-              </Button>
-              <Button
-                onClick={() => handleSelectedFilter('in_person')}
-                className={[
-                  selectedFilter === 'in_person'
-                    ? 'bg-kiiraBlue text-white text-[11px]'
-                    : 'bg-transparent text-kiiraText text-[11px]'
-                ]}>
-                ON SITE
-              </Button>
-              <Button
-                onClick={() => handleSelectedFilter('virtual')}
-                className={[
-                  selectedFilter === 'virtual'
-                    ? 'bg-kiiraBlue text-white text-xs'
-                    : 'bg-transparent text-kiiraText  text-xs'
-                ]}>
-                VIRTUAL
-              </Button>
-            </ButtonGroup>
-          </ContentContainer>
         </ContentContainer>
         <ContentContainer>
           <div className="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4 ">
@@ -113,6 +105,7 @@ const Doctors = () => {
                       loading={isLoading}
                       disabled={isLoading}
                       selected={true}
+                      setSelected={setSelectedDoctor}
                     />
                   );
                 })
@@ -124,6 +117,28 @@ const Doctors = () => {
             <Empty />
           </ContentContainer>
         ) : null}
+        <Dialog
+          open={open}
+          handler={handleOpen}
+          size="xxl"
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0.9, y: -100 }
+          }}>
+          <DialogBody className="min-h-[65vh]">
+            <ContentContainer column width="100%" height="100%" margin="auto" padding="10px">
+              <ContentContainer className="w-full py-2 text-center font-poppins">
+                <AppTypography variant="h4" className="uppercase text-kiiraBlue">
+                  Select an appointment type
+                </AppTypography>
+              </ContentContainer>
+              <BookAppointment
+                docAppointmentType={docAppointmentType}
+                appointedDoctor={selectedDoctor}
+              />
+            </ContentContainer>
+          </DialogBody>
+        </Dialog>
       </ContentContainer>
     </MainLayout>
   );

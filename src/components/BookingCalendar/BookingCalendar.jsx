@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AppTypography, CalendarWrapper, ContentContainer } from '../shared/styledComponents';
 import { Calendar, utils } from '@amir04lm26/react-modern-calendar-date-picker';
-import { element, func, object } from 'prop-types';
+import { element, func, object, string } from 'prop-types';
 import { useAvailableDates, useAvailableTimes } from 'src/queries/queryHooks';
 import moment from 'moment-timezone';
 import isEmpty from 'src/utils/isEmpty';
@@ -12,7 +12,7 @@ import { Empty } from '..';
 import { useLocalStore } from 'src/store';
 import { Alert } from '@material-tailwind/react';
 
-const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) => {
+const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, selectedDate }) => {
   const defaultDate = {
     year: Number(moment(new Date()).format('YYYY')),
     month: Number(moment(new Date()).format('MM')),
@@ -249,7 +249,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
             {!timesDatesLoading && !isFetching ? (
               <div className="grid grid-flow-row md:grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {timesDates?.map((time, index) => {
-                  const timeDate = moment(time?.time).format();
+                  const timeSlots = moment(time?.time).format();
                   return (
                     <ContentContainer
                       onClick={() => {
@@ -259,10 +259,14 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor }) =
                           onTimeSelect({ appointmentType, doctor, bookingCheckout: time });
                         }, 250);
                       }}
-                      className="col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer p-2"
+                      className={[
+                        moment(timeSlots).format('hh:mm') == moment(selectedDate).format('hh:mm')
+                          ? 'col bg-kiiraBg3 rounded-2xl flex items-center justify-center h-20 shadow-md cursor-pointer p-2 border-kiiraBlue'
+                          : 'col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer p-2'
+                      ]}
                       key={index.toString()}>
                       <AppTypography variant="small" className="font-medium text-sm text-center">
-                        {moment(timeDate).format('LT')}
+                        {moment(timeSlots).format('LT')}
                       </AppTypography>
                     </ContentContainer>
                   );
@@ -280,12 +284,14 @@ BookingCalendar.propTypes = {
   dateLabel: element,
   onTimeSelect: func,
   doctor: object,
-  appointmentType: object
+  appointmentType: object,
+  selectedDate: string
 };
 BookingCalendar.defaultProps = {
   onTimeSelect: () => {},
   doctor: {},
-  appointmentType: {}
+  appointmentType: {},
+  selectedDate: ''
 };
 
 export default BookingCalendar;

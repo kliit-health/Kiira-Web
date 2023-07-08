@@ -10,6 +10,7 @@ import {
 } from 'src/services/authServices';
 import { fetchUserProfile } from 'src/services/userServices';
 import {
+  cancelBookingAppointment,
   confirmPayment,
   fetchAppointmentByID,
   fetchAppointmentHistory,
@@ -20,7 +21,8 @@ import {
   fetchBookingForms,
   fetchDoctorsCalendars,
   fetchKiiraProducts,
-  initialiseBookingPayment
+  initialiseBookingPayment,
+  rescheduleBookedAppointment
 } from 'src/services/bookingServices';
 import isEmpty from 'src/utils/isEmpty';
 
@@ -73,7 +75,6 @@ export const useResetPassword = () => {
   });
   return data;
 };
-changePassword;
 
 export const useChangePassword = () => {
   const data = useMutation({
@@ -83,7 +84,6 @@ export const useChangePassword = () => {
   });
   return data;
 };
-changePassword;
 
 export const useProfile = () => {
   const data = useQuery({ queryKey: [KEYS.PROFILE], queryFn: fetchUserProfile });
@@ -183,6 +183,7 @@ export const useAppointmentById = (id) => {
   });
   return data;
 };
+
 export const useBlogCollections = () => {
   const data = useQuery({
     queryKey: [KEYS.BLOG_COLLECTIONS],
@@ -190,10 +191,29 @@ export const useBlogCollections = () => {
   });
   return data;
 };
+
 export const useBookingForms = () => {
   const data = useQuery({
     queryKey: [KEYS.BOOKING_FORMS],
     queryFn: () => fetchBookingForms()
+  });
+  return data;
+};
+
+export const useRescheduleAppointment = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return rescheduleBookedAppointment(data);
+    }
+  });
+  return data;
+};
+
+export const useCancelAppointment = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return cancelBookingAppointment(data);
+    }
   });
   return data;
 };

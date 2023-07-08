@@ -7,20 +7,21 @@ import { ROUTES } from 'src/routes/Paths';
 import { truncate } from 'src/utils/truncate';
 import { useNavigate } from 'react-router-dom';
 import isEmpty from 'src/utils/isEmpty';
+import { IMAGES } from 'src/data';
 
 const ServiceContainer = styled(ContentContainer)`
   ${tw`col-auto flex-col w-full max-w-max rounded-3xl h-full bg-kiiraBg2 gap-2`};
   min-width: -webkit-fill-available;
 `;
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, appointedDoctor }) => {
   const navigate = useNavigate();
 
   return (
     <ServiceContainer className="">
       <ContentContainer className="w-full  p-3 shrink-0 m-0 pb-0 overflow-hidden">
         <img
-          src={service?.image}
+          src={service?.image || IMAGES.Penguin}
           alt="image"
           className="w-full h-auto max-h-[180px] min-h-[180px] object-cover rounded-2xl"
           style={{ backgroundColor: service?.color }}
@@ -58,7 +59,9 @@ const ServiceCard = ({ service }) => {
             size="sm"
             className="w-32 rounded-full text-[8px] bg-kiiraBlue"
             onClick={() =>
-              navigate(`${ROUTES.CHOOSE_APPOINTMENT}/appointment-type`, { state: { service } })
+              navigate(`${ROUTES.CHOOSE_APPOINTMENT}/appointment-type`, {
+                state: { service, ...(!isEmpty(appointedDoctor) && { appointedDoctor }) }
+              })
             }>
             Book now
           </Button>
@@ -71,5 +74,6 @@ const ServiceCard = ({ service }) => {
 export default ServiceCard;
 
 ServiceCard.propTypes = {
-  service: object
+  service: object,
+  appointedDoctor: object
 };

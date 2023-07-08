@@ -1,8 +1,9 @@
-import { Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
+import { Breadcrumbs, Button, Dialog, IconButton } from '@material-tailwind/react';
+import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BookingCalendar, DoctorsCard } from 'src/components';
+import { BookingCalendar, DoctorsCard, Loader } from 'src/components';
 import {
   AppButton,
   AppLinkExternal,
@@ -11,15 +12,17 @@ import {
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { useDoctorsCalendars } from 'src/queries/queryHooks';
+import { useDoctorsCalendars, useRescheduleAppointment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import Swal from 'sweetalert2';
 
 const RescheduleAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, isLoading, error } = useDoctorsCalendars();
+  const { data, error } = useDoctorsCalendars();
+  const { mutate, isLoading } = useRescheduleAppointment();
 
   const errorMsg = error?.response?.data?.message || error?.message;
   useEffect(() => {
@@ -32,14 +35,14 @@ const RescheduleAppointment = () => {
 
   const doctors = data?.data?.calendars;
   const [doctorsData, setDoctorsData] = useState(doctors);
-  const [hideDoctors, setHideDoctors] = useState(false);
+  const [rescheduleData, setRescheduleData] = useState({});
 
   const { id } = useParams();
   const service = location.state?.service || {};
+
   const doc = doctorsData?.filter((elem) => elem?.id === service?.appointment?.calendarID);
 
   const doctorState = location.state?.doctor || !isEmpty(doc) ? doc[0] : {};
-  const [selectedDoctor, setSelectedDoctor] = useState(doctorState);
 
   useEffect(() => {
     if (isEmpty(doctors)) return;
@@ -49,6 +52,57 @@ const RescheduleAppointment = () => {
     );
     setDoctorsData(r);
   }, [id, doctors, service]);
+
+  const handleReschedule = () => {
+    const payload = {
+      id: service?.appointment?.id,
+      datetime: rescheduleData?.bookingCheckout?.time,
+      timezone: moment.tz.guess(true),
+      ...(!isEmpty(doctorState) && { calendarID: doctorState?.id })
+    };
+
+    mutate(payload, {
+      onSuccess: (response) => {
+        console.log(
+          '\n 🚀 ~ file: RescheduleAppointment.jsx:66 ~ handleReschedule ~ response:',
+          response
+        );
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          html: `<div className='text-xs'>${response?.message}</div>`,
+          confirmButtonColor: 'blue',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate(ROUTES.INDEX, { replace: true });
+          }
+        });
+        return;
+      },
+      onError: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          html: `<div className='text-xs'>${error.response?.data?.message}</div>`,
+          confirmButtonColor: 'red',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+          }
+        });
+      }
+    });
+  };
 
   return (
     <ContentContainer
@@ -160,61 +214,33 @@ const RescheduleAppointment = () => {
               className="text-[#112211] font-semibold text-xs lg:text-base">
               Book your appointment with
             </AppTypography>
-            <Button
-              variant="text"
-              size="sm"
-              onClick={() => setHideDoctors(!hideDoctors)}
-              className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
-              <span className="text-[0.5rem]">
-                {!hideDoctors ? 'Any Available' : 'Show Available Doctors'}
-              </span>
-            </Button>
           </ContentContainer>
 
-          {!hideDoctors && !isLoading && isEmpty(selectedDoctor) ? (
-            <ContentContainer className="text-red-500 font-medium text-xs text-right">
-              Please select your doctor to continue or Choose any available
-            </ContentContainer>
-          ) : null}
+          <ContentContainer
+            className="flex flex-row flex-nowrap gap-4 lg:gap-2 items-center overflow-hidden overflow-x-auto"
+            hideScroll={true}>
+            <div className="col">
+              <DoctorsCard
+                whiteBackground
+                doctor={doctorState}
+                selected={true}
+                style={{ minWidth: '245px', maxWidth: '400px' }}
+                hideBookingButton={true}
+              />
+            </div>
+          </ContentContainer>
 
-          {!hideDoctors ? (
-            <ContentContainer
-              className="flex flex-row flex-nowrap gap-4 lg:gap-2 items-center overflow-hidden overflow-x-auto"
-              hideScroll={true}>
-              {!isEmpty(selectedDoctor) && !isLoading ? (
-                <div className="col">
-                  <DoctorsCard
-                    whiteBackground
-                    doctor={selectedDoctor}
-                    selected={true}
-                    disabled={false}
-                    style={{ minWidth: '245px' }}
-                    hideBookingButton={true}
-                  />
-                </div>
-              ) : null}
+          <BookingCalendar
+            onTimeSelect={(bookingParams) => setRescheduleData(bookingParams)}
+            appointmentType={service}
+            doctor={doctorState}
+            selectedDate={rescheduleData?.bookingCheckout?.time}
+          />
 
-              {!isLoading
-                ? doctorsData?.map((calendar, index) => {
-                    if (selectedDoctor.id === calendar.id) return;
-                    return (
-                      <div className="col" key={index.toString()}>
-                        <DoctorsCard
-                          whiteBackground
-                          doctor={calendar}
-                          selected={selectedDoctor.id === calendar.id}
-                          disabled={selectedDoctor.id !== calendar.id && !isEmpty(doctorState)}
-                          style={{ minWidth: '245px' }}
-                          setSelected={(d) => setSelectedDoctor(d)}
-                          hideBookingButton={true}
-                        />
-                      </div>
-                    );
-                  })
-                : null}
-
-              {isLoading ? (
-                <ContentContainer className="flex h-full w-full min-h-[300px] items-center justify-center">
+          {!isEmpty(rescheduleData) ? (
+            isLoading ? (
+              <Dialog open={true} size="sm" className="bg-transparent">
+                <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
                   <ThreeDots
                     height="80"
                     width="80"
@@ -226,34 +252,17 @@ const RescheduleAppointment = () => {
                     visible={true}
                   />
                 </ContentContainer>
-              ) : null}
-            </ContentContainer>
-          ) : null}
-
-          {!isEmpty(selectedDoctor) && !hideDoctors ? (
-            <BookingCalendar
-              onTimeSelect={(bookingParams) =>
-                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
-              }
-              appointmentType={service}
-              doctor={!hideDoctors ? selectedDoctor : {}}
-            />
-          ) : isEmpty(selectedDoctor) && hideDoctors ? (
-            <BookingCalendar
-              onTimeSelect={(bookingParams) =>
-                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
-              }
-              appointmentType={service}
-              doctor={!hideDoctors ? selectedDoctor : {}}
-            />
-          ) : hideDoctors ? (
-            <BookingCalendar
-              onTimeSelect={(bookingParams) =>
-                navigate(ROUTES.REVIEW_APPOINTMENT, { state: { data: bookingParams } })
-              }
-              appointmentType={service}
-              doctor={!hideDoctors ? selectedDoctor : {}}
-            />
+              </Dialog>
+            ) : (
+              <AppButton
+                size="md"
+                background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
+                className="text-sm font-bold text-white uppercase shadow-transparent mt-4"
+                fullWidth
+                onClick={handleReschedule}>
+                Reschedule
+              </AppButton>
+            )
           ) : null}
         </ContentContainer>
       </ContentContainer>

@@ -32,10 +32,6 @@ const Api = {
     getBlogCollections: () => ApiHandler.get(`/collections?limit=10`),
     getBookingForms: () => ApiHandler.get(`/forms`),
     getAvailableDates: (data) => {
-      console.log(
-        '\n 🚀 ~ file: index.js:59 ~ Api.bookings.getAvailableDates:',
-        isEmpty(data?.calendarID) && `calendarID=${data['calendarID']}`
-      );
       let queryString;
 
       queryString = Object.keys(data)

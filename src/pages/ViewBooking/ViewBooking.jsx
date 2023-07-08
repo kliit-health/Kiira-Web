@@ -29,6 +29,8 @@ const ViewBooking = () => {
   const { id } = useParams();
   const { data, isLoading } = useAppointmentById(id);
   const booking = location?.state;
+  const { mutate, isLoading: cancelBookingLoading } = useRescheduleAppointment();
+
   const appointment = data?.data?.appointment;
 
   const downloadPdfDocument = async () => {
@@ -53,6 +55,10 @@ const ViewBooking = () => {
     pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`kiira-booking.pdf`);
     setHiddenElement(false);
+  };
+
+  const handleCancelAppointment = () => {
+    if (!appointment?.canClientReschedule) return;
   };
 
   return (
@@ -102,7 +108,7 @@ const ViewBooking = () => {
       {!isLoading && id !== 'undefined' ? (
         <ContentContainer
           ref={downloadRef}
-          className="w-full h-full flex flex-col gap-6 p-8 rounded-lg">
+          className="w-full h-full flex flex-col gap-6 p-2 xl:p-8 rounded-lg">
           <ContentContainer className="flex flex-row items-center justify-between flex-wrap md:flex-nowrap gap-4 w-full">
             <AppTypography
               variant="h6"
@@ -114,11 +120,22 @@ const ViewBooking = () => {
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${booking?.appointment_type?.price || appointment?.price}
+                ${booking?.appointment_type?.price || appointment?.priceSold}
               </AppTypography>
-              {booking?.status === 'payment_ticketed' && !hiddenElement ? (
+
+              {appointment?.canceled ? (
+                <Button
+                  size="sm"
+                  variant="text"
+                  className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                  Appointment Cancelled
+                </Button>
+              ) : booking?.status === 'payment_ticketed' &&
+                !hiddenElement &&
+                !appointment?.canceled ? (
                 <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                   <Button
+                    disabled={!appointment?.canClientReschedule}
                     onClick={() =>
                       navigate(
                         `${ROUTES.HISTORY}/${
@@ -127,14 +144,24 @@ const ViewBooking = () => {
                             : appointment?.id
                         }${ROUTES.RESCHEDULE_APPOINTMENT}`,
                         {
-                          state: { service: booking }
+                          state: { service: { ...booking, appointment } }
                         }
                       )
                     }
                     size="sm"
                     variant="text"
-                    className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                    Reschedule Appointment
+                    className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:bg-transparent hover:opacity-80 hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                    {!appointment?.canClientReschedule
+                      ? 'Reschedule Unavailable'
+                      : 'Reschedule Appointment'}
+                  </Button>
+                  <Button
+                    disabled={!appointment?.canClientCancel}
+                    onClick={() => {}}
+                    size="sm"
+                    variant="text"
+                    className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                    Cancel
                   </Button>
                   <ContentContainer row className="gap-2 items-center flex-wrap">
                     <IconButton
@@ -176,8 +203,8 @@ const ViewBooking = () => {
           </ContentContainer>
 
           <ContentContainer className="gap-5 w-full h-full">
-            <ContentContainer className="flex-row w-full shadow-none rounded-2xl gap-0 overflow-hidden flex-wrap md:flex-nowrap">
-              <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
+            <ContentContainer className="flex-row w-full shadow-none rounded-2xl gap-0 flex-wrap md:flex-nowrap">
+              <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
                 <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
                     {moment(booking?.appointment_datetime || appointment?.datetime).format(
@@ -201,8 +228,8 @@ const ViewBooking = () => {
                 </ContentContainer>
               </ContentContainer>
 
-              <ContentContainer col className="w-full md:-ml-0.5">
-                <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 gap-2 flex-wrap">
+              <ContentContainer col className="w-full md:-ml-0.5 rounded-r-2xl">
+                <ContentContainer className="flex-row items-center justify-between w-full h-24 bg-kiiraBlue p-2 gap-2 flex-wrap rounded-tr-none md:rounded-tr-2xl">
                   <ContentContainer
                     className="flex flex-row 1tems-center gap-1"
                     alignItems="center">
@@ -230,14 +257,27 @@ const ViewBooking = () => {
                   </AppTypography>
                 </ContentContainer>
 
-                <ContentContainer className="bg-kiiraBg2 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap">
+                <ContentContainer className="bg-kiiraBg2 gap-1 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-x-auto">
                   <ContentContainer>
+                    <span className="text-sm flex-row flex-wrap">
+                      <h6>
+                        <b>Booking ID: </b>
+                      </h6>{' '}
+                      {booking?.id || appointment?.id}
+                    </span>
+                    <span className="text-sm flex-row flex-wrap">
+                      <h6>
+                        <b>Payment Ref:</b>
+                      </h6>{' '}
+                      {booking?.reference || appointment?.reference}
+                    </span>
+
                     {!isEmpty(booking?.calendar?.description || appointment?.calendar) ? (
-                      <AppTypography variant="h4" color="blue-gray" className="text-2xl">
+                      <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">
                         {booking?.calendar?.name || appointment?.calendar}
                       </AppTypography>
                     ) : (
-                      <AppTypography variant="h6" color="blue-gray" className="text-base">
+                      <AppTypography variant="h6" color="blue-gray" className="text-base my-2">
                         Any available doctor
                       </AppTypography>
                     )}

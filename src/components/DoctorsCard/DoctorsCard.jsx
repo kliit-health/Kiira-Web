@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AppAvatar, AppTypography, ContentContainer } from '../shared/styledComponents';
 import { IMAGES, profileState } from 'src/data';
 import { Badge, Button, Rating } from '@material-tailwind/react';
@@ -9,6 +9,7 @@ import { ROUTES } from 'src/routes/Paths';
 import { truncate } from 'src/utils/truncate';
 import isEmpty from 'src/utils/isEmpty';
 import { Toast } from 'src/utils';
+import { useAppointmentTypes } from 'src/queries/queryHooks';
 
 const ServiceContainer = styled(ContentContainer)(({ disabled, whiteBackground, selected }) => [
   tw`col-auto flex-col w-full max-w-[-webkit-fill-available] rounded-3xl h-full gap-2`,
@@ -32,6 +33,7 @@ const DoctorsCard = ({
   setSelected,
   selected
 }) => {
+  const docRef = useRef();
   const navigate = useNavigate();
 
   return (
@@ -57,6 +59,7 @@ const DoctorsCard = ({
         )}
       </ContentContainer>
       <Badge
+        containerRef={docRef}
         overlap="circular"
         placement="top-end"
         className="h-4 w-4 bg-white p-[1px] mt-6"
@@ -98,8 +101,18 @@ const DoctorsCard = ({
           </AppTypography>
         ) : null}
       </ContentContainer>
-      <Rating value={doctor?.rating || 5} readonly />
-      <hr className="bg-kiiraText mt-auto w-full " />
+      <Rating value={doctor?.rating || 5} readonly className="mb-auto" />
+      <ContentContainer className="">
+        {!isEmpty(doctor?.location) ? (
+          <AppTypography
+            variant="small"
+            className="text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center">
+            <IMAGES.LocationIcon className="opacity-50" />{' '}
+            <span className="text-center text-xs">{truncate(doctor?.location, 30)}</span>
+          </AppTypography>
+        ) : null}
+      </ContentContainer>
+      <hr className="bg-kiiraText w-full " />
       <ContentContainer className="flex flex-row items-center gap-2 justify-center flex-wrap xl:flex-nowrap">
         <Button
           disabled={disabled || loading}
@@ -125,7 +138,10 @@ const DoctorsCard = ({
         ) : (
           <Button
             disabled={disabled || loading}
-            onClick={() => navigate(`${ROUTES.CHOOSE_APPOINTMENT}/doctor`, { state: { doctor } })}
+            onClick={() => {
+              setSelected(doctor);
+              // navigate(`${ROUTES.CHOOSE_APPOINTMENT}/doctor`, { state: { doctor } });
+            }}
             size="sm"
             className="max-w-[120px] rounded-full text-[8px] bg-kiiraBlue shadow-none">
             Book now

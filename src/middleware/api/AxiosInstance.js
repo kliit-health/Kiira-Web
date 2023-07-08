@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BASE_URL } from 'src/utils/constants';
 import Auth from '../storage';
 import { ROUTES } from 'src/routes/Paths';
+import { redirect } from 'react-router-dom';
 
 const axiosApiInstance = axios.create();
 
