@@ -17,6 +17,7 @@ const Doctors = () => {
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
 
   useEffect(() => {
+    if (isEmpty(doctors)) return;
     setFilteredDoctors(doctors);
   }, [doctors]);
 
@@ -33,22 +34,21 @@ const Doctors = () => {
   const appointment_types = appointmentTypes?.data?.appointment_types ?? [];
   const [docAppointmentType, setDocAppointmentType] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState({});
+  console.log('\n 🚀 ~ file: Doctors.jsx:37 ~ Doctors ~ selectedDoctor:', selectedDoctor?.id);
 
   useEffect(() => {
     if (isEmpty(selectedDoctor) || isEmpty(appointment_types)) return;
-    const filteredDocAppointment = appointment_types?.filter((elem) => {
-      if (elem?.calendarIDs?.includes(selectedDoctor?.id)) {
-        return true;
-      }
-      return false;
-    });
+    const filteredDocAppointment = appointment_types?.filter((elem) =>
+      elem?.calendarIDs?.find((id) => selectedDoctor?.id === id)
+    );
 
     console.log(
       '\n 🚀 ~ file: Doctors.jsx:18 ~ Doctors ~ docAppointmentType:',
       filteredDocAppointment
     );
     setDocAppointmentType(filteredDocAppointment);
-    handleOpen();
+    setOpen(true);
+    // handleOpen();
   }, [selectedDoctor, appointment_types]);
 
   return (
@@ -127,10 +127,24 @@ const Doctors = () => {
           }}>
           <DialogBody className="min-h-[65vh]">
             <ContentContainer column width="100%" height="100%" margin="auto" padding="10px">
-              <ContentContainer className="w-full py-2 text-center font-poppins">
-                <AppTypography variant="h4" className="uppercase text-kiiraBlue">
-                  Select an appointment type
+              <ContentContainer className="w-full py-2 text-center font-poppins flex-row items-center gap-4 flex-wrap">
+                <AppTypography variant="h4" className="uppercase text-md text-kiiraBlackText">
+                  Book an appointment type with{' '}
+                  <span className="text-kiiraBlue">{selectedDoctor?.name}</span>
                 </AppTypography>
+                <ContentContainer>
+                  <Button
+                    size="sm"
+                    variant="text"
+                    className="max-w-max text-purple-400"
+                    onClick={() => {
+                      setSelectedDoctor({});
+                      setDocAppointmentType([]);
+                      handleOpen();
+                    }}>
+                    CHoose a diffect doctor
+                  </Button>
+                </ContentContainer>
               </ContentContainer>
               <BookAppointment
                 docAppointmentType={docAppointmentType}

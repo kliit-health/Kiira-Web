@@ -60,7 +60,7 @@ const ServiceCard = ({ service, appointedDoctor }) => {
             className="w-32 rounded-full text-[8px] bg-kiiraBlue"
             onClick={() =>
               navigate(`${ROUTES.CHOOSE_APPOINTMENT}/appointment-type`, {
-                state: { service, ...(!isEmpty(appointedDoctor) && { appointedDoctor }) }
+                state: { service, ...(!isEmpty(appointedDoctor) && { doctor: appointedDoctor }) }
               })
             }>
             Book now

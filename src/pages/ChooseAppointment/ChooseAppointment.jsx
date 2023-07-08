@@ -35,7 +35,7 @@ const ChooseAppointment = () => {
 
   const { id } = useParams();
   const service = location.state?.service || {};
-  console.log("\n 🚀 ~ file: ChooseAppointment.jsx:38 ~ ChooseAppointment ~ service:", service)
+  console.log('\n 🚀 ~ file: ChooseAppointment.jsx:38 ~ ChooseAppointment ~ service:', service);
   const doctorState = location.state?.doctor || {};
 
   useEffect(() => {
@@ -59,11 +59,11 @@ const ChooseAppointment = () => {
           separator={<i className="fa fa-angle-right text-kiiraText " aria-hidden="true"></i>}
           fullWidth
           className="w-auto bg-transparent">
-          {id === 'doctor' ? (
+          {!isEmpty(doctorState) ? (
             <AppNavLink
               to={ROUTES.DOCTORS}
               className="opacity-75 text-xs font-semibold text-kiiraBlue hover:text-kiiraBlue">
-              Doctor
+              {doctorState?.name}
             </AppNavLink>
           ) : (
             <AppNavLink

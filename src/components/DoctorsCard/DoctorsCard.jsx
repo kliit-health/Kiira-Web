@@ -108,7 +108,7 @@ const DoctorsCard = ({
             variant="small"
             className="text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center">
             <IMAGES.LocationIcon className="opacity-50" />{' '}
-            <span className="text-center text-xs">{truncate(doctor?.location, 30)}</span>
+            <span className="text-center text-xs w-auto">{truncate(doctor?.location, 60)}</span>
           </AppTypography>
         ) : null}
       </ContentContainer>
