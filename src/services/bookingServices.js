@@ -70,3 +70,7 @@ export const cancelBookingAppointment = async (id) => {
   const res = await Api.bookings.cancelAppointment(id);
   return res;
 };
+export const fetchAppointmentHistoryByID = async (id) => {
+  const res = await Api.bookings.appointmentHistoryById(id);
+  return res;
+};

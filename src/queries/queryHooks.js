@@ -14,6 +14,7 @@ import {
   confirmPayment,
   fetchAppointmentByID,
   fetchAppointmentHistory,
+  fetchAppointmentHistoryByID,
   fetchAppointmentTypes,
   fetchAvailableDates,
   fetchAvailableTimes,
@@ -179,6 +180,16 @@ export const useAppointmentById = (id) => {
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENTS_BY_ID, id],
     queryFn: () => fetchAppointmentByID(id),
+    enabled: enabledQuery
+  });
+  return data;
+};
+export const useAppointmentHistoryByID = (id) => {
+  const enabledQuery = !isEmpty(id) && id !== 'undefined';
+
+  const data = useQuery({
+    queryKey: [KEYS.APPOINTMENTS_HISTORY_BY_ID, id],
+    queryFn: () => fetchAppointmentHistoryByID(id),
     enabled: enabledQuery
   });
   return data;

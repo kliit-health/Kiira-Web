@@ -152,13 +152,13 @@ const ConfirmBooking = () => {
                   </AppTypography>
                 </ContentContainer>
               </ContentContainer>
-              {!isEmpty(data?.data?.appointment) ? (
+              {!isEmpty(booking_details) ? (
                 <AppButton
                   size="md"
                   fullWidth
                   onClick={() => {
                     const booking = { ...booking_details, appointment: data?.data?.appointment };
-                    navigate(`${ROUTES.VIEW_BOOKING}/${data?.data?.appointment?.id}`, {
+                    navigate(`${ROUTES.VIEW_BOOKING}/${booking_details?.id}`, {
                       state: booking
                     });
                   }}>

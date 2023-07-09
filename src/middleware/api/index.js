@@ -27,6 +27,7 @@ const Api = {
     createAppointment: (data) => ApiHandler.post(`/appointments`, data),
     updateAppointment: (id, data) => ApiHandler.put(`/appointments/${id}`, data),
     cancelAppointment: (id) => ApiHandler.put(`/appointments/${id}/cancel`),
+    appointmentHistoryById: (id) => ApiHandler.get(`/appointments/book/review/${id}`),
     rescheduleAppointment: (id, data) => ApiHandler.put(`/appointments/${id}/reschedule`, data),
     validateAvailableTimes: (data) => ApiHandler.post(`/availability/check-times`, data),
     getBlogCollections: () => ApiHandler.get(`/collections?limit=10`),

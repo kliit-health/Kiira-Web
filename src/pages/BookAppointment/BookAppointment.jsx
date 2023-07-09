@@ -62,63 +62,70 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
             handleSearch(e.target.value);
           }}
         />
-        <ContentContainer className="flex flex-row items-center w-full">
-          <ButtonGroup ripple={true} size="sm" className="shadow-none bg-kiiraBg3 rounded-lg">
-            <Button
-              onClick={() => handleSelectedFilter('')}
-              className={[
-                selectedFilter === ''
-                  ? 'bg-kiiraBlue text-white text-[10px]'
-                  : 'bg-transparent text-kiiraText  text-[10px]'
-              ]}>
-              ALL
-            </Button>
-            <Button
-              onClick={() => handleSelectedFilter('Kiira Health Palooza')}
-              className={[
-                selectedFilter === 'Kiira Health Palooza'
-                  ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
-                  : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-              ]}>
-              Kiira Health Palooza
-            </Button>
-            <Button
-              onClick={() => handleSelectedFilter('Melrose - In person Visit')}
-              className={[
-                selectedFilter === 'Melrose - In person Visit'
-                  ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
-                  : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-              ]}>
-              Melrose - In person Visit
-            </Button>
-            <Button
-              onClick={() => handleSelectedFilter('Melrose IV Drip - In person Visit')}
-              className={[
-                selectedFilter === 'Melrose IV Drip - In person Visit'
-                  ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
-                  : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-              ]}>
-              Melrose IV Drip - In person Visit
-            </Button>
-            <Button
-              onClick={() => handleSelectedFilter('Virtual Only')}
-              className={[
-                selectedFilter === 'Virtual Only'
-                  ? 'bg-kiiraBlue text-white text-[10px]'
-                  : 'bg-transparent text-kiiraText  text-[10px]'
-              ]}>
-              Virtual Only
-            </Button>
-          </ButtonGroup>
-        </ContentContainer>
+
+        {!isLoading && !isEmpty(filteredAppointmentTypes) ? (
+          <ContentContainer className="flex flex-row items-center w-full">
+            <ButtonGroup ripple={true} size="sm" className="shadow-none bg-kiiraBg3 rounded-lg">
+              <Button
+                onClick={() => handleSelectedFilter('')}
+                className={[
+                  selectedFilter === ''
+                    ? 'bg-kiiraBlue text-white text-[10px]'
+                    : 'bg-transparent text-kiiraText  text-[10px]'
+                ]}>
+                ALL
+              </Button>
+              <Button
+                onClick={() => handleSelectedFilter('Kiira Health Palooza')}
+                className={[
+                  selectedFilter === 'Kiira Health Palooza'
+                    ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
+                    : 'bg-transparent text-kiiraText text-[10px] min-w-max'
+                ]}>
+                Kiira Health Palooza
+              </Button>
+              <Button
+                onClick={() => handleSelectedFilter('Melrose - In person Visit')}
+                className={[
+                  selectedFilter === 'Melrose - In person Visit'
+                    ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
+                    : 'bg-transparent text-kiiraText text-[10px] min-w-max'
+                ]}>
+                Melrose - In person Visit
+              </Button>
+              <Button
+                onClick={() => handleSelectedFilter('Melrose IV Drip - In person Visit')}
+                className={[
+                  selectedFilter === 'Melrose IV Drip - In person Visit'
+                    ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
+                    : 'bg-transparent text-kiiraText text-[10px] min-w-max'
+                ]}>
+                Melrose IV Drip - In person Visit
+              </Button>
+              <Button
+                onClick={() => handleSelectedFilter('Virtual Only')}
+                className={[
+                  selectedFilter === 'Virtual Only'
+                    ? 'bg-kiiraBlue text-white text-[10px]'
+                    : 'bg-transparent text-kiiraText  text-[10px]'
+                ]}>
+                Virtual Only
+              </Button>
+            </ButtonGroup>
+          </ContentContainer>
+        ) : null}
       </ContentContainer>
       <ContentContainer>
         {!isLoading ? (
           <div className="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4">
             {filteredAppointmentTypes?.map((service, index) => {
-              // if (service.category !== 'Virtual Only') return;
-              // if (!service.active) return;
-              return <ServiceCard service={service} appointedDoctor={appointedDoctor} key={index.toString()} />;
+              return (
+                <ServiceCard
+                  service={service}
+                  appointedDoctor={appointedDoctor}
+                  key={index.toString()}
+                />
+              );
             })}
           </div>
         ) : null}

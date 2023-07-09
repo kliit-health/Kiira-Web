@@ -1,8 +1,7 @@
-import { Button, ButtonGroup, Select, Option, Dialog, DialogBody } from '@material-tailwind/react';
+import { Button, Dialog, DialogBody } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { DoctorsCard, Empty, SearchInput, ServiceCard } from 'src/components';
+import { DoctorsCard, Empty, SearchInput } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
-import { kiiraDoctors } from 'src/data';
 import { MainLayout } from 'src/layouts';
 import { useAppointmentTypes, useDoctorsCalendars } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
@@ -14,10 +13,10 @@ const Doctors = () => {
   const doctors = data?.data?.calendars ?? [];
 
   const [searchText, setSearchText] = useState('');
+  // const [doctorList, setDoctorList] = useState(doctors);
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
 
   useEffect(() => {
-    if (isEmpty(doctors)) return;
     setFilteredDoctors(doctors);
   }, [doctors]);
 
@@ -33,23 +32,8 @@ const Doctors = () => {
   const { data: appointmentTypes, isLoading: typesLoading, error } = useAppointmentTypes();
   const appointment_types = appointmentTypes?.data?.appointment_types ?? [];
   const [docAppointmentType, setDocAppointmentType] = useState([]);
+
   const [selectedDoctor, setSelectedDoctor] = useState({});
-  console.log('\n 🚀 ~ file: Doctors.jsx:37 ~ Doctors ~ selectedDoctor:', selectedDoctor?.id);
-
-  useEffect(() => {
-    if (isEmpty(selectedDoctor) || isEmpty(appointment_types)) return;
-    const filteredDocAppointment = appointment_types?.filter((elem) =>
-      elem?.calendarIDs?.find((id) => selectedDoctor?.id === id)
-    );
-
-    console.log(
-      '\n 🚀 ~ file: Doctors.jsx:18 ~ Doctors ~ docAppointmentType:',
-      filteredDocAppointment
-    );
-    setDocAppointmentType(filteredDocAppointment);
-    setOpen(true);
-    // handleOpen();
-  }, [selectedDoctor, appointment_types]);
 
   return (
     <MainLayout>
@@ -105,7 +89,20 @@ const Doctors = () => {
                       loading={isLoading}
                       disabled={isLoading}
                       selected={true}
-                      setSelected={setSelectedDoctor}
+                      setSelected={(doc) => {
+                        setSelectedDoctor(doc);
+                        if (isEmpty(appointment_types)) return;
+                        const filteredDocAppointment = appointment_types?.filter((elem) =>
+                          elem?.calendarIDs?.find((id) => doc?.id === id)
+                        );
+                        console.log(
+                          '\n 🚀 ~ file: Doctors.jsx:97 ~ ?filteredDoctors?.map ~ doc?.id:',
+                          doc?.id
+                        );
+
+                        setDocAppointmentType(filteredDocAppointment);
+                        setOpen(true);
+                      }}
                     />
                   );
                 })
@@ -128,28 +125,43 @@ const Doctors = () => {
           <DialogBody className="min-h-[65vh]">
             <ContentContainer column width="100%" height="100%" margin="auto" padding="10px">
               <ContentContainer className="w-full py-2 text-center font-poppins flex-row items-center gap-4 flex-wrap">
-                <AppTypography variant="h4" className="uppercase text-md text-kiiraBlackText">
-                  Book an appointment type with{' '}
-                  <span className="text-kiiraBlue">{selectedDoctor?.name}</span>
-                </AppTypography>
-                <ContentContainer>
-                  <Button
-                    size="sm"
-                    variant="text"
-                    className="max-w-max text-purple-400"
-                    onClick={() => {
-                      setSelectedDoctor({});
-                      setDocAppointmentType([]);
-                      handleOpen();
-                    }}>
-                    CHoose a diffect doctor
-                  </Button>
+                <Button
+                  size="md"
+                  variant="text"
+                  className="max-w-max text-blue-700 hover:bg-gray-100 pl-2 capitalize"
+                  onClick={() => {
+                    setSelectedDoctor({});
+                    setDocAppointmentType([]);
+                    handleOpen();
+                  }}>
+                  <i className="fa fa-long-arrow-left" aria-hidden="true"></i> Reselect doctor
+                </Button>
+                <ContentContainer className="py-2 text-center font-poppins flex-row items-center justify-center flex-wrap">
+                  <AppTypography variant="h4" className="text-md text-kiiraText">
+                    Book an appointment type with{' '}
+                  </AppTypography>
+                  <span
+                    // size="sm"
+                    // variant="text"
+                    // onClick={() => {
+                    //   setSelectedDoctor({});
+                    //   setDocAppointmentType([]);
+                    //   handleOpen();
+                    // }}
+                    className="max-w-max text-kiiraBlue p-0 pl-2 font-bold text-md">
+                    {selectedDoctor?.name}
+                  </span>
+                  ?
                 </ContentContainer>
               </ContentContainer>
-              <BookAppointment
-                docAppointmentType={docAppointmentType}
-                appointedDoctor={selectedDoctor}
-              />
+              {isEmpty(docAppointmentType) ? (
+                <Empty label="Not Available" />
+              ) : (
+                <BookAppointment
+                  docAppointmentType={docAppointmentType}
+                  appointedDoctor={selectedDoctor}
+                />
+              )}
             </ContentContainer>
           </DialogBody>
         </Dialog>

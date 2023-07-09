@@ -24,8 +24,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
       <ContentContainer
         className={
           !review
-            ? 'w-full sm:w-1/4  shrink-0 m-0 rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none bg-[#E2EDFF] bg-blend-darken'
-            : 'h-full sm:w-1/4  shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
+            ? 'w-full sm:w-1/4 shadow-sm shrink-0 m-0 rounded-t-xl  md:rounded-r-none md:rounded-l-xl rounded-b-none bg-[#E2EDFF] bg-blend-darken'
+            : 'h-full sm:w-1/4 shadow-sm shrink-0 m-0 rounded-xl bg-[#E2EDFF] bg-blend-darken'
         }>
         <img
           src={
@@ -43,7 +43,12 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
         />
       </ContentContainer>
 
-      <ContentContainer className={!review ? 'p-2 md:p-4 w-full gap-4' : 'w-full gap-1.5 md:gap-2'}>
+      <ContentContainer
+        className={
+          !review
+            ? 'p-2 md:p-4 w-full gap-4 bg-kiiraBg/20 shadow-sm  rounded-b-xl rounded-tr-none md:rounded-r-xl md:rounded-bl-none'
+            : 'w-full gap-1.5 md:gap-2 bg-kiiraBg/20 shadow-sm  rounded-b-xl rounded-tr-none md:rounded-r-xl md:rounded-bl-none'
+        }>
         <ContentContainer
           row
           className={
@@ -68,8 +73,10 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 className="text-right font-montserrat text-kiiraBlue font-bold">
                 $
                 {!review
-                  ? bookingData?.appointment_type?.price
-                  : bookingData?.appointmentType?.price}
+                  ? bookingData?.checkout_session?.amount_total ||
+                    bookingData?.appointment_type?.price
+                  : bookingData?.checkout_session?.amount_total ||
+                    bookingData?.appointmentType?.price}
               </AppTypography>
               <AppTypography
                 variant="small"
@@ -246,15 +253,19 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
               </AppTypography>
             </ContentContainer>
 
-            <hr className="bg-kiiraText" />
+            {bookingData?.status === 'payment_ticketed' ? (
+              <>
+                <hr className="bg-kiiraText" />
 
-            <AppButton
-              size="md"
-              fullWidth
-              disabled={disabled || bookingData?.status !== 'payment_ticketed'}
-              onClick={() => bookingAction(bookingData)}>
-              View Booking
-            </AppButton>
+                <AppButton
+                  size="md"
+                  fullWidth
+                  disabled={disabled || bookingData?.status !== 'payment_ticketed'}
+                  onClick={() => bookingAction(bookingData)}>
+                  View Booking
+                </AppButton>
+              </>
+            ) : null}
           </>
         ) : null}
       </ContentContainer>

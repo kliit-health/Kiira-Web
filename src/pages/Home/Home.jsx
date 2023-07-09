@@ -73,7 +73,7 @@ const Home = () => {
                     <BookingCard
                       bookingData={booking}
                       bookingAction={(data) =>
-                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.appointment?.id}`, {
+                        navigate(`${ROUTES.VIEW_BOOKING}/${booking?.id}`, {
                           state: data
                         })
                       }

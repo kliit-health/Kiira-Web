@@ -1,5 +1,15 @@
-import { Alert, Avatar, Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Alert,
+  Avatar,
+  Breadcrumbs,
+  Button,
+  Dialog,
+  IconButton,
+  Popover,
+  PopoverContent,
+  PopoverHandler
+} from '@material-tailwind/react';
+import { useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   AppNavLink,
@@ -15,7 +25,7 @@ import jsPDF from 'jspdf';
 import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
 import { Toast } from 'src/utils';
-import { useAppointmentById } from 'src/queries/queryHooks';
+import { useAppointmentHistoryByID, useCancelAppointment } from 'src/queries/queryHooks';
 import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
 import { Empty } from 'src/components';
@@ -27,11 +37,10 @@ const ViewBooking = () => {
   const downloadRef = useRef(null);
   const [hiddenElement, setHiddenElement] = useState(false);
   const { id } = useParams();
-  const { data, isLoading } = useAppointmentById(id);
+  const { data, isLoading, refetch } = useAppointmentHistoryByID(id);
+  const appointment = data?.data?.booking;
+  const { mutate, isLoading: cancelLoading } = useCancelAppointment();
   const booking = location?.state;
-  const { mutate, isLoading: cancelBookingLoading } = useRescheduleAppointment();
-
-  const appointment = data?.data?.appointment;
 
   const downloadPdfDocument = async () => {
     if (isEmpty(downloadRef?.current)) return;
@@ -58,7 +67,31 @@ const ViewBooking = () => {
   };
 
   const handleCancelAppointment = () => {
-    if (!appointment?.canClientReschedule) return;
+    if (!appointment?.canClientReschedule) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Appointment cannot be canceled'
+      });
+      return;
+    }
+
+    const id = appointment?.appointment_id;
+
+    mutate(id, {
+      onSuccess: (response) => {
+        refetch();
+        Toast.fire({
+          icon: 'success',
+          title: response?.data?.message
+        });
+      },
+      onError: (error) => {
+        Toast.fire({
+          icon: 'error',
+          title: error.response?.data?.message
+        });
+      }
+    });
   };
 
   return (
@@ -83,7 +116,6 @@ const ViewBooking = () => {
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
-
       {isLoading && id !== 'undefined' ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <ThreeDots
@@ -104,7 +136,6 @@ const ViewBooking = () => {
           </AppTypography>
         </ContentContainer>
       ) : null}
-
       {!isLoading && id !== 'undefined' ? (
         <ContentContainer
           ref={downloadRef}
@@ -120,7 +151,7 @@ const ViewBooking = () => {
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${booking?.appointment_type?.price || appointment?.priceSold}
+                ${booking?.checkout_session?.amount_total || booking?.appointment_type?.price}
               </AppTypography>
 
               {appointment?.canceled ? (
@@ -155,14 +186,38 @@ const ViewBooking = () => {
                       ? 'Reschedule Unavailable'
                       : 'Reschedule Appointment'}
                   </Button>
-                  <Button
-                    disabled={!appointment?.canClientCancel}
-                    onClick={() => {}}
-                    size="sm"
-                    variant="text"
-                    className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                    Cancel
-                  </Button>
+                  <Popover
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 }
+                    }}>
+                    <PopoverHandler>
+                      <Button
+                        disabled={!appointment?.canClientCancel}
+                        size="sm"
+                        variant="text"
+                        className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2 ">
+                        Cancel
+                      </Button>
+                    </PopoverHandler>
+                    <PopoverContent>
+                      <ContentContainer className="items-center gap-1 ">
+                        <AppTypography
+                          variant="small"
+                          className="text-kiiraBlackishGreen  font-medium">
+                          Do you wish to cancel this appointment?
+                        </AppTypography>{' '}
+                        <Button
+                          // disabled={!appointment?.canClientCancel}
+                          onClick={handleCancelAppointment}
+                          size="sm"
+                          variant="outlined"
+                          className="text-sm text-red-500 font-poppins border border-red-500 font-medium bg-transparent hover:shadow-none hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2">
+                          Continue
+                        </Button>
+                      </ContentContainer>
+                    </PopoverContent>
+                  </Popover>
                   <ContentContainer row className="gap-2 items-center flex-wrap">
                     <IconButton
                       onClick={() => {
@@ -338,18 +393,31 @@ const ViewBooking = () => {
           </ContentContainer>
         </ContentContainer>
       ) : null}
-
       {!isLoading && isEmpty(booking) && isEmpty(appointment) ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty />
         </ContentContainer>
       ) : null}
-
       {id === 'undefined' ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty label={<ConfirmBooking />} />
         </ContentContainer>
       ) : null}
+
+      <Dialog open={cancelLoading} size="sm" className="bg-transparent">
+        <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#005eff"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+        </ContentContainer>
+      </Dialog>
     </ContentContainer>
   );
 };

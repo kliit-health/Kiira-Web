@@ -96,21 +96,23 @@ const ChangePassword = () => {
         </Breadcrumbs>
       </ContentContainer>
 
-      <ContentContainer className="w-full h-full flex flex-col gap-4 mt-6">
-        <AppTypography
-          variant="h6"
-          color="blue"
-          className="capitalise text-kiiraDark text-lg md:text-xl font-normal font-poppins ">
-          Change Password
-        </AppTypography>
-        <ContentContainer className="w-full md:w-3/4 xl:w-1/2 gap-5 bg-kiiraBg2 p-4 justify-center rounded-2xl h-full min-h-[25vh]">
+      <ContentContainer className="w-full h-full flex flex-col gap-4">
+        <ContentContainer className="w-full gap-5 bg-kiiraBg2 p-4 justify-center rounded-2xl h-full min-h-[25vh]">
           <ContentContainer className="flex-wrap items-center justify-between gap-5 p-1 xs:p-3 md:p-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <AppTypography
+              variant="h4"
+              color="blue"
+              className="uppercase text-kiiraDark text-lg md:text-xl font-semibold font-poppins">
+              Change Password
+            </AppTypography>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4 w-full md:w-8/12">
               <ContentContainer className="gap-1 w-full">
                 <AppPasswordInput
                   ref={appPasswordRef}
                   autoComplete="off"
-                  label="Create Password"
+                  label="Old Password"
                   size="lg"
                   name="old_password"
                   {...register('old_password', {
@@ -144,7 +146,7 @@ const ChangePassword = () => {
                 <AppPasswordInput
                   ref={appPasswordRef2}
                   autoComplete="off"
-                  label="Create Password"
+                  label="New Password"
                   size="lg"
                   name="new_password"
                   {...register('new_password', {
@@ -178,7 +180,7 @@ const ChangePassword = () => {
                 <AppPasswordInput
                   ref={appPasswordRef3}
                   autoComplete="off"
-                  label="Re-enter Password"
+                  label="Re-enter new Password"
                   size="lg"
                   name="confirm_new_password"
                   {...register('confirm_new_password', {

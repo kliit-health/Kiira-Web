@@ -34,10 +34,10 @@ const ReviewAppointment = () => {
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
-  console.log(
-    '\n 🚀 ~ file: ReviewAppointment.jsx:37 ~ ReviewAppointment ~ bookingData:',
-    bookingData
-  );
+  // console.log(
+  //   '\n 🚀 ~ file: ReviewAppointment.jsx:37 ~ ReviewAppointment ~ bookingData:',
+  //   bookingData
+  // );
 
   const appointmentType =
     bookingData?.appointmentType?.appointment_type || bookingData?.appointmentType;
