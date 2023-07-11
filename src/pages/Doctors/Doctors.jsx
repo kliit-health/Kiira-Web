@@ -25,7 +25,7 @@ const Doctors = () => {
   const handleOpen = () => setOpen(!open);
 
   const handleSearch = (text) => {
-    setSearchText(searchText);
+    setSearchText(text);
     searchFilter(text, 'name', setSearchText, doctors, setFilteredDoctors);
   };
 
@@ -118,12 +118,13 @@ const Doctors = () => {
           open={open}
           handler={handleOpen}
           size="xxl"
+  
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.9, y: -100 }
           }}>
-          <DialogBody className="min-h-[65vh]">
-            <ContentContainer column width="100%" height="100%" margin="auto" padding="10px">
+          <DialogBody className="min-h-[65vh] p-0">
+            <ContentContainer column width="100%" height="100%" margin="auto" padding="0">
               <ContentContainer className="w-full py-2 text-center font-poppins flex-row items-center gap-4 flex-wrap">
                 <Button
                   size="md"
@@ -140,15 +141,7 @@ const Doctors = () => {
                   <AppTypography variant="h4" className="text-md text-kiiraText">
                     Book an appointment type with{' '}
                   </AppTypography>
-                  <span
-                    // size="sm"
-                    // variant="text"
-                    // onClick={() => {
-                    //   setSelectedDoctor({});
-                    //   setDocAppointmentType([]);
-                    //   handleOpen();
-                    // }}
-                    className="max-w-max text-kiiraBlue p-0 pl-2 font-bold text-md">
+                  <span className="max-w-max text-kiiraBlue p-0 pl-2 font-bold text-md">
                     {selectedDoctor?.name}
                   </span>
                   ?

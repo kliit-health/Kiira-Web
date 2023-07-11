@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Empty, SavedCards, SubscriptionPlans } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
-import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
-import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
 import { useProducts } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import isEmpty from 'src/utils/isEmpty';
@@ -19,7 +17,7 @@ const Subscription = () => {
   const products = data?.data?.products;
 
   useEffect(() => {
-    console.log(' \n 🚀 ~ file: Subscription.jsx:15 ~ Subscription ~ selected:', selected);
+    // console.log(' \n 🚀 ~ file: Subscription.jsx:15 ~ Subscription ~ selected:', selected);
   }, [selected]);
   return (
     <MainLayout>

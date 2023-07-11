@@ -12,7 +12,7 @@ import {
 import { IMAGES } from 'src/data';
 import { useDoctorsCalendars } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
-import { Toast } from 'src/utils';
+import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
 const ChooseAppointment = () => {
@@ -55,6 +55,7 @@ const ChooseAppointment = () => {
       <ContentContainer
         className="w-full -mt-4 bg-kiiraBg2 border border-[#E4E7F3] rounded-lg overflow-hidden overflow-x-auto"
         hideScroll={true}>
+        <ScrollToTop />
         <Breadcrumbs
           separator={<i className="fa fa-angle-right text-kiiraText " aria-hidden="true"></i>}
           fullWidth

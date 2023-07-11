@@ -14,7 +14,7 @@ import {
 import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
 import { useDoctorsCalendars, useRescheduleAppointment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
-import { Toast } from 'src/utils';
+import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import Swal from 'sweetalert2';
 
@@ -70,7 +70,7 @@ const RescheduleAppointment = () => {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          html: `<div className='text-xs'>${response?.message}</div>`,
+          html: `<div className='text-xs'>Booking appointment has been rescheduled successfully</div>`,
           confirmButtonColor: 'blue',
           allowOutsideClick: false,
           allowEscapeKey: false,
@@ -112,6 +112,7 @@ const RescheduleAppointment = () => {
       <ContentContainer
         className="w-full -mt-4 bg-kiiraBg2 border border-[#E4E7F3] rounded-lg overflow-hidden overflow-x-auto"
         hideScroll={true}>
+        <ScrollToTop />
         <Breadcrumbs
           separator={<i className="fa fa-angle-right text-kiiraText " aria-hidden="true"></i>}
           fullWidth

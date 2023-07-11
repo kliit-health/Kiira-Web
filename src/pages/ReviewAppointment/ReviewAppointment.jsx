@@ -14,7 +14,7 @@ import { IMAGES } from 'src/data';
 import { useBookingForms, useInitialisePayment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
-import { Toast } from 'src/utils';
+import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { truncate } from 'src/utils/truncate';
 import Swal from 'sweetalert2';
@@ -34,10 +34,6 @@ const ReviewAppointment = () => {
   const { mutate, isLoading } = useInitialisePayment();
 
   const bookingData = !isEmpty(getStoredBookingCheckout) ? getStoredBookingCheckout : bookingParams;
-  // console.log(
-  //   '\n 🚀 ~ file: ReviewAppointment.jsx:37 ~ ReviewAppointment ~ bookingData:',
-  //   bookingData
-  // );
 
   const appointmentType =
     bookingData?.appointmentType?.appointment_type || bookingData?.appointmentType;
@@ -123,7 +119,7 @@ const ReviewAppointment = () => {
           allowEscapeKey: false
         }).then((result) => {
           if (result.isConfirmed) {
-            window.open(response?.data?.checkout_session?.url);
+            window.open(response?.data?.checkout_session?.url, '_self');
             navigate(ROUTES.INDEX, { replace: true });
           }
         });
@@ -146,6 +142,7 @@ const ReviewAppointment = () => {
       <ContentContainer
         className="w-full -mt-4 bg-kiiraBg2 border border-[#E4E7F3] rounded-lg overflow-hidden overflow-x-auto"
         hideScroll={true}>
+        <ScrollToTop />
         <Breadcrumbs
           separator={<i className="fa fa-angle-right text-kiiraText " aria-hidden="true"></i>}
           fullWidth

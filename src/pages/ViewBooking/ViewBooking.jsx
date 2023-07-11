@@ -24,7 +24,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
-import { Toast } from 'src/utils';
+import { ScrollToTop, Toast } from 'src/utils';
 import { useAppointmentHistoryByID, useCancelAppointment } from 'src/queries/queryHooks';
 import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
@@ -38,9 +38,11 @@ const ViewBooking = () => {
   const [hiddenElement, setHiddenElement] = useState(false);
   const { id } = useParams();
   const { data, isLoading, refetch } = useAppointmentHistoryByID(id);
-  const appointment = data?.data?.booking;
+  const booking = data?.data?.booking;
+  console.log('\n 🚀 ~ file: ViewBooking.jsx:42 ~ ViewBooking ~ booking:', booking);
+
   const { mutate, isLoading: cancelLoading } = useCancelAppointment();
-  const booking = location?.state;
+  // const booking = location?.state;
 
   const downloadPdfDocument = async () => {
     if (isEmpty(downloadRef?.current)) return;
@@ -62,12 +64,12 @@ const ViewBooking = () => {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
     pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`kiira-booking.pdf`);
+    pdf.save(`kiira-booking - ${appointment?.id}.pdf`);
     setHiddenElement(false);
   };
 
   const handleCancelAppointment = () => {
-    if (!appointment?.canClientReschedule) {
+    if (!booking?.appointment?.canClientReschedule) {
       Toast.fire({
         icon: 'error',
         title: 'Appointment cannot be canceled'
@@ -75,7 +77,7 @@ const ViewBooking = () => {
       return;
     }
 
-    const id = appointment?.appointment_id;
+    const id = booking?.appointment_id;
 
     mutate(id, {
       onSuccess: (response) => {
@@ -102,6 +104,7 @@ const ViewBooking = () => {
       <ContentContainer
         className="w-full -mt-4 bg-kiiraBg2 border border-[#E4E7F3] rounded-lg overflow-hidden overflow-x-auto"
         hideScroll={true}>
+        <ScrollToTop />
         <Breadcrumbs
           separator={<i className="fa fa-angle-right text-kiiraText " aria-hidden="true"></i>}
           fullWidth
@@ -112,7 +115,7 @@ const ViewBooking = () => {
             History
           </AppNavLink>
           <AppNavLink to="#" className="opacity-75 text-xs font-medium cursor-default">
-            {booking?.appointment_type?.name || appointment?.type}
+            {booking?.appointment_type?.name}
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
@@ -145,16 +148,16 @@ const ViewBooking = () => {
               variant="h6"
               color="blue"
               className="capitalise text-kiiraBlackishGreen text-lg lg:text-xl font-semibold">
-              {booking?.appointment_type?.name || appointment?.type}
+              {booking?.appointment_type?.name}
             </AppTypography>
             <ContentContainer className="gap-2">
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${booking?.checkout_session?.amount_total || booking?.appointment_type?.price}
+                ${booking?.checkout_session?.amount_total || 0.0}
               </AppTypography>
 
-              {appointment?.canceled ? (
+              {booking?.appointment?.canceled ? (
                 <Button
                   size="sm"
                   variant="text"
@@ -163,26 +166,22 @@ const ViewBooking = () => {
                 </Button>
               ) : booking?.status === 'payment_ticketed' &&
                 !hiddenElement &&
-                !appointment?.canceled ? (
+                !booking?.appointment?.canceled ? (
                 <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                   <Button
-                    disabled={!appointment?.canClientReschedule}
+                    disabled={!booking?.appointment?.canClientReschedule}
                     onClick={() =>
                       navigate(
-                        `${ROUTES.HISTORY}/${
-                          !isEmpty(booking?.appointment?.id)
-                            ? booking?.appointment?.id
-                            : appointment?.id
-                        }${ROUTES.RESCHEDULE_APPOINTMENT}`,
+                        `${ROUTES.HISTORY}/${booking?.appointment?.id}${ROUTES.RESCHEDULE_APPOINTMENT}`,
                         {
-                          state: { service: { ...booking, appointment } }
+                          state: { service: booking }
                         }
                       )
                     }
                     size="sm"
                     variant="text"
                     className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:bg-transparent hover:opacity-80 hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                    {!appointment?.canClientReschedule
+                    {!booking?.appointment?.canClientReschedule
                       ? 'Reschedule Unavailable'
                       : 'Reschedule Appointment'}
                   </Button>
@@ -193,7 +192,7 @@ const ViewBooking = () => {
                     }}>
                     <PopoverHandler>
                       <Button
-                        disabled={!appointment?.canClientCancel}
+                        disabled={!booking?.appointment?.canClientCancel}
                         size="sm"
                         variant="text"
                         className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2 ">
@@ -208,7 +207,6 @@ const ViewBooking = () => {
                           Do you wish to cancel this appointment?
                         </AppTypography>{' '}
                         <Button
-                          // disabled={!appointment?.canClientCancel}
                           onClick={handleCancelAppointment}
                           size="sm"
                           variant="outlined"
@@ -222,11 +220,7 @@ const ViewBooking = () => {
                     <IconButton
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `https://kiira-hmp.netlify.app/history/view-booking/${
-                            !isEmpty(booking?.appointment?.id)
-                              ? booking?.appointment?.id
-                              : appointment?.id
-                          }`
+                          `https://kiira-hmp.netlify.app/history/view-booking/${booking?.appointment?.id}`
                         );
                         Toast.fire({
                           icon: 'success',
@@ -262,9 +256,7 @@ const ViewBooking = () => {
               <ContentContainer className="w-full md:w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none flex-row md:flex-col  gap-2 flex-wrap xs:flex-nowrap">
                 <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {moment(booking?.appointment_datetime || appointment?.datetime).format(
-                      'ddd MMM D,'
-                    )}
+                    {moment(booking?.appointment_datetime).format('ddd MMM D,')}
                   </AppTypography>
                   <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                     Date
@@ -273,9 +265,7 @@ const ViewBooking = () => {
                 <DividerIcon className="rotate-0 sm:rotate-90 md:rotate-0 w-full xs:w-auto md:max-w-min " />
                 <ContentContainer className="w-full xs:w-auto items-center xs:items-start">
                   <AppTypography variant="h4" color="blue-gray" className="text-2xl">
-                    {moment(booking?.appointment_datetime || appointment?.datetime).format(
-                      'HH:mm A'
-                    )}
+                    {moment(booking?.appointment_datetime).format('HH:mm A')}
                   </AppTypography>
                   <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
                     Time
@@ -300,15 +290,14 @@ const ViewBooking = () => {
                       variant="h6"
                       color="blue"
                       className="text-white text-xs font-semibold font-poppins">
-                      {booking?.appointment?.firstName || appointment?.firstName}{' '}
-                      {booking?.appointment?.lastName || appointment?.lastName}
+                      {booking?.appointment?.firstName} {booking?.appointment?.lastName}
                     </AppTypography>
                   </ContentContainer>
                   <AppTypography
                     variant="h6"
                     color="blue"
                     className="text-white text-xs text-right font-normal font-poppins">
-                    {booking?.appointment_type?.name || appointment?.type}
+                    {booking?.appointment_type?.name}
                   </AppTypography>
                 </ContentContainer>
 
@@ -318,18 +307,18 @@ const ViewBooking = () => {
                       <h6>
                         <b>Booking ID: </b>
                       </h6>{' '}
-                      {booking?.id || appointment?.id}
+                      {booking?.id}
                     </span>
                     <span className="text-sm flex-row flex-wrap">
                       <h6>
                         <b>Payment Ref:</b>
                       </h6>{' '}
-                      {booking?.reference || appointment?.reference}
+                      {booking?.reference}
                     </span>
 
-                    {!isEmpty(booking?.calendar?.description || appointment?.calendar) ? (
+                    {!isEmpty(booking?.calendar?.name) ? (
                       <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">
-                        {booking?.calendar?.name || appointment?.calendar}
+                        {booking?.calendar?.name}
                       </AppTypography>
                     ) : (
                       <AppTypography variant="h6" color="blue-gray" className="text-base my-2">
@@ -345,7 +334,7 @@ const ViewBooking = () => {
 
                   <ContentContainer className="h-24 w-24 min-w-[100px] min-h-[100px]">
                     <QRCode
-                      value={`https://kiira-hmp.netlify.app/history/view-booking/${appointment?.id}`}
+                      value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
                       size={256}
                       style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                       viewBox={`0 0 256 256`}
@@ -387,13 +376,13 @@ const ViewBooking = () => {
                   </span>
                 </Alert>
               ) : (
-                booking?.appointment?.formsText || appointment?.formsText
+                booking?.appointment?.formsText
               )}
             </ContentContainer>
           </ContentContainer>
         </ContentContainer>
       ) : null}
-      {!isLoading && isEmpty(booking) && isEmpty(appointment) ? (
+      {!isLoading && isEmpty(booking) ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty />
         </ContentContainer>

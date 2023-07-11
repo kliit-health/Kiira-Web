@@ -101,8 +101,13 @@ export const useDoctorsCalendars = () => {
   return data;
 };
 
-export const useAppointmentTypes = () => {
-  const data = useQuery({ queryKey: [KEYS.APPOINTMENT_TYPES], queryFn: fetchAppointmentTypes });
+export const useAppointmentTypes = (docAppointment) => {
+  const enabledQuery = isEmpty(docAppointment)
+  const data = useQuery({
+    queryKey: [KEYS.APPOINTMENT_TYPES],
+    queryFn: fetchAppointmentTypes,
+    enabled: enabledQuery
+  });
   return data;
 };
 

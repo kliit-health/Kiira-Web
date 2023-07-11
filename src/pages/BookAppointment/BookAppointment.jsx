@@ -36,11 +36,19 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
 
   const handleSearch = (text) => {
     setSearchText(searchText);
-    searchFilter(text, 'name', setSearchText, appointment_types, setFilteredAppointmentTypes);
+    setSelectedFilter('');
+    searchFilter(
+      text,
+      'name',
+      setSearchText,
+      !isEmpty(docAppointmentType) ? docAppointmentType : appointment_types,
+      setFilteredAppointmentTypes
+    );
   };
 
   const handleSelectedFilter = (selected) => {
     setSelectedFilter(selected);
+    setSearchText('');
     searchFilter(
       selected,
       'category',
@@ -63,8 +71,10 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
           }}
         />
 
-        {!isLoading && !isEmpty(filteredAppointmentTypes) ? (
-          <ContentContainer className="flex flex-row items-center w-full">
+        {!isLoading && (!isEmpty(filteredAppointmentTypes) || !isEmpty(docAppointmentType)) ? (
+          <ContentContainer
+            className="flex flex-row items-center w-full overflow-hidden overflow-x-auto"
+            hideScroll>
             <ButtonGroup ripple={true} size="sm" className="shadow-none bg-kiiraBg3 rounded-lg">
               <Button
                 onClick={() => handleSelectedFilter('')}

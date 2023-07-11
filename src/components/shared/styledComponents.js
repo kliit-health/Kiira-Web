@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import tw, { styled, css } from 'twin.macro';
 import { ReactComponent as AddCircle } from 'src/assets/icons/Add_circle.svg';
 import { profileState } from 'src/data';
+import { bool } from 'prop-types';
 
 export const ContentContainer = styled.div`
   ${(props) => props.hideScroll && hideScrollbar}
@@ -36,6 +37,14 @@ export const ContentContainer = styled.div`
   box-shadow: ${({ boxShadow }) => boxShadow};
   z-index: ${({ zIndex }) => zIndex};
 `;
+
+ContentContainer.propTypes = {
+  hideScroll: bool
+}
+
+ContentContainer.defaultProps = {
+  hideScroll: false
+}
 
 export const AppTypography = styled(Typography)`
   ${tw`font-poppins`}
