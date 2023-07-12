@@ -35,7 +35,9 @@ const History = () => {
         <>
           <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
           {appointments?.map((booking, index) => {
-            // console.log("\n 🚀 ~ file: History.jsx:40 ~ {appointments?.map ~ booking:", booking)
+            // console.log('\n 🚀 ~ file: History.jsx:40 ~ {appointments?.map ~ booking:', booking);
+            if (booking?.status === 'pending' || booking?.status === "payment_successful")
+              return;
             return (
               <BookingCard
                 bookingData={booking}

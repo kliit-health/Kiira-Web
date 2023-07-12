@@ -5,7 +5,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { Empty, SearchInput, ServiceCard } from 'src/components';
 import { ContentContainer } from 'src/components/shared/styledComponents';
 import { useAppointmentTypes } from 'src/queries/queryHooks';
-import { Toast } from 'src/utils';
+import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { searchFilter } from 'src/utils/searchFilter';
 
@@ -62,6 +62,7 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
       width="100%"
       height="100%"
       className="h-full min-h-[50vh] w-full  p-4 lg:px-10 lg:py-4 gap-4 overflow-hidden overflow-y-auto">
+      <ScrollToTop />
       <ContentContainer className="flex-col gap-2 items-center flex-wrap lg:flex-nowrap">
         <SearchInput
           label="Search health keyword"
@@ -125,6 +126,7 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
           </ContentContainer>
         ) : null}
       </ContentContainer>
+
       <ContentContainer>
         {!isLoading ? (
           <div className="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4">

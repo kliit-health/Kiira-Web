@@ -154,7 +154,7 @@ const ViewBooking = () => {
               <AppTypography
                 variant="h4"
                 className="text-left md:text-right font-montserrat text-kiiraBlue/70 font-bold">
-                ${booking?.checkout_session?.amount_total || 0.0}
+                ${booking?.checkout_session?.amount_total || 0}
               </AppTypography>
 
               {booking?.appointment?.canceled ? (
@@ -303,18 +303,22 @@ const ViewBooking = () => {
 
                 <ContentContainer className="bg-kiiraBg2 gap-1 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-x-auto">
                   <ContentContainer>
-                    <span className="text-sm flex-row flex-wrap">
-                      <h6>
-                        <b>Booking ID: </b>
-                      </h6>{' '}
-                      {booking?.id}
-                    </span>
-                    <span className="text-sm flex-row flex-wrap">
-                      <h6>
-                        <b>Payment Ref:</b>
-                      </h6>{' '}
-                      {booking?.reference}
-                    </span>
+                    <ContentContainer className="flex-row">
+                      <span className="text-sm flex-row flex-wrap shrink ">
+                        <h6>
+                          <b>Booking ID: </b>
+                        </h6>{' '}
+                        {booking?.id}
+                      </span>
+                    </ContentContainer>
+                    <ContentContainer className="flex-row">
+                      <span className="text-sm flex-row flex-wrap shrink-1">
+                        <h6>
+                          <b>Payment Ref:</b>
+                        </h6>{' '}
+                        {booking?.reference}
+                      </span>
+                    </ContentContainer>
 
                     {!isEmpty(booking?.calendar?.name) ? (
                       <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">

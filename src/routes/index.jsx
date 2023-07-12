@@ -43,7 +43,7 @@ export const Router = () => {
           <Route path={ROUTES.INBOX} element={<Inbox />} />
           <Route path={ROUTES.DOCTORS} element={<Doctors />} />
           <Route element={<MainOutletLayout />}>
-          <Route path={ROUTES.CONFIRM_BOOKING} element={<ConfirmBooking />} />
+            <Route path={ROUTES.CONFIRM_BOOKING} element={<ConfirmBooking />} />
             <Route index path={ROUTES.PROFILE} element={<Profile />} />
             <Route path={ROUTES.CHANGE_PASSWORD} element={<ChangePassword />} />
           </Route>
@@ -55,7 +55,7 @@ export const Router = () => {
           </Route>
           <Route element={<MainOutletLayout />}>
             <Route index path={ROUTES.HISTORY} element={<History />} />
-            <Route path={`${ROUTES.VIEW_BOOKING}/:id`} element={<ViewBooking />} />
+            <Route exact path={`${ROUTES.VIEW_BOOKING}/:id`} element={<ViewBooking />} />
             <Route
               path={`${ROUTES.HISTORY}/:id${ROUTES.RESCHEDULE_APPOINTMENT}`}
               element={<RescheduleAppointment />}

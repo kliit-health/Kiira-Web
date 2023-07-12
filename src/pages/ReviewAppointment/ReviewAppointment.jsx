@@ -120,7 +120,7 @@ const ReviewAppointment = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             window.open(response?.data?.checkout_session?.url, '_self');
-            navigate(ROUTES.INDEX, { replace: true });
+          
           }
         });
         return;

@@ -1,12 +1,13 @@
 import { Button, Card } from '@material-tailwind/react';
 import React from 'react';
 import { ThreeDots } from 'react-loader-spinner';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AddButton, BlogItem, BookingCard, Empty } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import { useAppointmentsHistory, useBlogCollections } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
+import { ScrollToTop } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
 
   return (
     <MainLayout>
+      <ScrollToTop />
       <ContentContainer
         width="100%"
         height="100%"
@@ -67,8 +69,9 @@ const Home = () => {
           {!isLoading && !isEmpty(appointments) ? (
             <>
               {appointments
-                .map((booking, index) => {
-                  if (booking?.status === 'payment_failed') return;
+                ?.map((booking, index) => {
+                  if (booking?.status === 'pending' || booking?.status === 'payment_successful')
+                    return;
                   return (
                     <BookingCard
                       bookingData={booking}
@@ -82,6 +85,7 @@ const Home = () => {
                   );
                 })
                 .splice(0, 3)}
+
               {appointments?.length > 3 ? (
                 <ContentContainer className="w-full flex-row justify-center">
                   <Button
