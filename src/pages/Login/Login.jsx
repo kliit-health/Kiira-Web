@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
@@ -31,6 +31,10 @@ const Login = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useLogin();
 
+  const isSubscribed = Auth.isSubscribed();
+
+  useEffect(() => {}, [isSubscribed]);
+
   const {
     register,
     handleSubmit,
@@ -62,7 +66,11 @@ const Login = () => {
           return;
         }
 
-        if (isEmpty(user?.subscription_expiry_date) && isEmpty(user?.subscription_id)) {
+        if (
+          isEmpty(user?.subscription_expiry_date) &&
+          isEmpty(user?.subscription_id) &&
+          isEmpty(user?.stripe_customer_id)
+        ) {
           navigate(ROUTES.SIGINUP_SUBSCRIPTION, { replace: true });
           return;
         }

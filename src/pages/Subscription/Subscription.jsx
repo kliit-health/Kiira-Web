@@ -1,9 +1,22 @@
-import { Card, Dialog, DialogBody } from '@material-tailwind/react';
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogBody,
+  Popover,
+  PopoverContent,
+  PopoverHandler
+} from '@material-tailwind/react';
 import React, { useState } from 'react';
 import { DownloadIcon, Empty, PdfIcon, SavedCards, SubscriptionPlans } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
-import { useProducts, useProfile, useSubscriptionHistory } from 'src/queries/queryHooks';
+import {
+  useCancelSubscription,
+  useProducts,
+  useProfile,
+  useSubscriptionHistory
+} from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import isEmpty from 'src/utils/isEmpty';
 import { useEffect } from 'react';
@@ -11,19 +24,26 @@ import { useLocalStore } from 'src/store';
 import moment from 'moment-timezone';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
+import KEYS from 'src/queries/queryKeys';
+import { Toast } from 'src/utils';
+import Auth from 'src/middleware/storage';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Subscription = () => {
+  const queryClient = useQueryClient();
   const setSelectedPlan = useLocalStore((state) => state.setStoredData);
+  const { data, isLoading } = useProducts();
+  const { data: userProfile, refetch: refetchProfile } = useProfile();
+  const profile = userProfile?.data?.user;
+  const { mutate, isLoading: cancelLoading } = useCancelSubscription();
+  const {
+    data: subscriptionData,
+    isLoading: subscriptionLoading,
+    refetch: refetchHistory
+  } = useSubscriptionHistory();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
-  const { data: userProfile } = useProfile();
-  const profile = userProfile?.data?.user;
-  const { data, isLoading } = useProducts();
-  const { data: subscriptionData, isLoading: subscriptionLoading } = useSubscriptionHistory();
-  console.log(
-    '\n 🚀 ~ file: Subscription.jsx:19 ~ Subscription ~ subscriptionData:',
-    subscriptionData?.data?.subscription_history
-  );
   const subscriptionHistory = subscriptionData?.data?.subscription_history;
   const products = data?.data?.products;
   const [selected, setSelected] = useState({});
@@ -34,26 +54,91 @@ const Subscription = () => {
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
   );
-  console.log(
-    '\n 🚀 ~ file: Subscription.jsx:36 ~ Subscription ~ currentSubscriptionDetails:',
-    currentSubscriptionDetails
-  );
+
+  const handleCancelSubscription = () => {
+    mutate(
+      {},
+      {
+        onSuccess: (response) => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY, KEYS.PROFILE] });
+          console.log(
+            '\n 🚀 ~ file: Subscription.jsx:47 ~ handleCancelSubscription ~ response:',
+            response
+          );
+          Toast.fire({
+            icon: 'success',
+            title: response?.data?.message
+          });
+          refetchProfile();
+          refetchHistory();
+          Auth.setUser(profile);
+        },
+        onError: (error) => {
+          console.log(
+            '\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:',
+            error
+          );
+          Toast.fire({
+            icon: 'error',
+            title: error.response?.data?.message
+          });
+        }
+      }
+    );
+  };
   return (
     <MainLayout>
       <ContentContainer className="flex p-4 md:p-0 mb-6">
         {!isEmpty(subscriptionData) ? (
-          <>
-            <AppTypography variant="h6" className="text-kiiraDark">
-              You are currently on{' '}
-              <span className="text-kiiraBlue">{currentSubscriptionDetails?.name}</span>
-            </AppTypography>
-            <AppTypography variant="small" className="text-kiiraText text-sm">
-              Next payment on{' '}
-              <span className="text-kiiraDark">
-                {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
-              </span>
-            </AppTypography>
-          </>
+          <ContentContainer row className="flex-wrap gap-4 items-center justify-between">
+            <ContentContainer>
+              <AppTypography variant="h6" className="text-kiiraDark">
+                You are currently on{' '}
+                <span className="text-kiiraBlue">{currentSubscriptionDetails?.name}</span>
+              </AppTypography>
+              <AppTypography variant="small" className="text-kiiraText text-sm">
+                Next payment on{' '}
+                <span className="text-kiiraDark">
+                  {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
+                </span>
+              </AppTypography>
+            </ContentContainer>
+            {moment().isSameOrBefore(profile?.subscription_expiry_date, 'day') ? (
+              <Popover
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 }
+                }}>
+                <PopoverHandler>
+                  <Button
+                    size="sm"
+                    variant="outlined"
+                    className="bg-kiiraBg3 border border-red-500 text-red-600 text-sm capitalize font-poppins flex flex-row gap-1 items-center">
+                    Cancel Subscription{' '}
+                    <i className="fa-regular fa-circle-xmark text-red-600 text-lg"></i>
+                  </Button>
+                </PopoverHandler>
+                <PopoverContent className="max-w-[90vw]">
+                  <ContentContainer className="items-center gap-1 ">
+                    <AppTypography variant="small" className="text-kiiraBlackishGreen font-medium">
+                      Do you wish to cancel{' '}
+                      <span className="text-kiiraBlue font-bold font-manrope ">
+                        {currentSubscriptionDetails?.name}
+                      </span>{' '}
+                      subscription?
+                    </AppTypography>{' '}
+                    <Button
+                      onClick={handleCancelSubscription}
+                      size="sm"
+                      variant="outlined"
+                      className="text-sm text-red-500 font-poppins border border-red-500 font-medium bg-transparent hover:shadow-none hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2">
+                      Continue
+                    </Button>
+                  </ContentContainer>
+                </PopoverContent>
+              </Popover>
+            ) : null}
+          </ContentContainer>
         ) : null}
       </ContentContainer>
       {isEmpty(selected) && !isLoading ? (
@@ -142,7 +227,7 @@ const Subscription = () => {
                     return (
                       <ContentContainer
                         key={index?.toString()}
-                        onClick={handleOpen}
+                        // onClick={handleOpen}
                         className="rounded-2xl bg-white p-2 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-75 hover:cursor-pointer">
                         <ContentContainer className="flex flex-row flex-nowrap gap-1.5 items-center">
                           <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-[#AFB6C0] p-1 md:h-8 md:w-8 rounded-full">
@@ -200,6 +285,25 @@ const Subscription = () => {
               aria-label="Talent CV"></object>
           </ContentContainer>
         </DialogBody>
+      </Dialog>
+      <Dialog open={cancelLoading} size="sm" className="bg-transparent">
+        <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#005eff"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+          <AppTypography
+            variant="small"
+            className="text-sm text-kiiraBlackishGreen font-poppins w-full text-center my-2 font-semibold">
+            Processing cancel subscription
+          </AppTypography>
+        </ContentContainer>
       </Dialog>
     </MainLayout>
   );

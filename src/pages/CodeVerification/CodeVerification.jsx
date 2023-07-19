@@ -4,7 +4,7 @@ import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { useNavigate } from 'react-router-dom';
 import Api from 'src/middleware/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { Toast } from 'src/utils';
 import { useProfile, useVerifyEmail } from 'src/queries/queryHooks';
@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { Loader } from 'src/components';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
+import Auth from 'src/middleware/storage';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
@@ -20,6 +21,9 @@ const CodeVerification = () => {
   const { mutate, isLoading } = useVerifyEmail();
   const [loading, setLoading] = useState(false);
   const getStoredEmail = useLocalStore((state) => state.email);
+  const isSubscribed = Auth.isSubscribed();
+
+  useEffect(() => {}, [isSubscribed]);
   console.log(
     '\n 🚀 ~ file: CodeVerification.jsx:24 ~ CodeVerification ~ localStore getStoredEmail:',
     getStoredEmail
@@ -42,7 +46,7 @@ const CodeVerification = () => {
           icon: 'success',
           title: response?.data?.message
         });
-        if (isEmpty(profile?.subscription_id) && isEmpty(profile?.subscription_type)) {
+        if (!isSubscribed) {
           navigate(ROUTES.SIGINUP_SUBSCRIPTION);
           return;
         }

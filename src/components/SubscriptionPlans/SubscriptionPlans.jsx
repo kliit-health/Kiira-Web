@@ -9,7 +9,7 @@ import isEmpty from 'src/utils/isEmpty';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 
-const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscription }) => {
+const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
   const location = useLocation();
   const { pathname } = location;
   const Icon = subscription?.planIcon || IMAGES.subscriptionOval1;
@@ -77,7 +77,8 @@ const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscri
         profile?.subscription_id === subscription?.id &&
         pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
           <AppTypography variant="small" className="text-[0.675rem] text-center text-kiiraText">
-            Expires {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
+            {moment().isSameOrBefore(profile?.subscription_expiry_date, 'day') ? 'Expires' : 'Expired'}{' '}
+            {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
           </AppTypography>
         ) : null}
       </ContentContainer>
@@ -88,15 +89,13 @@ const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscri
 SubscriptionPlans.propTypes = {
   subscription: propTypes.shape({}),
   selected: propTypes.shape({}),
-  setSelected: propTypes.func,
-  currentSubscription: propTypes.shape({})
+  setSelected: propTypes.func
 };
 
 SubscriptionPlans.defaultProps = {
   currentSubscription: {},
   setSelected: () => {},
-  selected: {},
-  subscription: {}
+  selected: {}
 };
 
 export default SubscriptionPlans;

@@ -61,13 +61,13 @@ const MainLayout = ({ children, hideScroll }) => {
                 <Link
                   to={ROUTES.SUBSCRIPTION}
                   className="!absolute top-auto right-3 px-2 py-1 items-center flex gap-1 text-kiiraBlue rounded-md">
-                  <Button variant="standard" color="blue" size="sm">
+                  <Button color="blue" size="sm">
                     {/* <i className="fa-regular fa-circle-xmark text-white text-lg"></i>  */}
                     renew
                   </Button>
                 </Link>
               }>
-              <AppTypography variant="h6" className="text-[#c92e2e] font-montserrat">
+              <AppTypography variant="h6" className="text-[#c92e2e] font-montserrat mr-5">
                 Your <span className="text-kiiraBlue">{currentSubscriptionDetails?.name}</span>{' '}
                 subscription has expired...{' '}
                 <span className="text-kiiraDark text-sm font-montserrat">
@@ -86,13 +86,13 @@ const MainLayout = ({ children, hideScroll }) => {
                 <Link
                   to={ROUTES.SUBSCRIPTION}
                   className="!absolute top-auto right-3 px-2 py-1 items-center flex gap-1 text-kiiraBlue rounded-md">
-                  <Button variant="standard" color="blue" size="sm">
+                  <Button  color="blue" size="sm">
                     {/* <i className="fa-regular fa-circle-xmark text-white text-lg"></i>  */}
                     renew
                   </Button>
                 </Link>
               }>
-              <AppTypography variant="h6" className="text-kiiraBlackishGreen font-montserrat">
+              <AppTypography variant="h6" className="text-kiiraBlackishGreen font-montserrat mr-5">
                 Your{' '}
                 <span className="text-kiiraBlue font-montserrat">
                   {currentSubscriptionDetails?.name}

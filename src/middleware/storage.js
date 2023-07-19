@@ -50,8 +50,13 @@ const Auth = {
   isSubscribed: () => {
     const userl = localStorage.getItem('user');
     const user = JSON.parse(userl);
-
-    if (!isEmpty(user?.subscription_expiry_date) && !isEmpty(user?.subscription_id)) return true;
+    
+    if (
+      !isEmpty(user?.subscription_expiry_date) &&
+      !isEmpty(user?.subscription_id) &&
+      !isEmpty(user?.stripe_customer_id)
+    )
+      return true;
     return false;
   }
 

@@ -1,4 +1,14 @@
-import { Card, Dialog, DialogBody, Radio } from '@material-tailwind/react';
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogBody,
+  IconButton,
+  Popover,
+  PopoverContent,
+  PopoverHandler,
+  Radio
+} from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import { AppTypography, ContentContainer } from '../shared/styledComponents';
 import { RadioCheckedIcon, VisaIcon } from '../shared/AppIcons/AppIcons';
@@ -7,8 +17,17 @@ import { func, object } from 'prop-types';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { useDeleteUserCard, useViewSavedCards } from 'src/queries/queryHooks';
+import { ThreeDots } from 'react-loader-spinner';
+import KEYS from 'src/queries/queryKeys';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SavedCards = () => {
+  const queryClient = useQueryClient();
+  const { data: savedCardData, isLoading } = useViewSavedCards();
+  const { mutate, isLoading: deleteCardLoading } = useDeleteUserCard();
+  const savedCards = savedCardData?.data?.user_card;
+
   const selectedPlan = useLocalStore((state) => state.storedData);
   const [open, setOpen] = useState(false);
 
@@ -20,9 +39,7 @@ const SavedCards = () => {
     function handleWindowResize() {
       setWindowSize(getWindowSize());
     }
-
     window.addEventListener('resize', handleWindowResize);
-
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
@@ -32,24 +49,87 @@ const SavedCards = () => {
     const { innerWidth, innerHeight } = window;
     return { innerWidth, innerHeight };
   }
+
+  const handleDeleteSavedCards = () => {
+    mutate(
+      {},
+      {
+        onSuccess: (response) => {
+          queryClient.invalidateQueries({ queryKey: [KEYS.SAVED_CARDS] });
+          Toast.fire({
+            icon: 'success',
+            title: `Payment Card removed successfully`
+          });
+        },
+        onError: (error) => {
+          console.log(
+            '\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:',
+            error
+          );
+          Toast.fire({
+            icon: 'error',
+            title: error.response?.data?.message
+          });
+        }
+      }
+    );
+  };
   return (
     <>
       <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none p-4 rounded-lg">
-        <ContentContainer className="rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer">
-          <ContentContainer className="flex flex-row flex-nowrap gap-5 items-center">
-            <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-kiiraBlue p-1 md:h-8 md:w-8 rounded-full">
-              <i className="fa-solid fa-credit-card text-white text-2xl"></i>
+        {!isEmpty(savedCards?.card_last_four_digits) ? (
+          <ContentContainer
+            className={
+              isLoading
+                ? 'animate-pulse rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap hover:opacity-90 hover:cursor-pointer'
+                : 'rounded-2xl bg-kiiraBlue p-1 md:p-5 flex flex-row items-center justify-between gap-1 flex-wrap-reverse  hover:opacity-95 hover:cursor-pointer'
+            }>
+            <ContentContainer className="flex flex-row flex-nowrap gap-5 items-center">
+              <ContentContainer className="flex flex-row items-center justify-center lg:p-0.5 bg-kiiraBlue p-1 md:h-8 md:w-8 rounded-full">
+                <i className="fa-solid fa-credit-card text-white text-2xl"></i>
+              </ContentContainer>
+              <AppTypography
+                variant="small"
+                className="text-sm md:text-base text-white font-medium text-right">
+                **** **** **** {savedCards?.card_last_four_digits}
+              </AppTypography>
             </ContentContainer>
-            <AppTypography variant="small" className="text-sm md:text-base text-white font-medium text-right">
-              **** 4321 
-            </AppTypography>
-          </ContentContainer>
-          <ContentContainer className="flex flex-row flex-nowrap gap-0.5 items-center">
-            <ContentContainer className="flex flex-row items-center justify-center p-0.5 h-4 w-4  md:h-8 md:w-8 rounded-full">
-              {false ? <RadioCheckedIcon /> : <Radio id="white" name="color" color="amber" />}
+
+            <ContentContainer className="flex flex-row flex-nowrap gap-0.5 items-center">
+              <Popover
+                animate={{
+                  mount: { scale: 1, y: 0 },
+                  unmount: { scale: 0, y: 25 }
+                }}>
+                <PopoverHandler>
+                  <IconButton
+                    variant="outlined"
+                    className="font-bold text-white text-[16px] rounded-full lowercase p-1 border border-white h-4 w-4 font-montserrat ">
+                    <i className="fa-solid fa-ban text-gray-100"></i>
+                  </IconButton>
+                </PopoverHandler>
+                <PopoverContent className="max-w-[90vw]">
+                  <ContentContainer className="items-center gap-1 ">
+                    <AppTypography variant="small" className="text-kiiraBlackishGreen font-medium">
+                      Do you wish to remove payment card <br />
+                      <span className="text-red-500 font-bold font-manrope ">
+                        **** **** **** {savedCards?.card_last_four_digits}
+                      </span>{' '}
+                      from your profile?
+                    </AppTypography>{' '}
+                    <Button
+                      onClick={handleDeleteSavedCards}
+                      size="sm"
+                      variant="outlined"
+                      className="text-sm text-red-500 font-poppins border border-red-500 font-medium bg-transparent hover:shadow-none hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2">
+                      Continue
+                    </Button>
+                  </ContentContainer>
+                </PopoverContent>
+              </Popover>
             </ContentContainer>
           </ContentContainer>
-        </ContentContainer>
+        ) : null}
 
         <AddButton
           label="Add a new card"
@@ -82,6 +162,25 @@ const SavedCards = () => {
         <DialogBody className="overflow-hidden overflow-y-auto min-w-full ">
           <PaymentCard dismissHandler={handleOpen} />
         </DialogBody>
+      </Dialog>
+      <Dialog open={deleteCardLoading} size="sm" className="bg-transparent">
+        <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#005eff"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+          <AppTypography
+            variant="small"
+            className="text-sm text-kiiraBlackishGreen font-poppins w-full text-center my-2 font-semibold">
+            Removing payment card from profile...
+          </AppTypography>
+        </ContentContainer>
       </Dialog>
     </>
   );

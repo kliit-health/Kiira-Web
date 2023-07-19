@@ -9,9 +9,12 @@ import {
   verifyEmail
 } from 'src/services/authServices';
 import {
+  cancelUserSubscription,
+  deleteSavedCards,
   fetchSubscriptionHistory,
   fetchUserProfile,
-  planSubscription
+  planSubscription,
+  viewSavedCards
 } from 'src/services/userServices';
 import {
   cancelBookingAppointment,
@@ -255,6 +258,32 @@ export const useSubscriptionHistory = () => {
   const data = useQuery({
     queryKey: [KEYS.SUBSCRIPTION_HISTORY],
     queryFn: () => fetchSubscriptionHistory()
+  });
+  return data;
+};
+
+export const useCancelSubscription = () => {
+  const data = useMutation({
+    mutationFn: () => {
+      return cancelUserSubscription();
+    }
+  });
+  return data;
+};
+
+export const useViewSavedCards = () => {
+  const data = useQuery({
+    queryKey: [KEYS.SAVED_CARDS],
+    queryFn: () => viewSavedCards()
+  });
+  return data;
+};
+
+export const useDeleteUserCard = () => {
+  const data = useMutation({
+    mutationFn: () => {
+      return deleteSavedCards();
+    }
   });
   return data;
 };

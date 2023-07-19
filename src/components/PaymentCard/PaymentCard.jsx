@@ -31,13 +31,14 @@ import { Toast } from 'src/utils';
 import lookup from 'country-code-lookup';
 import isEmpty from 'src/utils/isEmpty';
 import countryList, { getCountryFlag } from 'src/utils/countryList';
-import { usePlanSubscription } from 'src/queries/queryHooks';
+import { usePlanSubscription, useProfile } from 'src/queries/queryHooks';
 import { Loader } from '..';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
-import { redirect, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
+import Auth from 'src/middleware/storage';
 
 const PaymentCard = (props) => {
   const STRIPE_KEY =
@@ -81,7 +82,10 @@ const CARD_ELEMENT_OPTIONS = {
 
 const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
+  const { data: userProfile, refetch: refetchProfileData } = useProfile();
+  const profile = userProfile?.data?.user;
   const selectedPlan = useLocalStore((state) => state.storedData);
   const queryClient = useQueryClient();
   const stripe = useStripe();
@@ -114,7 +118,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
     if (!stripe || !elements) {
       setError({
         e: true,
-        message: `Processing payment gateway...`
+        message: `Please wait, payment gateway processing...`
       });
 
       setTimeout(() => {
@@ -186,10 +190,11 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               icon: 'success',
               title: response?.data?.message
             });
-
+            refetchProfileData();
+            Auth.setUser(profile);
+            // Auth.setToken(response.data?.token);
             if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
-              redirect(ROUTES.INDEX);
-              return;
+              return navigate(ROUTES.INDEX);
             }
             // dismissHandler();
           },

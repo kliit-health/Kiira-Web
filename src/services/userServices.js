@@ -14,3 +14,17 @@ export const fetchSubscriptionHistory = async () => {
   const res = await Api.payment.subscriptionHistory();
   return res;
 };
+
+export const cancelUserSubscription = async (id) => {
+  const res = await Api.payment.cancelSubscription(id);
+  return res;
+};
+
+export const viewSavedCards = async () => {
+  const res = await Api.payment.viewSavedCards();
+  return res;
+};
+export const deleteSavedCards = async () => {
+  const res = await Api.payment.deleteSavedCards();
+  return res;
+};

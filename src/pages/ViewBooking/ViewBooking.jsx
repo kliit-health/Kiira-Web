@@ -335,14 +335,16 @@ const ViewBooking = () => {
                         {booking?.id}
                       </span>
                     </ContentContainer>
-                    <ContentContainer className="flex-row">
-                      <span className="text-sm flex-row flex-wrap shrink-1">
-                        <h6>
-                          <b>Payment Ref:</b>
-                        </h6>{' '}
-                        {booking?.reference}
-                      </span>
-                    </ContentContainer>
+                    {!isEmpty(booking?.reference) ? (
+                      <ContentContainer className="flex-row">
+                        <span className="text-sm flex-row flex-wrap shrink-1">
+                          <h6>
+                            <b>Payment Ref:</b>
+                          </h6>{' '}
+                          {booking?.reference}
+                        </span>
+                      </ContentContainer>
+                    ) : null}
 
                     {!isEmpty(booking?.calendar?.name) ? (
                       <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">
