@@ -11,10 +11,9 @@ const Loader = ({ spinner, label, fullWidth, size, className }) => {
       size={size}
       className={
         className
-          ? [
-              'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent',
-              className
-            ]
+          ? 'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent' +
+            ' ' +
+            className
           : 'flex flex-row justify-center items-center gap-1 text-sm font-medium text-white capitalize bg-kiiraBlue disabled:opacity-100 shadow-transparent'
       }
       fullWidth={fullWidth}>

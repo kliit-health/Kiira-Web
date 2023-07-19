@@ -8,7 +8,11 @@ import {
   signup,
   verifyEmail
 } from 'src/services/authServices';
-import { fetchUserProfile } from 'src/services/userServices';
+import {
+  fetchSubscriptionHistory,
+  fetchUserProfile,
+  planSubscription
+} from 'src/services/userServices';
 import {
   cancelBookingAppointment,
   confirmPayment,
@@ -102,7 +106,7 @@ export const useDoctorsCalendars = () => {
 };
 
 export const useAppointmentTypes = (docAppointment) => {
-  const enabledQuery = isEmpty(docAppointment)
+  const enabledQuery = isEmpty(docAppointment);
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENT_TYPES],
     queryFn: fetchAppointmentTypes,
@@ -230,6 +234,27 @@ export const useCancelAppointment = () => {
     mutationFn: (data) => {
       return cancelBookingAppointment(data);
     }
+  });
+  return data;
+};
+
+export const usePlanSubscription = () => {
+  const queryClient = useQueryClient();
+  const data = useMutation({
+    mutationFn: (data) => {
+      return planSubscription(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
+    }
+  });
+  return data;
+};
+
+export const useSubscriptionHistory = () => {
+  const data = useQuery({
+    queryKey: [KEYS.SUBSCRIPTION_HISTORY],
+    queryFn: () => fetchSubscriptionHistory()
   });
   return data;
 };

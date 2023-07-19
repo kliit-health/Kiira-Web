@@ -30,10 +30,13 @@ import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
 import { Empty } from 'src/components';
 import { ConfirmBooking } from '..';
+import { useQueryClient } from '@tanstack/react-query';
+import KEYS from 'src/queries/queryKeys';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const downloadRef = useRef(null);
   const [hiddenElement, setHiddenElement] = useState(false);
   const { id } = useParams();
@@ -77,10 +80,9 @@ const ViewBooking = () => {
       return;
     }
 
-    const id = booking?.appointment_id;
-
     mutate(id, {
       onSuccess: (response) => {
+        queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
         refetch();
         Toast.fire({
           icon: 'success',
@@ -199,12 +201,34 @@ const ViewBooking = () => {
                         Cancel
                       </Button>
                     </PopoverHandler>
-                    <PopoverContent>
+                    <PopoverContent className="max-w-[90vw] sm:max-w-[60vw]">
                       <ContentContainer className="items-center gap-1 ">
+                        <ContentContainer className=" flex flex-col gap-1 text-[0.8rem]">
+                          <p className="font-bold uppercase text-kiiraBlackishGreen">
+                            Cancellation / No-Show Policy:
+                          </p>
+                          <p>
+                            We require 48 hours of notice to cancel or reschedule an appointment,
+                            otherwise, a 50% fee will apply.
+                          </p>{' '}
+                          <p>
+                            If your appointment was canceled within 48 hours of your appointment
+                            start time, you will be charged 50% of your appointment fee.
+                          </p>
+                          <p>
+                            If your appointment was canceled prior to 48 hours then no worries, you
+                            will not be charged!
+                          </p>
+                          <p>Thank you for your understanding!</p>
+                          <p>
+                            We are excited to serve you and we look forward to your appointment.
+                          </p>
+                          <b> Best, Kiira Team</b>
+                        </ContentContainer>
                         <AppTypography
                           variant="small"
                           className="text-kiiraBlackishGreen  font-medium">
-                          Do you wish to cancel this appointment?
+                          Proceed to cancel this appointment?
                         </AppTypography>{' '}
                         <Button
                           onClick={handleCancelAppointment}
@@ -220,7 +244,7 @@ const ViewBooking = () => {
                     <IconButton
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `https://kiira-hmp.netlify.app/history/view-booking/${booking?.appointment?.id}`
+                          `https://kiira-hmp.netlify.app/history/view-booking/${id}`
                         );
                         Toast.fire({
                           icon: 'success',
@@ -382,6 +406,26 @@ const ViewBooking = () => {
               ) : (
                 booking?.appointment?.formsText
               )}
+              <ContentContainer className=" bg-kiiraBg2 rounded p-4 flex flex-col gap-1 text-[0.8rem]">
+                <p className="font-bold uppercase text-kiiraBlackishGreen">
+                  Cancellation / No-Show Policy:
+                </p>
+                <p>
+                  We require 48 hours of notice to cancel or reschedule an appointment, otherwise, a
+                  50% fee will apply.
+                </p>
+                <p>
+                  If your appointment was canceled within 48 hours of your appointment start time,
+                  you will be charged 50% of your appointment fee.
+                </p>
+                <p>
+                  If your appointment was canceled prior to 48 hours then no worries, you will not
+                  be charged!
+                </p>
+                <p>Thank you for your understanding!</p>
+                <p>We are excited to serve you and we look forward to your appointment.</p>
+                <b> Best, Kiira Team</b>
+              </ContentContainer>
             </ContentContainer>
           </ContentContainer>
         </ContentContainer>

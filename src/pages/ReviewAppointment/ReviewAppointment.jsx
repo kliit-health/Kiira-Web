@@ -1,4 +1,5 @@
 import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
+import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
@@ -11,7 +12,7 @@ import {
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
-import { useBookingForms, useInitialisePayment } from 'src/queries/queryHooks';
+import { useBookingForms, useInitialisePayment, useProfile } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
@@ -24,6 +25,9 @@ const ReviewAppointment = () => {
   const location = useLocation();
   const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
   const formsData = fData?.data.forms;
+
+  const { data: profileData } = useProfile();
+  const profile = profileData?.data?.user;
 
   const [reserveBooking, setReserveBooking] = useState(false);
   const [formResult, setFormResult] = useState({});
@@ -65,6 +69,14 @@ const ReviewAppointment = () => {
   }, [bookingData]);
 
   const handleInitialisePayment = () => {
+    if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Your current subscription has expired. Please renew your subscription'
+      });
+      return;
+    }
+
     const keys = Object.keys(formResult);
 
     const isRequired = keys.filter((key) => {
@@ -110,17 +122,36 @@ const ReviewAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
+        console.log(
+          '\n 🚀 ~ file: ReviewAppointment.jsx:125 ~ handleInitialisePayment ~ response:',
+          response
+        );
         Swal.fire({
           icon: 'success',
-          title: 'Payment Initialised',
-          html: `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
+          title: isEmpty(response?.data?.checkout_session)
+            ? 'Payment Successful'
+            : 'Payment Initialised',
+          html: isEmpty(response?.data?.checkout_session)
+            ? `<div className='text-xs'>${response?.data?.message}</div>`
+            : `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
           confirmButtonColor: 'blue',
           allowOutsideClick: false,
           allowEscapeKey: false
         }).then((result) => {
+          function viewBookingRedirect(params) {
+            const booking = {
+              ...response?.data?.availability_time,
+              appointment: response?.data?.appointment
+            };
+            navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.id}`, {
+              state: booking
+            });
+          }
+
           if (result.isConfirmed) {
-            window.open(response?.data?.checkout_session?.url, '_self');
-          
+            isEmpty(response?.data?.checkout_session)
+              ? viewBookingRedirect()
+              : window.open(response?.data?.checkout_session?.url, '_self');
           }
         });
         return;

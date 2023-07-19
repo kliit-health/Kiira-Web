@@ -21,7 +21,7 @@ const CodeVerification = () => {
   const [loading, setLoading] = useState(false);
   const getStoredEmail = useLocalStore((state) => state.email);
   console.log(
-    '\n 🚀 ~ file: CodeVerification.jsx:24 ~ CodeVerification ~ getStoredEmail:',
+    '\n 🚀 ~ file: CodeVerification.jsx:24 ~ CodeVerification ~ localStore getStoredEmail:',
     getStoredEmail
   );
 

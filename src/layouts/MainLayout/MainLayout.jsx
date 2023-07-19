@@ -6,13 +6,26 @@ import {
   LayoutWrapper
 } from 'src/components/shared/styledComponents';
 import gradientBg from 'src/assets/images/gradientBg.png';
-import { Card } from '@material-tailwind/react';
+import { Alert, Button, Card } from '@material-tailwind/react';
 import { node } from 'prop-types';
-import { useProfile } from 'src/queries/queryHooks';
+import { useProducts, useProfile } from 'src/queries/queryHooks';
+import { ROUTES } from 'src/routes/Paths';
+import { Link, redirect } from 'react-router-dom';
+import moment from 'moment-timezone';
 
 const MainLayout = ({ children, hideScroll }) => {
-  const { data } = useProfile();
+  const { data, isLoading: profileLoading } = useProfile();
+  const { data: productData } = useProducts();
+  const products = productData?.data?.products;
   const profile = data?.data?.user;
+
+  const currentSubscriptionDetails = products?.find(
+    (product) => profile?.subscription_id == product?.id
+  );
+
+  const today = moment();
+  const expiry_date = moment(profile?.subscription_expiry_date);
+  const dateDiif = expiry_date.diff(today, 'days');
 
   return (
     <ContentContainer width="100vw" className="h-full overflow-y-auto">
@@ -39,6 +52,60 @@ const MainLayout = ({ children, hideScroll }) => {
             className="text-kiiraText text-sm md:text-lg w-full lg:w-3/4 xl:w-1/2">
             Manage your health on the go, connect with doctors, book appointments and much more.
           </AppTypography>
+          {moment().isAfter(profile?.subscription_expiry_date, 'day') && !profileLoading ? (
+            <Alert
+              open={true}
+              className="flex items-center text-sm p-3 bg-[#c92e2e]/10 border-l-4 border-[#c92e2e] rounded font-medium"
+              icon={<i className="fa-solid fa-triangle-exclamation text-[#c92e2e] text-lg"></i>}
+              action={
+                <Link
+                  to={ROUTES.SUBSCRIPTION}
+                  className="!absolute top-auto right-3 px-2 py-1 items-center flex gap-1 text-kiiraBlue rounded-md">
+                  <Button variant="standard" color="blue" size="sm">
+                    {/* <i className="fa-regular fa-circle-xmark text-white text-lg"></i>  */}
+                    renew
+                  </Button>
+                </Link>
+              }>
+              <AppTypography variant="h6" className="text-[#c92e2e] font-montserrat">
+                Your <span className="text-kiiraBlue">{currentSubscriptionDetails?.name}</span>{' '}
+                subscription has expired...{' '}
+                <span className="text-kiiraDark text-sm font-montserrat">
+                  {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
+                </span>
+              </AppTypography>
+            </Alert>
+          ) : null}
+          {dateDiif > 0 && dateDiif < 8 && !profileLoading ? (
+            <Alert
+              open={true}
+              color="amber"
+              className="flex items-center text-sm p-3 bg-[#FFC007]/40 border-l-4 border-kiiraBlue rounded font-medium"
+              icon={<i className="fa fa-bullhorn text-kiiraBlue text-xl" aria-hidden="true"></i>}
+              action={
+                <Link
+                  to={ROUTES.SUBSCRIPTION}
+                  className="!absolute top-auto right-3 px-2 py-1 items-center flex gap-1 text-kiiraBlue rounded-md">
+                  <Button variant="standard" color="blue" size="sm">
+                    {/* <i className="fa-regular fa-circle-xmark text-white text-lg"></i>  */}
+                    renew
+                  </Button>
+                </Link>
+              }>
+              <AppTypography variant="h6" className="text-kiiraBlackishGreen font-montserrat">
+                Your{' '}
+                <span className="text-kiiraBlue font-montserrat">
+                  {currentSubscriptionDetails?.name}
+                </span>{' '}
+                subscription will expire in less than{' '}
+                <span className="text-kiiraBlue font-montserrat">{dateDiif} days</span>...{' '}
+                <span className="text-kiiraDark text-sm font-montserrat">
+                  {moment(profile?.subscription_expiry_date).format('MMM D, YYYY')}
+                </span>
+              </AppTypography>
+            </Alert>
+          ) : null}
+
           <InnerNavBar />
         </ContentContainer>
         <ContentContainer className="min-h-[58vh] w-full h-full">

@@ -72,7 +72,7 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
           }}
         />
 
-        {!isLoading && (!isEmpty(filteredAppointmentTypes) || !isEmpty(docAppointmentType)) ? (
+        {!isLoading ? (
           <ContentContainer
             className="flex flex-row items-center w-full overflow-hidden overflow-x-auto"
             hideScroll>

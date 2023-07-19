@@ -12,6 +12,7 @@ const BookingContainer = styled(ContentContainer)(({ disabled }) => [
 ]);
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
+  console.log('\n 🚀 ~ file: BookingCard.jsx:15 ~ BookingCard ~ bookingData:', bookingData);
   const doctor = bookingData?.calendar;
   return (
     <BookingContainer
@@ -61,7 +62,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             color="blue"
             className={
               !review
-                ? 'capitalise text-kiiraBlackishGreen text-lg lg:text-2xl font-semibold text-justify'
+                ? 'capitalise text-kiiraBlackishGreen text-lg lg:text-2xl font-semibold'
                 : 'capitalise text-kiiraBlackishGreen text-sm font-semibold'
             }>
             {!review ? bookingData?.appointment_type?.name : bookingData?.appointmentType?.name}
@@ -226,7 +227,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
               <AppTypography
                 variant="small"
                 className="text-xs text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
-                {bookingData?.status === 'payment_ticketed' ? (
+                {bookingData?.status === 'payment_ticketed' &&
+                !bookingData?.appointment?.canceled ? (
                   <i className="fa-solid fa-calendar-check text-green-500 font-semibold"></i>
                 ) : null}
                 {bookingData?.status === 'payment_failed' ? (
@@ -238,6 +240,11 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 {bookingData?.status === 'payment_successful' ? (
                   <i className="fa-solid fa-circle-check text-kiiraBlue  font-semibold"></i>
                 ) : null}
+                {bookingData?.status === 'payment_ticketed' &&
+                bookingData?.appointment?.canceled ? (
+                  <i className="fa-solid fa-calendar-xmark text-orange-500   font-semibold"></i>
+                ) : null}
+
                 <span>
                   Status:{' '}
                   {bookingData?.status === 'payment_failed'
@@ -246,8 +253,11 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     ? 'Pending'
                     : bookingData?.status === 'payment_successful'
                     ? 'Success'
-                    : bookingData?.status === 'payment_ticketed'
+                    : bookingData?.status === 'payment_ticketed' &&
+                      !bookingData?.appointment?.canceled
                     ? 'Ticket Booked'
+                    : bookingData?.appointment?.canceled
+                    ? 'Appointment Canceled'
                     : null}
                 </span>
               </AppTypography>

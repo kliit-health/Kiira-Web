@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AppButton, AppTypography, ContentContainer } from '../shared/styledComponents';
-import { ReactComponent as Badge } from 'src/assets/icons/check-badge.svg';
 import propTypes from 'prop-types';
-import Auth from 'src/middleware/storage';
 import { IMAGES } from 'src/data';
 import { truncate } from 'src/utils/truncate';
+import { useProfile } from 'src/queries/queryHooks';
+import moment from 'moment-timezone';
 import isEmpty from 'src/utils/isEmpty';
+import { useLocation } from 'react-router-dom';
+import { ROUTES } from 'src/routes/Paths';
 
 const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscription }) => {
-  const isAuthenticated = Auth.isAuthenticated();
+  const location = useLocation();
+  const { pathname } = location;
   const Icon = subscription?.planIcon || IMAGES.subscriptionOval1;
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
 
   return (
     <ContentContainer className="flex flex-col w-full h-auto min-h-[459px] max-w-max min-w-[285px] max-h-max overflow-hidden">
@@ -33,34 +38,17 @@ const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscri
       </ContentContainer>
       <ContentContainer
         className={[
-          (selected?.id || currentSubscription.id) === subscription?.id
-            ? 'bg-white gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl border border-kiiraBlue/20'
+          profile?.subscription_id === subscription?.id
+            ? 'bg-kiiraBg/30 gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl border  border-kiiraBg3 border-t-0'
+            : selected?.id === subscription?.id
+            ? 'bg-kiiraBg2/70 gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl border  border-kiiraBlue/20'
             : 'bg-white gap-3 h-auto min-h-[375px] p-4 rounded rounded-b-2xl'
         ]}>
-        {/* <AppTypography className="text-kiiraText text-xs min-h-[36px]" variant="small">
-          {subscription?.description}
-        </AppTypography> */}
-
         <AppTypography className="p-2 w-full bg-[#E2EDFF] text-kiiraBlue text-xs text-center font-semibold rounded-md">
           {subscription?.name} Features:
         </AppTypography>
 
         <ContentContainer className="flex flex-col gap-y-2 overflow-x-hidden">
-          {/* {subscription?.package?.map((item, index) => {
-            return (
-              <ContentContainer className="flex flex-row flex-nowrap gap-4" key={index?.toString()}>
-                <span className="w-1">
-                  <Badge className="h-3.5 w-3.5 mt-0.5" />
-                </span>
-                <AppTypography
-                  variant="lead"
-                  className="flex flex-row flex-nowrap gap-4 text-kiiraText text-xs text-left font-medium ml-1"
-                  key={index?.toString()}>
-                  {item}
-                </AppTypography>
-              </ContentContainer>
-            );
-          })} */}
           <AppTypography
             className="text-kiiraText text-xs min-h-[36px] whitespace-pre-wrap"
             variant="small">
@@ -68,26 +56,30 @@ const SubscriptionPlans = ({ subscription, selected, setSelected, currentSubscri
           </AppTypography>
         </ContentContainer>
 
-        <AppButton
-          size="sm"
-          fullWidth
-          onClick={() => {
-            isEmpty(currentSubscription)
-              ? setSelected(currentSubscription)
-              : setSelected(subscription);
-          }}
-          className={
-            (['px-4 py-2 text-white capitalize text-[10px] shadow-transparent mt-auto'],
-            subscription?.cycle === 'Monthly' ? 'bg-kiiraBlue' : 'bg-kiiraText')
-          }>
-          Choose Plan
-        </AppButton>
+        <ContentContainer className="mt-auto">
+          <AppButton
+            size="sm"
+            fullWidth
+            onClick={() => {
+              setSelected(subscription);
+            }}
+            className={
+              ('px-4 py-2 text-white capitalize text-[10px] shadow-transparent',
+              (selected?.id || profile?.subscription_id) === subscription?.id
+                ? 'bg-kiiraBlue'
+                : 'bg-kiiraText')
+            }>
+            {selected?.id === subscription?.id ? 'Selected' : 'Choose'}
+          </AppButton>
+        </ContentContainer>
 
-        {/* {isAuthenticated && subscription?.cycle === 'Monthly' ? (
+        {!isEmpty(profile?.subscription_expiry_date) &&
+        profile?.subscription_id === subscription?.id &&
+        pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
           <AppTypography variant="small" className="text-[0.675rem] text-center text-kiiraText">
-            Expires Apr 30th, 2023
+            Expires {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
           </AppTypography>
-        ) : null} */}
+        ) : null}
       </ContentContainer>
     </ContentContainer>
   );

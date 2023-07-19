@@ -1,17 +1,27 @@
-import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import { useNavigate } from 'react-router-dom';
-import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
+import { Card, CardBody } from '@material-tailwind/react';
+import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
-import { ROUTES } from 'src/routes/Paths';
-import { ReactComponent as Visa } from 'src/assets/icons/visa.svg';
-import { SubscriptionPlans } from 'src/components';
+import { PaymentCard, SubscriptionPlans } from 'src/components';
 import { useProducts } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
+import { useLocalStore } from 'src/store';
+import { useEffect, useState } from 'react';
+import Auth from 'src/middleware/storage';
 
 const SignupSubscription = () => {
-  const navigate = useNavigate();
+  const setSelectedPlan = useLocalStore((state) => state.setStoredData);
   const { data, isLoading } = useProducts();
   const products = data?.data?.products;
+  const [selected, setSelected] = useState({});
+  useEffect(() => {
+    setSelectedPlan({ ...selected });
+  }, [selected]);
+
+  const isSubscribed = Auth.isSubscribed();
+  console.log(
+    '\n 🚀 ~ file: SignupSubscription.jsx:27 ~ SignupSubscription ~ isSubscribed:',
+    isSubscribed
+  );
 
   return (
     <AuthLayout hideScroll>
@@ -48,7 +58,15 @@ const SignupSubscription = () => {
 
                 {!isLoading &&
                   products?.map((plan, index) => {
-                    return <SubscriptionPlans subscription={plan} key={index?.toString()} />;
+                    return (
+                      <SubscriptionPlans
+                        currentSubscription={selected}
+                        subscription={plan}
+                        key={index?.toString()}
+                        selected={selected}
+                        setSelected={(d) => setSelected(d)}
+                      />
+                    );
                   })}
               </ContentContainer>
             </CardBody>
@@ -57,55 +75,11 @@ const SignupSubscription = () => {
 
         {/* Payment Form */}
         {!isLoading ? (
-          <Card className="w-full h-auto 2xl:h-full shadow-none">
-            <CardBody className="flex flex-col h-full gap-6 px-8 py-8">
-              <AppTypography variant="h3" className="text-[#252539] font-medium">
-                Add payment
-              </AppTypography>
-              <AppTypography variant="small" className="text-base font-normal text-kiiraText">
-                Start enjoying amazing benefits as a member
-              </AppTypography>
-              <div className="flex flex-col w-full gap-5 mt-5">
-                <ContentContainer className="flex flex-row items-center justify-between gap-4 flex-wrap md:flex-nowrap">
-                  <Input label="Card Number" size="lg" className="w-full" icon={<Visa />} />
-                </ContentContainer>
-                <ContentContainer className="flex flex-row items-center justify-between gap-4 flex-wrap md:flex-nowrap">
-                  <Input label="Exp. Date" size="lg" className="w-full" />
-                  <Input label="CVC" size="lg" className="w-full" />
-                </ContentContainer>
-                <Input label="Name on Card" size="lg" className="w-full" />
-                <Input label="Postal Code" size="lg" className="w-full" />
-              </div>
-              <div className="flex flex-row flex-nowrap items-center -ml-2.5">
-                <Checkbox
-                  color="blue-gray"
-                  iconProps={{ size: 'xs' }}
-                  label="Securely save my information for 1-click checkout"
-                  labelProps={{ className: 'p-1 font-medium text-sm -ml-2' }}
-                />
-              </div>
-
-              <AppButton
-                size="md"
-                background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
-                className="text-sm font-medium text-white capitalize shadow-transparent"
-                fullWidth
-                onClick={() => {
-                  setTimeout(() => {
-                    navigate(ROUTES.INDEX);
-                  }, 500);
-                }}>
-                Subscribe
-              </AppButton>
-              <AppTypography
-                variant="small"
-                className="flex justify-center flex-wrap -mt-1 text-center text-xs text-kiiraText/75">
-                By confirming your subscription, you allow Kiira health to charge your card for this
-                payment and future payments in accordance with their terms. You can always cancel
-                your subscription.
-              </AppTypography>
-            </CardBody>
-          </Card>
+          <>
+            <Card className="w-full h-auto 2xl:h-full shadow-none px-4">
+              <PaymentCard showCloseButton={false} />
+            </Card>
+          </>
         ) : null}
       </ContentContainer>
     </AuthLayout>

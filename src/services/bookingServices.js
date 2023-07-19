@@ -61,8 +61,8 @@ export const fetchBookingForms = async () => {
 };
 
 export const rescheduleBookedAppointment = async (data) => {
-  const { id, ...rest } = data;
-  const res = await Api.bookings.rescheduleAppointment(id, rest);
+  // const { appointment_id, ...rest } = data;
+  const res = await Api.bookings.rescheduleAppointment(data?.booking_id, data);
   return res;
 };
 

@@ -62,7 +62,12 @@ const Login = () => {
           return;
         }
 
-        navigate(from, { replace: true });
+        if (isEmpty(user?.subscription_expiry_date) && isEmpty(user?.subscription_id)) {
+          navigate(ROUTES.SIGINUP_SUBSCRIPTION, { replace: true });
+          return;
+        }
+
+        navigate(ROUTES.INDEX, { replace: true });
         return;
       },
       onError: (error) => {

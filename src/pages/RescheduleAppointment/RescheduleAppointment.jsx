@@ -12,7 +12,7 @@ import {
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
-import { useDoctorsCalendars, useRescheduleAppointment } from 'src/queries/queryHooks';
+import { useDoctorsCalendars, useProfile, useRescheduleAppointment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
@@ -22,6 +22,8 @@ const RescheduleAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data, error } = useDoctorsCalendars();
+  const { data: profileData } = useProfile();
+  const profile = profileData?.data?.user;
   const { mutate, isLoading } = useRescheduleAppointment();
 
   const errorMsg = error?.response?.data?.message || error?.message;
@@ -34,28 +36,46 @@ const RescheduleAppointment = () => {
   }, [error]);
 
   const doctors = data?.data?.calendars;
-  const [doctorsData, setDoctorsData] = useState(doctors);
+  // console.log("\n 🚀 ~ file: RescheduleAppointment.jsx:37 ~ RescheduleAppointment ~ doctors:", doctors)
+  const [doctorState, setDoctorState] = useState(location.state?.doctor);
   const [rescheduleData, setRescheduleData] = useState({});
 
   const { id } = useParams();
   const service = location.state?.service || {};
 
-  const doc = doctorsData?.filter((elem) => elem?.id === service?.appointment?.calendarID);
-
-  const doctorState = location.state?.doctor || !isEmpty(doc) ? doc[0] : {};
-
   useEffect(() => {
     if (isEmpty(doctors)) return;
     if (isEmpty(service)) return;
-    const r = doctors?.filter((elem) =>
-      service?.appointment_type?.calendarIDs?.find((id) => elem?.id === id)
+    // const r = doctors?.filter((elem) => service?.appointment_type?.calendarIDs?.find((id) => elem?.id === id));
+    // console.log('\n 🚀 ~ file: RescheduleAppointment.jsx:55 ~ useEffect ~ r:', r);
+    const doc = doctors?.find((elem) => {
+      console.log('\n 🚀 ~ file: RescheduleAppointment.jsx:50 ~ doc ~ elem:', elem);
+      return elem?.id == service?.appointment?.calendarID;
+    });
+    console.log(
+      '\n 🚀 ~ file: RescheduleAppointment.jsx:46 ~ RescheduleAppointment ~ doc:',
+      doc,
+      service?.appointment?.calendarID
     );
-    setDoctorsData(r);
+    console.log(
+      '\n 🚀 ~ file: RescheduleAppointment.jsx:46 ~ RescheduleAppointment ~ doctors:',
+      doctors
+    );
+    setDoctorState(doc);
   }, [id, doctors, service]);
 
   const handleReschedule = () => {
+    if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
+      Toast.fire({
+        icon: 'error',
+        title: 'Your current subscription has expired. Please renew your subscription'
+      });
+      return;
+    }
+
     const payload = {
-      id: service?.appointment?.id,
+      booking_id: service?.id,
+      appointment_id: service?.appointment?.id,
       datetime: rescheduleData?.bookingCheckout?.time,
       timezone: moment.tz.guess(true),
       ...(!isEmpty(doctorState) && { calendarID: doctorState?.id })
@@ -69,7 +89,7 @@ const RescheduleAppointment = () => {
         );
         Swal.fire({
           icon: 'success',
-          title: 'Success',
+          title: response?.data?.message,
           html: `<div className='text-xs'>Booking appointment has been rescheduled successfully</div>`,
           confirmButtonColor: 'blue',
           allowOutsideClick: false,
@@ -209,27 +229,32 @@ const RescheduleAppointment = () => {
             </ContentContainer>
           </ContentContainer>
 
-          <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
-            <AppTypography
-              variant="h6"
-              className="text-[#112211] font-semibold text-xs lg:text-base">
-              Book your appointment with
-            </AppTypography>
-          </ContentContainer>
-
-          <ContentContainer
-            className="flex flex-row flex-nowrap gap-4 lg:gap-2 items-center overflow-hidden overflow-x-auto"
-            hideScroll={true}>
-            <div className="col">
-              <DoctorsCard
-                whiteBackground
-                doctor={doctorState}
-                selected={true}
-                style={{ minWidth: '245px', maxWidth: '400px' }}
-                hideBookingButton={true}
-              />
-            </div>
-          </ContentContainer>
+          {!isEmpty(doctorState) ? (
+            <>
+              <ContentContainer
+                row
+                className="flex-row flex-nowrap items-center justify-between mt-4">
+                <AppTypography
+                  variant="h6"
+                  className="text-[#112211] font-semibold text-xs lg:text-base">
+                  Book your appointment with
+                </AppTypography>
+              </ContentContainer>
+              <ContentContainer
+                className="flex flex-row flex-nowrap gap-4 lg:gap-2 items-center overflow-hidden overflow-x-auto"
+                hideScroll={true}>
+                <div className="col">
+                  <DoctorsCard
+                    whiteBackground
+                    doctor={doctorState}
+                    selected={true}
+                    style={{ minWidth: '245px', maxWidth: '400px' }}
+                    hideBookingButton={true}
+                  />
+                </div>
+              </ContentContainer>
+            </>
+          ) : null}
 
           <BookingCalendar
             onTimeSelect={(bookingParams) => setRescheduleData(bookingParams)}

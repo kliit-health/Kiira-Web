@@ -1,3 +1,6 @@
+export const getCountryFlag = (c) =>
+  c?.replace(/./g, (ch) => String.fromCodePoint(0x1f1a5 + ch.toUpperCase().charCodeAt()));
+
 const countryList = [
   'United States',
   'Canada',

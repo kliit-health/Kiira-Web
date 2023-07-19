@@ -40,11 +40,11 @@ export const ContentContainer = styled.div`
 
 ContentContainer.propTypes = {
   hideScroll: bool
-}
+};
 
 ContentContainer.defaultProps = {
   hideScroll: false
-}
+};
 
 export const AppTypography = styled(Typography)`
   ${tw`font-poppins`}
@@ -206,5 +206,13 @@ export const CalendarWrapper = styled(ContentContainer)`
 
   .Calendar__day.-selected {
     margin: 0px 1.3rem;
+  }
+`;
+
+export const SelectWrapper = styled(ContentContainer)`
+  ${tw`z-[99] relative`}
+
+  ul {
+    ${tw`w-full lg:!w-[70vw] !max-w-[70vw]`}
   }
 `;

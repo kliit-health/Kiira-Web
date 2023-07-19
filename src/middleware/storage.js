@@ -1,5 +1,7 @@
 import Axios from 'axios';
 import Api from './api';
+import { useLocalStore } from 'src/store';
+import isEmpty from 'src/utils/isEmpty';
 
 const Auth = {
   setToken: (token, refreshToken) => {
@@ -38,12 +40,21 @@ const Auth = {
     return false;
   },
   destroyToken: () => {
+    useLocalStore.persist.clearStorage();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     // localStorage.removeItem('refresh_token');
     delete Axios.defaults.headers.common['Authorization'];
     return true;
+  },
+  isSubscribed: () => {
+    const userl = localStorage.getItem('user');
+    const user = JSON.parse(userl);
+
+    if (!isEmpty(user?.subscription_expiry_date) && !isEmpty(user?.subscription_id)) return true;
+    return false;
   }
+
   // getRefreshToken: () => {
   //   const token = localStorage.getItem('refresh_token');
   //   if (token) {

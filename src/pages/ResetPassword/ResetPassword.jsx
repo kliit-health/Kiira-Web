@@ -15,7 +15,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
-  const getStoredEmail = useLocalStore((state) => state.email);
+ 
 
   const { mutate, isLoading } = useResetPassword();
 
