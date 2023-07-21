@@ -61,7 +61,7 @@ const Subscription = () => {
           );
           Toast.fire({
             icon: 'success',
-            title: response?.data?.message
+            title: `Subscription cancelled successfully`
           });
           refetchProfile();
           refetchHistory();
@@ -83,7 +83,7 @@ const Subscription = () => {
   return (
     <MainLayout>
       <ContentContainer className="flex p-4 md:p-0 mb-6">
-        {!isEmpty(subscriptionData) ? (
+        {!isEmpty(subscriptionData) && !isEmpty(profile?.subscription_expiry_date) ? (
           <ContentContainer row className="flex-wrap gap-4 items-center justify-between">
             <ContentContainer>
               <AppTypography variant="h6" className="text-kiiraDark">
@@ -134,6 +134,18 @@ const Subscription = () => {
             ) : null}
           </ContentContainer>
         ) : null}
+        {isEmpty(profile?.subscription_expiry_date) &&
+        isEmpty(profile?.subscription_id) &&
+        !isEmpty(profile?.stripe_customer_id) ? (
+          <ContentContainer>
+            <AppTypography variant="h6" className="text-kiiraDark">
+              Subscription Cancelled{' '}
+            </AppTypography>
+            <AppTypography variant="small" className="text-red-600 font-semibold text-sm">
+              You do not have an active subscription plan{' '}
+            </AppTypography>
+          </ContentContainer>
+        ) : null}
       </ContentContainer>
       {isEmpty(selected) && !isLoading ? (
         <AppTypography
@@ -144,7 +156,7 @@ const Subscription = () => {
       ) : null}
       <ContentContainer className="h-full min-h-[40vh] w-full flex flex-row gap-4 flex-wrap md:flex-nowrap">
         <ContentContainer
-          className="flex flex-row w-full h-full overflow-hidden overflow-x-auto flex-nowrap gap-5"
+          className="flex flex-row w-full overflow-hidden overflow-x-auto flex-nowrap gap-5"
           hideScroll>
           {!isLoading
             ? products?.map((plan, index) => {

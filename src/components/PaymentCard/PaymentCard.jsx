@@ -34,6 +34,7 @@ import KEYS from 'src/queries/queryKeys';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import Auth from 'src/middleware/storage';
+import useAuth from 'src/hooks/useAuth';
 
 const PaymentCard = (props) => {
   const STRIPE_KEY =
@@ -78,9 +79,9 @@ const CARD_ELEMENT_OPTIONS = {
 const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const { pathname } = location;
-  const { data: userProfile, refetch: refetchProfileData } = useProfile();
-  const profile = userProfile?.data?.user;
+  const { refetch: refetchProfileData } = useProfile();
   const selectedPlan = useLocalStore((state) => state.storedData);
   const queryClient = useQueryClient();
   const stripe = useStripe();
@@ -180,16 +181,25 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             elements.getElement(CardNumberElement).clear();
             elements.getElement(CardExpiryElement).clear();
             elements.getElement(CardCvcElement).clear();
+            setField({ name: '', country: '', postalCode: '' });
             queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
             Toast.fire({
               icon: 'success',
-              title: response?.data?.message
+              title: `Process completed successfully`
             });
             refetchProfileData();
-            Auth.setUser(profile);
+
             if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
-              return navigate(ROUTES.INDEX);
+              setTimeout(() => {
+                Toast.fire({
+                  icon: 'info',
+                  title: `Congratulations,\nLogin to continue...`
+                });
+                logout();
+              }, 2500);
+              return;
             }
+            dismissHandler();
           },
           onError: (error) => {
             console.log(

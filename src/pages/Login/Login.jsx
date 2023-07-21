@@ -53,6 +53,8 @@ const Login = () => {
         });
 
         const { user } = response?.data;
+
+        console.log('\n 🚀 ~ file: Login.jsx:56 ~ onSubmit ~ user:', user);
         if (!user?.is_email_verified) {
           const emailData = {
             email: response.data?.user?.email
@@ -61,15 +63,11 @@ const Login = () => {
           navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
           return;
         }
-
-        if (
-          isEmpty(user?.subscription_expiry_date) &&
-          isEmpty(user?.subscription_id) &&
-          isEmpty(user?.stripe_customer_id)
-        ) {
-          navigate(ROUTES.SIGINUP_SUBSCRIPTION, { replace: true });
-          return;
-        }
+        
+        // if(isEmpty(user?.stripe_customer_id)) {
+        //   navigate(ROUTES.SIGINUP_SUBSCRIPTION, { replace: true });
+        //   return;
+        // }
 
         navigate(previousLocation, { replace: true });
         return;

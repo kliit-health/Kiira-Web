@@ -177,7 +177,7 @@ const SavedCards = () => {
           />
           <AppTypography
             variant="small"
-            className="text-sm text-kiiraBlackishGreen font-poppins w-full text-center my-2 font-semibold">
+            className="text-sm text-kiiraBlackishGreen font-poppins w-full text-center mb-2 font-semibold px-5">
             Removing payment card from profile...
           </AppTypography>
         </ContentContainer>
