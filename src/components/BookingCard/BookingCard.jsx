@@ -12,7 +12,6 @@ const BookingContainer = styled(ContentContainer)(({ disabled }) => [
 ]);
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
-  console.log('\n 🚀 ~ file: BookingCard.jsx:15 ~ BookingCard ~ bookingData:', bookingData);
   const doctor = bookingData?.calendar;
   return (
     <BookingContainer

@@ -24,7 +24,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || ROUTES.INDEX;
+  const previousLocation = location.state?.from?.pathname || ROUTES.INDEX;
 
   const appPasswordRef = useRef(null);
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
@@ -75,7 +75,7 @@ const Login = () => {
           return;
         }
 
-        navigate(ROUTES.INDEX, { replace: true });
+        navigate(previousLocation, { replace: true });
         return;
       },
       onError: (error) => {

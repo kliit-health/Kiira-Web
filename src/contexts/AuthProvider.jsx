@@ -1,12 +1,15 @@
 import propTypes from 'prop-types';
 import { useState, createContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Auth from 'src/middleware/storage';
+import { ROUTES } from 'src/routes/Paths';
 
 // create a context for the auth provider
 export const AuthContext = createContext();
 
 // create the auth provider component
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
   const userData = Auth?.getUser();
@@ -15,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     Auth?.destroyToken();
     setUser({});
+    navigate(ROUTES.LOGIN);
   };
 
   useEffect(() => {

@@ -1,11 +1,16 @@
-import { Navbar, IconButton, List, ListItem } from '@material-tailwind/react';
+import { Navbar, IconButton, List, ListItem, Button } from '@material-tailwind/react';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { AppButton, AppLink, AppLinkExternal } from '../shared/styledComponents';
 import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg';
+import useAuth from 'src/hooks/useAuth';
 
 export default function AppNavBar() {
+  const location = useLocation();
+  const { pathname } = location;
+  const { logout } = useAuth();
+
   const navList = (
     <List className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 ">
       <AppLinkExternal href="https://www.kiira.io/">
@@ -35,19 +40,30 @@ export default function AppNavBar() {
 
         <div className="flex flex-row items-center gap-12">
           <div className="hidden lg:block">{navList}</div>
-          <div className="flex flex-row items-center gap-4">
-            <AppLinkExternal
-              href="www.kiira.io/about"
-              className="hidden text-kiiraBlue lg:inline-block">
+          <div className="flex flex-row items-center gap-1">
+            <Link to={ROUTES.BOOK_APPOINTMENT} className="hidden text-kiiraBlue lg:inline-block">
               Book an appointment
-            </AppLinkExternal>
-            <AppLinkExternal href="https://app.acuityscheduling.com/catalog.php?owner=20421830&category=Membership">
-              <AppButton
+            </Link>
+            {pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
+              <Link to={ROUTES.SUBSCRIPTION}>
+                <AppButton
+                  size="sm"
+                  className="px-4 py-2 text-white capitalize text-[10px] shadow-transparent">
+                  Join Kiira
+                </AppButton>
+              </Link>
+            ) : null}
+            {pathname === ROUTES.SIGINUP_SUBSCRIPTION ? (
+              <Button
                 size="sm"
-                className="px-4 py-2 text-white capitalize text-[10px] shadow-transparent">
-                Join Kiira
-              </AppButton>
-            </AppLinkExternal>
+                variant="text"
+                onClick={() => {
+                  logout();
+                }}
+                className="text-red-500 bg-kiiraBg2 hover:bg-white uppercase shadow-sm">
+                Log Out
+              </Button>
+            ) : null}
             <IconButton
               variant="text"
               ripple={false}

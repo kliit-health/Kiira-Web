@@ -1,5 +1,6 @@
 import { Avatar, IconButton } from '@material-tailwind/react';
 import React from 'react';
+import { Empty } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
 import { MainLayout } from 'src/layouts';
@@ -15,7 +16,7 @@ const Inbox = () => {
         <AppTypography variant="h6" className="text-kiiraDark font-bold text-lg">
           Inbox
         </AppTypography>
-        {[1, 2].map((history, index) => {
+        {/* {[1, 2].map((history, index) => {
           return (
             <ContentContainer
               className="rounded-lg bg-kiiraBg2 p-2 lg:px-5 lg:py-5 flex flex-row items-center justify-between gap-1 flex-wrap"
@@ -59,7 +60,9 @@ const Inbox = () => {
               </ContentContainer>
             </ContentContainer>
           );
-        })}
+        })} */}
+
+        <Empty />
       </ContentContainer>
     </MainLayout>
   );

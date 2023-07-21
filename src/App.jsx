@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './contexts/AuthProvider';
 import { Router } from './routes';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@material-tailwind/react';
@@ -17,11 +16,9 @@ function App() {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
         <ThemeProvider>
           <Router />
         </ThemeProvider>
-      </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

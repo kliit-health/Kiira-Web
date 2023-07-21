@@ -18,10 +18,6 @@ const SignupSubscription = () => {
   }, [selected]);
 
   const isSubscribed = Auth.isSubscribed();
-  console.log(
-    '\n 🚀 ~ file: SignupSubscription.jsx:27 ~ SignupSubscription ~ isSubscribed:',
-    isSubscribed
-  );
 
   return (
     <AuthLayout hideScroll>
