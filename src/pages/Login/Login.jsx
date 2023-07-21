@@ -63,11 +63,6 @@ const Login = () => {
           navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
           return;
         }
-        
-        // if(isEmpty(user?.stripe_customer_id)) {
-        //   navigate(ROUTES.SIGINUP_SUBSCRIPTION, { replace: true });
-        //   return;
-        // }
 
         navigate(previousLocation, { replace: true });
         return;

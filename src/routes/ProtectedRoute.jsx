@@ -23,7 +23,10 @@ export const ProtectedRoute = () => {
     }
   }, [isAuthenticated, isSubscribed]);
 
-  return isAuthenticated && !isSubscribed && location.pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
+  return isAuthenticated &&
+    !isSubscribed &&
+    !inactiveSubscription &&
+    location.pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
     <Navigate to={ROUTES.SIGINUP_SUBSCRIPTION} state={{ from: location }} />
   ) : isAuthenticated ? (
     <Outlet />

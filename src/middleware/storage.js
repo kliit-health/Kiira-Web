@@ -50,7 +50,7 @@ const Auth = {
   isSubscribed: () => {
     const userl = localStorage.getItem('user');
     const user = JSON.parse(userl);
-    
+
     if (
       !isEmpty(user?.subscription_expiry_date) &&
       !isEmpty(user?.subscription_id) &&
@@ -58,15 +58,19 @@ const Auth = {
     )
       return true;
     return false;
-  }
+  },
+  isInactiveSubscription: () => {
+    const userl = localStorage.getItem('user');
+    const user = JSON.parse(userl);
 
-  // getRefreshToken: () => {
-  //   const token = localStorage.getItem('refresh_token');
-  //   if (token) {
-  //     return token;
-  //   }
-  //   return false;
-  // },
+    if (
+      isEmpty(user?.subscription_expiry_date) &&
+      isEmpty(user?.subscription_id) &&
+      !isEmpty(user?.stripe_customer_id)
+    )
+      return true;
+    return false;
+  }
 };
 
 export default Auth;
