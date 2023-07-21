@@ -13,9 +13,6 @@ export default function AppNavBar() {
 
   const navList = (
     <List className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 ">
-      <AppLinkExternal href="https://www.kiira.io/">
-        <ListItem>Services</ListItem>
-      </AppLinkExternal>
       <AppLink href="#">
         <ListItem>Pricing</ListItem>
       </AppLink>
@@ -27,6 +24,9 @@ export default function AppNavBar() {
       </AppLinkExternal>
       <AppLinkExternal href="https://www.kiira.io/blog">
         <ListItem className="hover:opacity-80">Kick it with Kiira</ListItem>
+      </AppLinkExternal>
+      <AppLinkExternal href="https://www.kiira.io/podcast">
+        <ListItem>Podcast</ListItem>
       </AppLinkExternal>
     </List>
   );
@@ -41,9 +41,12 @@ export default function AppNavBar() {
         <div className="flex flex-row items-center gap-12">
           <div className="hidden lg:block">{navList}</div>
           <div className="flex flex-row items-center gap-1">
-            <Link to={ROUTES.BOOK_APPOINTMENT} className="hidden text-kiiraBlue lg:inline-block">
+            <Link
+              to={ROUTES.BOOK_APPOINTMENT}
+              className="hidden text-kiiraBlue lg:inline-block text-sm">
               Book an appointment
             </Link>
+
             {pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
               <Link to={ROUTES.SUBSCRIPTION}>
                 <AppButton
@@ -52,7 +55,16 @@ export default function AppNavBar() {
                   Join Kiira
                 </AppButton>
               </Link>
-            ) : null}
+            ) : (
+              <AppLinkExternal href="https://www.kiira.io/become-a-member">
+                {' '}
+                <AppButton
+                  size="sm"
+                  className="px-4 py-2 text-white capitalize text-[10px] shadow-transparent">
+                  Join Kiira
+                </AppButton>
+              </AppLinkExternal>
+            )}
             {pathname === ROUTES.SIGINUP_SUBSCRIPTION ? (
               <Button
                 size="sm"
@@ -60,7 +72,7 @@ export default function AppNavBar() {
                 onClick={() => {
                   logout();
                 }}
-                className="text-red-500 bg-kiiraBg2 hover:bg-white uppercase shadow-sm">
+                className="text-red-500 hover:bg-white uppercase hover:shadow-sm">
                 Log Out
               </Button>
             ) : null}
@@ -68,7 +80,7 @@ export default function AppNavBar() {
               variant="text"
               ripple={false}
               size="sm"
-              className="hidden w-auto p-0 lg:inline-block">
+              className="hidden w-auto p-0 lg:inline-block ml-2">
               <GlobeIconSvg className="w-4 h-4" />
             </IconButton>
           </div>
