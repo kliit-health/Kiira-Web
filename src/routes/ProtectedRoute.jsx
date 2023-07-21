@@ -12,6 +12,7 @@ export const ProtectedRoute = () => {
   const location = useLocation();
   const isAuthenticated = Auth.isAuthenticated();
   const isSubscribed = Auth.isSubscribed();
+  const inactiveSubscription = Auth.isInactiveSubscription();
 
   useEffect(() => {
     if (!isAuthenticated) {
