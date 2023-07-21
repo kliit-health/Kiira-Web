@@ -19,11 +19,8 @@ import {
 } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import isEmpty from 'src/utils/isEmpty';
-import { useEffect } from 'react';
 import { useLocalStore } from 'src/store';
 import moment from 'moment-timezone';
-import { useLocation } from 'react-router-dom';
-import { ROUTES } from 'src/routes/Paths';
 import KEYS from 'src/queries/queryKeys';
 import { Toast } from 'src/utils';
 import Auth from 'src/middleware/storage';
@@ -47,9 +44,6 @@ const Subscription = () => {
   const subscriptionHistory = subscriptionData?.data?.subscription_history;
   const products = data?.data?.products;
   const [selected, setSelected] = useState({});
-  useEffect(() => {
-    setSelectedPlan({ ...selected });
-  }, [selected]);
 
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
@@ -160,7 +154,10 @@ const Subscription = () => {
                     subscription={plan}
                     key={index?.toString()}
                     selected={selected}
-                    setSelected={(d) => setSelected(d)}
+                    setSelected={(d) => {
+                      setSelected(d);
+                      setSelectedPlan(d);
+                    }}
                   />
                 );
               })

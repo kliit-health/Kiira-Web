@@ -10,14 +10,9 @@ import {
   Button
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import {
-  AppButton,
-  AppTypography,
-  ContentContainer,
-  SelectWrapper
-} from '../shared/styledComponents';
+import { AppTypography, ContentContainer, SelectWrapper } from '../shared/styledComponents';
 import { CloseIcon } from '../shared/AppIcons/AppIcons';
-import { bool, func, object } from 'prop-types';
+import { bool, func } from 'prop-types';
 import {
   CardCvcElement,
   CardExpiryElement,
@@ -192,11 +187,9 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             });
             refetchProfileData();
             Auth.setUser(profile);
-            // Auth.setToken(response.data?.token);
             if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
               return navigate(ROUTES.INDEX);
             }
-            // dismissHandler();
           },
           onError: (error) => {
             console.log(
@@ -304,7 +297,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               label="Country or Region"
               size="lg">
               {countryList
-                ?.map((name, index) => {
+                ?.map((name) => {
                   const country = lookup.byCountry(name);
                   return (
                     <Option
@@ -329,17 +322,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 })}
             </Select>
           </SelectWrapper>
-
-          {/* <Input
-            label={"Postal Code"}
-            size="lg"
-            className="w-full"
-            value={field?.postalCode}
-            onChange={(e) => {
-              setError({ e: false, message: '' });
-              setField({ ...field, postalCode: e.target.value });
-            }}
-          /> */}
         </div>
         <div className="flex flex-row flex-nowrap items-center -ml-2.5">
           <Checkbox
@@ -361,7 +343,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
         ) : (
           <Button
             size="md"
-            // background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
             className="text-sm font-semibold text-white capitalize shadow-transparent bg-kiiraBlue"
             fullWidth
             onClick={handleCardTokenisation}>

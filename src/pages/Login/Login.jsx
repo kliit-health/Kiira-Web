@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Button, Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
+import { useRef } from 'react';
+import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import {
@@ -30,10 +30,6 @@ const Login = () => {
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useLogin();
-
-  const isSubscribed = Auth.isSubscribed();
-
-  useEffect(() => {}, [isSubscribed]);
 
   const {
     register,

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Card, CardBody } from '@material-tailwind/react';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
@@ -5,19 +6,12 @@ import { PaymentCard, SubscriptionPlans } from 'src/components';
 import { useProducts } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import { useLocalStore } from 'src/store';
-import { useEffect, useState } from 'react';
-import Auth from 'src/middleware/storage';
 
 const SignupSubscription = () => {
   const setSelectedPlan = useLocalStore((state) => state.setStoredData);
   const { data, isLoading } = useProducts();
   const products = data?.data?.products;
   const [selected, setSelected] = useState({});
-  useEffect(() => {
-    setSelectedPlan({ ...selected });
-  }, [selected]);
-
-  const isSubscribed = Auth.isSubscribed();
 
   return (
     <AuthLayout hideScroll>
@@ -60,7 +54,10 @@ const SignupSubscription = () => {
                         subscription={plan}
                         key={index?.toString()}
                         selected={selected}
-                        setSelected={(d) => setSelected(d)}
+                        setSelected={(d) => {
+                          setSelected(d);
+                          setSelectedPlan(d);
+                        }}
                       />
                     );
                   })}

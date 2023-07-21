@@ -19,10 +19,11 @@ export const ProtectedRoute = () => {
         icon: 'info',
         html: `<ContentContainer className="text-kiiraBg2 text-xs">Unauthorised<br/>Kindly login to continue...</ContentContainer>`
       });
+      return;
     }
   }, [isAuthenticated, isSubscribed]);
 
-  return isAuthenticated && !isSubscribed ? (
+  return isAuthenticated && !isSubscribed && location.pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
     <Navigate to={ROUTES.SIGINUP_SUBSCRIPTION} state={{ from: location }} />
   ) : isAuthenticated ? (
     <Outlet />
