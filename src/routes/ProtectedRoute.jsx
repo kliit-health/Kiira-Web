@@ -22,7 +22,7 @@ export const ProtectedRoute = () => {
       });
       return;
     }
-  }, [isAuthenticated, isSubscribed]);
+  }, [isAuthenticated, isSubscribed, inactiveSubscription]);
 
   return isAuthenticated &&
     !isSubscribed &&

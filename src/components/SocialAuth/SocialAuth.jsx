@@ -7,22 +7,22 @@ import { Button } from '@material-tailwind/react';
 const SocialAuth = () => {
   return (
     <>
-      <div className="flex flex-row justify-between w-full gap-5">
-        <Button
+      <div className="flex flex-row justify-center w-full gap-5">
+        {/* <Button
           variant="text"
           className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
           <FacebookIcon />
-        </Button>
+        </Button> */}
         <Button
           variant="text"
-          className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
-          <GoogleIcon />
+          className="relative w-full h-48 max-h-[48px] max-w-xs  border border-kiiraBlue/30 rounded-full shadow-md  flex items-center justify-center">
+          <GoogleIcon className='absolute left-5' /> <span>Continue with Google</span>
         </Button>
-        <Button
+        {/* <Button
           variant="text"
           className="w-full h-48 max-h-[48px] border border-kiiraBlue rounded-xl flex items-center justify-center">
           <AppleIcon />
-        </Button>
+        </Button> */}
       </div>
     </>
   );

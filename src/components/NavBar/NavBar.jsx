@@ -13,9 +13,9 @@ export default function AppNavBar() {
 
   const navList = (
     <List className="flex flex-col gap-2 mt-2 mb-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6 ">
-      <AppLink href="#">
+      {/* <AppLink href="#">
         <ListItem>Pricing</ListItem>
-      </AppLink>
+      </AppLink> */}
       <AppLinkExternal as="a" href="https://www.kiira.io/locations">
         <ListItem>Location</ListItem>
       </AppLinkExternal>

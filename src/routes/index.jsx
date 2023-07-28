@@ -64,6 +64,7 @@ export const Router = () => {
               />
             </Route>
           </Route>
+          
         </Routes>
       </AuthProvider>
     </BrowserRouter>

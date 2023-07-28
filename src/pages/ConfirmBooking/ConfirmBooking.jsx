@@ -28,7 +28,6 @@ const ConfirmBooking = () => {
   const { data, isLoading, error, refetch } = useConfirmPayment(ref);
 
   useEffect(() => {
-
     refetch();
   }, [ref]);
 
@@ -83,13 +82,15 @@ const ConfirmBooking = () => {
             variant="gradient"
             color="light-blue"
             open={true}
-            className="flex items-center uppercase whitespace-pre-wrap font-bold "
+            className="flex items-center uppercase whitespace-pre-wrap font-bold"
             icon={
               <IconButton variant="text">
                 <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
               </IconButton>
             }>
-            {data?.data?.message}
+            {booking_details.status === 'payment_ticketed'
+              ? 'Appointment confirmed'
+              : data?.data?.message}
           </Alert>
           <ContentContainer className="flex-col md:flex-row w-full  rounded-l-2xl lg:max-h-[450px] gap-1 md:gap-0">
             <ContentContainer className="w-full md:w-1/4 lg:w-2/5 min-[540px]:w-full max-[768px]:h-[100px] shadow-md md:shadow-none  shrink-0 m-0 rounded-2xl  md:rounded-r-none md:rounded-l-xl bg-[#E2EDFF] bg-blend-darken">

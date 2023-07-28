@@ -54,7 +54,6 @@ const Login = () => {
 
         const { user } = response?.data;
 
-        console.log('\n 🚀 ~ file: Login.jsx:56 ~ onSubmit ~ user:', user);
         if (!user?.is_email_verified) {
           const emailData = {
             email: response.data?.user?.email

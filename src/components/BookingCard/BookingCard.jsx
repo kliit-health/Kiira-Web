@@ -254,7 +254,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     ? 'Success'
                     : bookingData?.status === 'payment_ticketed' &&
                       !bookingData?.appointment?.canceled
-                    ? 'Ticket Booked'
+                    ? 'Appointment Confirmed'
                     : bookingData?.appointment?.canceled
                     ? 'Appointment Canceled'
                     : null}

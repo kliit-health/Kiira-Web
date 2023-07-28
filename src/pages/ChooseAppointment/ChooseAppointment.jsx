@@ -152,28 +152,50 @@ const ChooseAppointment = () => {
             </ContentContainer>
           </ContentContainer>
 
-          <ContentContainer row className="flex-row flex-nowrap items-center justify-between mt-4">
+          <ContentContainer
+            row
+            className="flex-row flex-wrap gap-2 items-center justify-between mt-4">
             <AppTypography
               variant="h6"
               className="text-[#112211] font-semibold text-xs lg:text-base">
               Book your appointment with
             </AppTypography>
-            <Button
-              variant="text"
-              size="sm"
-              onClick={() => setHideDoctors(!hideDoctors)}
-              className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
-              <span className="text-[0.5rem]">
-                {!hideDoctors ? 'Any Available' : 'Show Available Doctors'}
-              </span>
-            </Button>
-          </ContentContainer>
 
-          {!hideDoctors && !isLoading && isEmpty(selectedDoctor) ? (
-            <ContentContainer className="text-red-500 font-medium text-xs text-right">
-              Please select your doctor to continue or Choose any available
-            </ContentContainer>
-          ) : null}
+            {!hideDoctors && !isLoading && isEmpty(selectedDoctor) ? (
+              <ContentContainer className=" flex-row flex-wrap gap-1 items-center justify-end text-red-500 font-medium text-xs text-right">
+                Please select appointment with doctor or{' '}
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => setHideDoctors(!hideDoctors)}
+                  className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
+                  <span className="text-[0.5rem]">{!hideDoctors ? 'Any Available' : ''}</span>
+                </Button>
+              </ContentContainer>
+            ) : !hideDoctors && !isLoading ? (
+              <ContentContainer className=" flex-row gap-1 items-center text-red-500 font-medium text-xs text-right">
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => setHideDoctors(!hideDoctors)}
+                  className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
+                  <span className="text-[0.5rem]">Any Available</span>
+                </Button>
+              </ContentContainer>
+            ) : null}
+
+            {hideDoctors && !isLoading ? (
+              <ContentContainer className=" flex-row gap-1 items-center text-red-500 font-medium text-xs text-right">
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => setHideDoctors(!hideDoctors)}
+                  className="text-xs rounded-2xl bg-kiiraBlue text-white py-1 px-5">
+                  <span className="text-[0.5rem]">Show Doctors</span>
+                </Button>
+              </ContentContainer>
+            ) : null}
+          </ContentContainer>
 
           {!hideDoctors ? (
             <ContentContainer

@@ -58,7 +58,8 @@ const Api = {
     subscriptionHistory: () => ApiHandler.get(`/subscriptions/history`),
     confirmPayment: (id) => ApiHandler.get(`/appointments/book/confirmation/${id}`),
     viewSavedCards: () => ApiHandler.get(`/users/saved-card`),
-    deleteSavedCards: () => ApiHandler.delete(`/users/saved-card`)
+    deleteSavedCards: () => ApiHandler.delete(`/users/saved-card`),
+    addSubscriptionCard: (data) => ApiHandler.put(`/users/saved-card`, data),
   }
 };
 

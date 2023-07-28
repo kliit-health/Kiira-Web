@@ -42,7 +42,6 @@ const ViewBooking = () => {
   const { id } = useParams();
   const { data, isLoading, refetch } = useAppointmentHistoryByID(id);
   const booking = data?.data?.booking;
-  console.log('\n 🚀 ~ file: ViewBooking.jsx:42 ~ ViewBooking ~ booking:', booking);
 
   const { mutate, isLoading: cancelLoading } = useCancelAppointment();
   // const booking = location?.state;
@@ -67,7 +66,8 @@ const ViewBooking = () => {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
     pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`kiira-booking - ${appointment?.id}.pdf`);
+    pdf.save(`Kiira Appointment - ${moment(booking?.datetime).format('MMM D, YYYY')}.pdf`);
+    console.log('i got here');
     setHiddenElement(false);
   };
 
@@ -141,6 +141,7 @@ const ViewBooking = () => {
           </AppTypography>
         </ContentContainer>
       ) : null}
+
       {!isLoading && id !== 'undefined' ? (
         <ContentContainer
           ref={downloadRef}
@@ -325,118 +326,122 @@ const ViewBooking = () => {
                   </AppTypography>
                 </ContentContainer>
 
-                <ContentContainer className="bg-kiiraBg2 gap-1 flex-row h-full items-end justify-between p-3 flex-wrap md:flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-x-auto">
-                  <ContentContainer>
-                    <ContentContainer className="flex-row">
-                      <span className="text-sm flex-row flex-wrap shrink ">
-                        <h6>
-                          <b>Booking ID: </b>
-                        </h6>{' '}
-                        {booking?.id}
-                      </span>
-                    </ContentContainer>
-                    {!isEmpty(booking?.reference) ? (
-                      <ContentContainer className="flex-row">
-                        <span className="text-sm flex-row flex-wrap shrink-1">
-                          <h6>
-                            <b>Payment Ref:</b>
-                          </h6>{' '}
-                          {booking?.reference}
-                        </span>
-                      </ContentContainer>
-                    ) : null}
+                <ContentContainer className="bg-kiiraBg2 gap-1 h-full justify-between p-3 flex-wrap lg:flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-hidden">
+                  <ContentContainer className="gap-2">
+                    <p className="text-sm md:text-base overflow-auto break-words ">
+                      <b className="font-bold">Booking ID: </b>{' '}
+                      <span className="">{booking?.id}</span>
+                    </p>
 
-                    {!isEmpty(booking?.calendar?.name) ? (
-                      <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">
-                        {booking?.calendar?.name}
-                      </AppTypography>
-                    ) : (
-                      <AppTypography variant="h6" color="blue-gray" className="text-base my-2">
-                        Any available doctor
-                      </AppTypography>
-                    )}
-                    {!isEmpty(booking?.calendar?.description) ? (
-                      <AppTypography color="gray" className="text-xs text-kiiraText/60 font-normal">
-                        {truncate(booking?.calendar?.description, 100)}
-                      </AppTypography>
+                    {!isEmpty(booking?.reference) ? (
+                      <p className="text-sm md:text-base overflow-auto break-words">
+                        <b className="font-bold">Payment Ref:</b>{' '}
+                        <span className="">{booking?.reference}</span>
+                      </p>
                     ) : null}
                   </ContentContainer>
-
-                  <ContentContainer className="h-24 w-24 min-w-[100px] min-h-[100px]">
-                    <QRCode
-                      value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
-                      size={256}
-                      style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-                      viewBox={`0 0 256 256`}
-                    />
+                  <ContentContainer className="w-full flex-row gap-1 flex-wrap sm:flex-nowrap justify-between">
+                    <ContentContainer>
+                      {!isEmpty(booking?.calendar?.name) ? (
+                        <AppTypography
+                          variant="h4"
+                          color="blue-gray"
+                          className="text-base md:text-2xl my-2">
+                          {booking?.calendar?.name}
+                        </AppTypography>
+                      ) : (
+                        <AppTypography variant="h6" color="blue-gray" className="text-base my-2">
+                          Any available doctor
+                        </AppTypography>
+                      )}
+                      {!isEmpty(booking?.calendar?.description) ? (
+                        <AppTypography
+                          color="gray"
+                          className="text-xs text-kiiraText/60 font-normal break-words">
+                          {truncate(booking?.calendar?.description, 100)}
+                        </AppTypography>
+                      ) : null}
+                    </ContentContainer>
+                    <ContentContainer className="h-12 w-12 md:h-24 md:w-24 min-w-[50px] min-h-[50px] ml-auto mt-auto">
+                      <QRCode
+                        value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
+                        size={256}
+                        style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+                        viewBox={`0 0 256 256`}
+                      />
+                    </ContentContainer>
                   </ContentContainer>
                 </ContentContainer>
               </ContentContainer>
             </ContentContainer>
 
-            <ContentContainer className="flex flex-col gap-4 w-full flex-wrap lg:flex-nowrap whitespace-pre-wrap">
-              {booking?.status === 'payment_failed' ? (
-                <Alert
-                  variant="gradient"
-                  color="red"
-                  open={true}
-                  className="uppercase whitespace-pre-wrap font-bold"
-                  icon={
-                    <IconButton variant="text" className="">
-                      <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
-                    </IconButton>
-                  }>
-                  <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
-                    Payment Booking Failed
-                  </span>
-                </Alert>
-              ) : booking?.status !== 'payment_ticketed' ? (
-                <Alert
-                  variant="gradient"
-                  color="amber"
-                  open={true}
-                  className="uppercase whitespace-pre-wrap font-bold"
-                  icon={
-                    <IconButton variant="text" className="">
-                      <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
-                    </IconButton>
-                  }>
-                  <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
-                    Booking process has not been completed...
-                  </span>
-                </Alert>
-              ) : (
-                booking?.appointment?.formsText
-              )}
-              <ContentContainer className=" bg-kiiraBg2 rounded p-4 flex flex-col gap-1 text-[0.8rem]">
-                <p className="font-bold uppercase text-kiiraBlackishGreen">
-                  Cancellation / No-Show Policy:
-                </p>
-                <p>
-                  We require 48 hours of notice to cancel or reschedule an appointment, otherwise, a
-                  50% fee will apply.
-                </p>
-                <p>
-                  If your appointment was canceled within 48 hours of your appointment start time,
-                  you will be charged 50% of your appointment fee.
-                </p>
-                <p>
-                  If your appointment was canceled prior to 48 hours then no worries, you will not
-                  be charged!
-                </p>
-                <p>Thank you for your understanding!</p>
-                <p>We are excited to serve you and we look forward to your appointment.</p>
-                <b> Best, Kiira Team</b>
+            {!isEmpty(booking) ? (
+              <ContentContainer className="flex flex-col gap-4 w-full flex-wrap lg:flex-nowrap whitespace-pre-wrap">
+                {booking?.status === 'payment_failed' ? (
+                  <Alert
+                    variant="gradient"
+                    color="red"
+                    open={true}
+                    className="uppercase whitespace-pre-wrap font-bold"
+                    icon={
+                      <IconButton variant="text" className="">
+                        <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
+                      </IconButton>
+                    }>
+                    <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
+                      Payment Booking Failed
+                    </span>
+                  </Alert>
+                ) : booking?.status !== 'payment_ticketed' ? (
+                  <Alert
+                    variant="gradient"
+                    color="amber"
+                    open={true}
+                    className="uppercase whitespace-pre-wrap font-bold"
+                    icon={
+                      <IconButton variant="text" className="">
+                        <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
+                      </IconButton>
+                    }>
+                    <span className="flex flex-row flex-wrap h-full w-full items-center text-center text-white">
+                      Booking process has not been completed...
+                    </span>
+                  </Alert>
+                ) : (
+                  booking?.appointment?.formsText
+                )}
+                <ContentContainer className=" bg-kiiraBg2 rounded p-4 flex flex-col gap-1 text-[0.8rem]">
+                  <p className="font-bold uppercase text-kiiraBlackishGreen">
+                    Cancellation / No-Show Policy:
+                  </p>
+                  <p>
+                    We require 48 hours of notice to cancel or reschedule an appointment, otherwise,
+                    a 50% fee will apply.
+                  </p>
+                  <p>
+                    If your appointment was canceled within 48 hours of your appointment start time,
+                    you will be charged 50% of your appointment fee.
+                  </p>
+                  <p>
+                    If your appointment was canceled prior to 48 hours then no worries, you will not
+                    be charged!
+                  </p>
+                  <p>Thank you for your understanding!</p>
+                  <p>We are excited to serve you and we look forward to your appointment.</p>
+                  <b> Best, Kiira Team</b>
+                </ContentContainer>
               </ContentContainer>
-            </ContentContainer>
+            ) : null}
           </ContentContainer>
         </ContentContainer>
       ) : null}
+
       {!isLoading && isEmpty(booking) ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty />
         </ContentContainer>
       ) : null}
+
       {id === 'undefined' ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty label={<ConfirmBooking />} />

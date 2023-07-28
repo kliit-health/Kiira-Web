@@ -24,10 +24,6 @@ const CodeVerification = () => {
   const isSubscribed = Auth.isSubscribed();
 
   useEffect(() => {}, [isSubscribed]);
-  console.log(
-    '\n 🚀 ~ file: CodeVerification.jsx:24 ~ CodeVerification ~ localStore getStoredEmail:',
-    getStoredEmail
-  );
 
   const {
     register,

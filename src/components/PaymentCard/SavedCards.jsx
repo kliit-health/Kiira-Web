@@ -11,9 +11,7 @@ import {
 } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import { AppTypography, ContentContainer } from '../shared/styledComponents';
-import { RadioCheckedIcon, VisaIcon } from '../shared/AppIcons/AppIcons';
 import { AddButton, PaymentCard } from '..';
-import { func, object } from 'prop-types';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
@@ -21,14 +19,19 @@ import { useDeleteUserCard, useViewSavedCards } from 'src/queries/queryHooks';
 import { ThreeDots } from 'react-loader-spinner';
 import KEYS from 'src/queries/queryKeys';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
+import { ROUTES } from 'src/routes/Paths';
 
 const SavedCards = () => {
+  const location = useLocation();
+  const { pathname } = location;
   const queryClient = useQueryClient();
   const { data: savedCardData, isLoading } = useViewSavedCards();
   const { mutate, isLoading: deleteCardLoading } = useDeleteUserCard();
   const savedCards = savedCardData?.data?.user_card;
 
   const selectedPlan = useLocalStore((state) => state.storedData);
+  const setSelectedPlan = useLocalStore((state) => state.setStoredData);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(!open);
@@ -36,6 +39,7 @@ const SavedCards = () => {
   const [windowSize, setWindowSize] = useState(getWindowSize());
 
   useEffect(() => {
+    setSelectedPlan({});
     function handleWindowResize() {
       setWindowSize(getWindowSize());
     }
@@ -134,7 +138,7 @@ const SavedCards = () => {
         <AddButton
           label="Add a new card"
           onAddClick={() => {
-            isEmpty(selectedPlan)
+            isEmpty(selectedPlan) && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
               ? Toast.fire({
                   icon: 'warning',
                   title: 'Please select a subscription plan to proceed...'
@@ -160,7 +164,12 @@ const SavedCards = () => {
           unmount: { scale: 0.9, y: -100 }
         }}>
         <DialogBody className="overflow-hidden overflow-y-auto min-w-full ">
-          <PaymentCard dismissHandler={handleOpen} />
+          <PaymentCard
+            dismissHandler={() => {
+              handleOpen();
+              setSelectedPlan({});
+            }}
+          />
         </DialogBody>
       </Dialog>
       <Dialog open={deleteCardLoading} size="sm" className="bg-transparent">

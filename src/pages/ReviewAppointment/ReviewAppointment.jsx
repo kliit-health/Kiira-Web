@@ -122,36 +122,28 @@ const ReviewAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        console.log(
-          '\n 🚀 ~ file: ReviewAppointment.jsx:125 ~ handleInitialisePayment ~ response:',
-          response
-        );
-        Swal.fire({
+        function viewBookingRedirect() {
+          const booking = {
+            ...response?.data?.availability_time,
+            appointment: response?.data?.appointment
+          };
+          navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
+            state: booking
+          });
+        }
+
+        Toast.fire({
           icon: 'success',
-          title: isEmpty(response?.data?.checkout_session) ? 'Successful' : 'Payment Initialised',
-          html: isEmpty(response?.data?.checkout_session)
+          title: isEmpty(response?.data?.checkout_session)
             ? `<div className='text-xs capitalize'>${response?.data?.message}</div>`
             : `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
-          confirmButtonColor: 'blue',
-          allowOutsideClick: false,
-          allowEscapeKey: false
-        }).then((result) => {
-          function viewBookingRedirect() {
-            const booking = {
-              ...response?.data?.availability_time,
-              appointment: response?.data?.appointment
-            };
-            navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
-              state: booking
-            });
-          }
-
-          if (result.isConfirmed) {
-            isEmpty(response?.data?.checkout_session)
-              ? viewBookingRedirect()
-              : window.open(response?.data?.checkout_session?.url, '_self');
-          }
+          width: '70vw'
         });
+
+        isEmpty(response?.data?.checkout_session)
+          ? viewBookingRedirect()
+          : window.open(response?.data?.checkout_session?.url, '_self');
+
         return;
       },
       onError: (error) => {

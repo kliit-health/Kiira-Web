@@ -28,6 +28,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 const Subscription = () => {
   const queryClient = useQueryClient();
+  const selectedPlan = useLocalStore((state) => state.storedData);
   const setSelectedPlan = useLocalStore((state) => state.setStoredData);
   const { data, isLoading } = useProducts();
   const { data: userProfile, refetch: refetchProfile } = useProfile();
@@ -43,8 +44,6 @@ const Subscription = () => {
   const handleOpen = () => setOpen(!open);
   const subscriptionHistory = subscriptionData?.data?.subscription_history;
   const products = data?.data?.products;
-  const [selected, setSelected] = useState({});
-
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
   );
@@ -147,7 +146,7 @@ const Subscription = () => {
           </ContentContainer>
         ) : null}
       </ContentContainer>
-      {isEmpty(selected) && !isLoading ? (
+      {isEmpty(selectedPlan) && !isLoading ? (
         <AppTypography
           variant="h4"
           className="text-[#252539] p-4 font-medium text-2xl lg:text-3xl ">
@@ -165,9 +164,8 @@ const Subscription = () => {
                     currentSubscription={currentSubscriptionDetails}
                     subscription={plan}
                     key={index?.toString()}
-                    selected={selected}
+                    selected={selectedPlan}
                     setSelected={(d) => {
-                      setSelected(d);
                       setSelectedPlan(d);
                     }}
                   />

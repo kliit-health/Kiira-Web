@@ -9,6 +9,7 @@ import {
   verifyEmail
 } from 'src/services/authServices';
 import {
+  addSubscriptionCard,
   cancelUserSubscription,
   deleteSavedCards,
   fetchSubscriptionHistory,
@@ -249,6 +250,19 @@ export const usePlanSubscription = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
+    }
+  });
+  return data;
+};
+
+export const useAddSubscriptionCard = () => {
+  const queryClient = useQueryClient();
+  const data = useMutation({
+    mutationFn: (data) => {
+      return addSubscriptionCard(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [KEYS.SAVED_CARDS] });
     }
   });
   return data;

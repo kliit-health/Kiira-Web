@@ -26,7 +26,7 @@ import { Toast } from 'src/utils';
 import lookup from 'country-code-lookup';
 import isEmpty from 'src/utils/isEmpty';
 import countryList, { getCountryFlag } from 'src/utils/countryList';
-import { usePlanSubscription, useProfile } from 'src/queries/queryHooks';
+import { useAddSubscriptionCard, usePlanSubscription, useProfile } from 'src/queries/queryHooks';
 import { Loader } from '..';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
@@ -77,9 +77,8 @@ const CARD_ELEMENT_OPTIONS = {
 };
 
 const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const location = useLocation();
   const { pathname } = location;
   const { refetch: refetchProfileData } = useProfile();
   const selectedPlan = useLocalStore((state) => state.storedData);
@@ -87,6 +86,8 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { mutate, isLoading } = usePlanSubscription();
+  const { mutate: mutateAddCard, isLoading: addCardLoading } = useAddSubscriptionCard();
+
   const [err, setError] = useState({ e: false, message: '' });
   const [loading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -103,7 +104,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
     });
     event.preventDefault();
 
-    if (isEmpty(selectedPlan)) {
+    if (isEmpty(selectedPlan) && pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
       setError({
         e: true,
         message: 'Please select a plan to proceed...'
@@ -172,46 +173,74 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
           product_id: selectedPlan?.id
         };
 
-        mutate(payload, {
-          onSuccess: (response) => {
-            console.log(
-              '\n 🚀 ~ file: PaymentCard.jsx:172 ~ handleCardTokenisation ~ response:',
-              response
-            );
-            elements.getElement(CardNumberElement).clear();
-            elements.getElement(CardExpiryElement).clear();
-            elements.getElement(CardCvcElement).clear();
-            setField({ name: '', country: '', postalCode: '' });
-            queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
-            Toast.fire({
-              icon: 'success',
-              title: `Process completed successfully`
-            });
-            refetchProfileData();
+        isEmpty(selectedPlan)
+          ? mutateAddCard(
+              {
+                card_token: result.token.id
+              },
+              {
+                onSuccess: (response) => {
+                  console.log(
+                    '\n 🚀 ~ file: PaymentCard.jsx:183 ~ handleCardTokenisation ~ mutateAddCard response:',
+                    response
+                  );
 
-            if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
-              setTimeout(() => {
+                  elements.getElement(CardNumberElement).clear();
+                  elements.getElement(CardExpiryElement).clear();
+                  elements.getElement(CardCvcElement).clear();
+                  setField({ name: '', country: '', postalCode: '' });
+                  Auth.fetchUser();
+                  Toast.fire({
+                    icon: 'success',
+                    title: `Payment Card added successfully`
+                  });
+                  refetchProfileData();
+                  dismissHandler();
+                },
+                onError: (error) => {
+                  console.log(
+                    '\n 🚀 ~ file: PaymentCard.jsx:184 ~ handleCardTokenisation ~ error:',
+                    error
+                  );
+                  setError({
+                    e: true,
+                    message: error.response?.data?.message
+                  });
+                }
+              }
+            )
+          : mutate(payload, {
+              onSuccess: (response) => {
+                elements.getElement(CardNumberElement).clear();
+                elements.getElement(CardExpiryElement).clear();
+                elements.getElement(CardCvcElement).clear();
+                setField({ name: '', country: '', postalCode: '' });
+                Auth.fetchUser();
+                queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
                 Toast.fire({
-                  icon: 'info',
-                  title: `Congratulations,\nLogin to continue...`
+                  icon: 'success',
+                  title: `Subscription successful`
                 });
-                logout();
-              }, 2500);
-              return;
-            }
-            dismissHandler();
-          },
-          onError: (error) => {
-            console.log(
-              '\n 🚀 ~ file: PaymentCard.jsx:184 ~ handleCardTokenisation ~ error:',
-              error
-            );
-            setError({
-              e: true,
-              message: error.response?.data?.message
+                refetchProfileData();
+                if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
+                  setTimeout(() => {
+                    navigate(ROUTES.INDEX);
+                  }, 1500);
+                  return;
+                }
+                dismissHandler();
+              },
+              onError: (error) => {
+                console.log(
+                  '\n 🚀 ~ file: PaymentCard.jsx:184 ~ handleCardTokenisation ~ error:',
+                  error
+                );
+                setError({
+                  e: true,
+                  message: error.response?.data?.message
+                });
+              }
             });
-          }
-        });
       }
     } catch (error) {
       console.log('\n 🚀 ~ file: PaymentCard.jsx:152 ~ handleCardTokenisation ~ error:', error);
@@ -233,7 +262,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
       <CardBody className="flex flex-col h-full gap-6 px-2 py-4  xl:px-8 xl:py-8">
         {showCloseButton ? (
           <IconButton
-            disabled={isLoading || loading}
+            disabled={isLoading || loading || addCardLoading}
             variant="text"
             className="absolute right-2 top-2"
             onClick={dismissHandler}>
@@ -245,7 +274,13 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
           <AppTypography
             variant="h6"
             className="text-black font-poppins font-normal text-xl md:text-3xl ">
-            Add a new Card
+            {!isEmpty(selectedPlan) ? (
+              <span className="text-base md:text-2xl">
+                Subscribe to <b className="text-kiiraBlue">{selectedPlan?.name}</b>
+              </span>
+            ) : (
+              'Add a new Card'
+            )}
           </AppTypography>
         ) : (
           <>
@@ -348,7 +383,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
           <span className="text-red-500 text-xs">*</span>
         </div>
 
-        {isLoading || loading ? (
+        {isLoading || loading || addCardLoading ? (
           <Loader className="mt-4" />
         ) : (
           <Button
@@ -356,7 +391,9 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             className="text-sm font-semibold text-white capitalize shadow-transparent bg-kiiraBlue"
             fullWidth
             onClick={handleCardTokenisation}>
-            {pathname === ROUTES?.SUBSCRIPTION ? 'Add Card' : 'Subscribe'}
+            {isEmpty(selectedPlan) && pathname !== ROUTES?.SIGINUP_SUBSCRIPTION
+              ? 'Add Card'
+              : 'Subscribe'}
           </Button>
         )}
 

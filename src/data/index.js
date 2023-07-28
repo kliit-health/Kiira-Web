@@ -39,6 +39,7 @@ import DrPilar from 'src/assets/images/doctors/DrPilar.png';
 import DrScut from 'src/assets/images/doctors/DrScut.png';
 import ConfirmBookingBirdie from 'src/assets/images/DrPenguin.png';
 import QR from 'src/assets/images/qrCode.png';
+import profilePlaceHolder from 'src/assets/images/profilePlaceHolder.jpeg';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
 import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
 import { ReactComponent as VisaIcon } from 'src/assets/icons/visaWhite.svg';
@@ -47,7 +48,7 @@ import { ReactComponent as DividerIcon } from 'src/assets/icons/DividerShape.svg
 import { ReactComponent as EditIcon } from 'src/assets/icons/EditFilled.svg';
 
 export const IMAGES = {
-  dummyProfilePhoto: 'https://www.lasma.eu/img/no-image-available.jpg', // 'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
+  dummyProfilePhoto: profilePlaceHolder, // 'https://cdn.pixabay.com/photo/2016/03/31/19/56/avatar-1295402_1280.png'
   GlobeIconSvg: GlobeIconSvg,
   KiiraLogoSvg: KiiraLogoSvg,
   sliderImg1: sliderImg1,

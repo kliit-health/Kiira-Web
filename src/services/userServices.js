@@ -28,3 +28,8 @@ export const deleteSavedCards = async () => {
   const res = await Api.payment.deleteSavedCards();
   return res;
 };
+
+export const addSubscriptionCard = async (data) => {
+  const res = await Api.payment.addSubscriptionCard(data);
+  return res;
+};

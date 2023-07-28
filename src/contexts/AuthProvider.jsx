@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import propTypes from 'prop-types';
 import { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +11,7 @@ export const AuthContext = createContext();
 // create the auth provider component
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
   const userData = Auth?.getUser();
@@ -18,6 +20,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     Auth?.destroyToken();
     setUser({});
+    queryClient.clear();
     navigate(ROUTES.LOGIN);
   };
 
