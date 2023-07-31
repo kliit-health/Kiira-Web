@@ -11,6 +11,7 @@ import {
 import {
   addSubscriptionCard,
   cancelUserSubscription,
+  contactDoctor,
   deleteSavedCards,
   fetchSubscriptionHistory,
   fetchUserProfile,
@@ -297,6 +298,15 @@ export const useDeleteUserCard = () => {
   const data = useMutation({
     mutationFn: () => {
       return deleteSavedCards();
+    }
+  });
+  return data;
+};
+
+export const useContactDoctor = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return contactDoctor(data);
     }
   });
   return data;

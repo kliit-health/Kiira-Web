@@ -2,7 +2,7 @@ import { Breadcrumbs, Button, IconButton } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BookingCalendar, DoctorsCard } from 'src/components';
+import { ApplyPromoCode, BookingCalendar, DoctorsCard } from 'src/components';
 import {
   AppLinkExternal,
   AppNavLink,
@@ -142,13 +142,7 @@ const ChooseAppointment = () => {
                 </AppLinkExternal>{' '}
                 for retrieval.
               </AppTypography>
-              <ContentContainer className="w-full lg:w-auto mt-2 lg:mt-0">
-                <AppTypography
-                  variant="small"
-                  className="font-medium text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75">
-                  + Add Promo Code
-                </AppTypography>
-              </ContentContainer>
+              <ApplyPromoCode />
             </ContentContainer>
           </ContentContainer>
 

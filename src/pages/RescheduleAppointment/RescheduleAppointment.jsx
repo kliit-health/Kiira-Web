@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BookingCalendar, DoctorsCard, Loader } from 'src/components';
+import { ApplyPromoCode, BookingCalendar, DoctorsCard, Loader } from 'src/components';
 import {
   AppButton,
   AppLinkExternal,
@@ -87,24 +87,14 @@ const RescheduleAppointment = () => {
           '\n 🚀 ~ file: RescheduleAppointment.jsx:66 ~ handleReschedule ~ response:',
           response
         );
-        Swal.fire({
+        Toast.fire({
           icon: 'success',
-          title: response?.data?.message,
           html: `<div className='text-xs'>Booking appointment has been rescheduled successfully</div>`,
-          confirmButtonColor: 'blue',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate(ROUTES.INDEX, { replace: true });
-          }
+          width: '80vw'
         });
+        setTimeout(() => {
+          navigate(ROUTES.HISTORY, { replace: true });
+        }, 2500);
         return;
       },
       onError: (error) => {
@@ -219,13 +209,8 @@ const RescheduleAppointment = () => {
                 </AppLinkExternal>{' '}
                 for retrieval.
               </AppTypography>
-              <ContentContainer className="w-full lg:w-auto mt-2 lg:mt-0">
-                <AppTypography
-                  variant="small"
-                  className="font-medium text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75">
-                  + Add Promo Code
-                </AppTypography>
-              </ContentContainer>
+
+              <ApplyPromoCode />
             </ContentContainer>
           </ContentContainer>
 

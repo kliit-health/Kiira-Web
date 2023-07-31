@@ -177,6 +177,12 @@ export const CalendarWrapper = styled(ContentContainer)`
     font-size: 1.25rem;
   }
 
+  .Calendar__sectionWrapper {
+    position: relative;
+    min-height: 32em;
+    overflow: hidden;
+  }
+
   @media (min-width: 768px) and (max-width: 1440px) {
     .Calendar__monthYear.-shown {
       /* transform: translateX(-120%); */

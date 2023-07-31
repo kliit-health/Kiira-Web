@@ -1,5 +1,5 @@
 import { Breadcrumbs } from '@material-tailwind/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader } from 'src/components';
 import {
   AppButton,
@@ -16,7 +16,6 @@ import { useChangePassword, useProfile } from 'src/queries/queryHooks';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
 

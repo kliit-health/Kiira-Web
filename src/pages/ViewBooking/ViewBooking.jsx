@@ -28,7 +28,7 @@ import { ScrollToTop, Toast } from 'src/utils';
 import { useAppointmentHistoryByID, useCancelAppointment } from 'src/queries/queryHooks';
 import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
-import { Empty } from 'src/components';
+import { Empty, SaveBooking } from 'src/components';
 import { ConfirmBooking } from '..';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
@@ -38,38 +38,13 @@ const ViewBooking = () => {
   const location = useLocation();
   const queryClient = useQueryClient();
   const downloadRef = useRef(null);
-  const [hiddenElement, setHiddenElement] = useState(false);
+
   const { id } = useParams();
   const { data, isLoading, refetch } = useAppointmentHistoryByID(id);
   const booking = data?.data?.booking;
 
   const { mutate, isLoading: cancelLoading } = useCancelAppointment();
   // const booking = location?.state;
-
-  const downloadPdfDocument = async () => {
-    if (isEmpty(downloadRef?.current)) return;
-    const element = downloadRef?.current;
-
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      format: 'a4',
-      unit: 'px'
-    });
-    const data = await html2canvas(element, {
-      scrollX: -window.scrollX,
-      scrollY: -window.scrollY,
-      windowWidth: document.documentElement.offsetWidth,
-      windowHeight: document.documentElement.offsetHeight
-    });
-    const img = data.toDataURL('image/png');
-    const imgProperties = pdf.getImageProperties(img);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
-    pdf.addImage(img, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Kiira Appointment - ${moment(booking?.datetime).format('MMM D, YYYY')}.pdf`);
-    console.log('i got here');
-    setHiddenElement(false);
-  };
 
   const handleCancelAppointment = () => {
     if (!booking?.appointment?.canClientReschedule) {
@@ -167,9 +142,7 @@ const ViewBooking = () => {
                   className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
                   Appointment Cancelled
                 </Button>
-              ) : booking?.status === 'payment_ticketed' &&
-                !hiddenElement &&
-                !booking?.appointment?.canceled ? (
+              ) : booking?.status === 'payment_ticketed' && !booking?.appointment?.canceled ? (
                 <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                   <Button
                     disabled={!booking?.appointment?.canClientReschedule}
@@ -259,17 +232,7 @@ const ViewBooking = () => {
                       <ShareIcon />
                     </IconButton>
 
-                    <Button
-                      className="capitalize bg-kiiraBlue shadow-none hover:shadow-none flex items-center justify-center"
-                      size="md"
-                      onClick={async () => {
-                        setHiddenElement(true);
-                        setTimeout(() => {
-                          downloadPdfDocument();
-                        }, 50);
-                      }}>
-                      Download
-                    </Button>
+                    <SaveBooking booking={booking} />
                   </ContentContainer>
                 </ContentContainer>
               ) : null}
@@ -328,7 +291,7 @@ const ViewBooking = () => {
 
                 <ContentContainer className="bg-kiiraBg2 gap-1 h-full justify-between p-3 flex-wrap lg:flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-hidden">
                   <ContentContainer className="gap-2">
-                    <p className="text-sm md:text-base overflow-auto break-words ">
+                    <p className="text-sm md:text-base overflow-auto break-words">
                       <b className="font-bold">Booking ID: </b>{' '}
                       <span className="">{booking?.id}</span>
                     </p>

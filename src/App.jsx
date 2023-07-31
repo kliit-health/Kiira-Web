@@ -2,7 +2,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Router } from './routes';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@material-tailwind/react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
+import { GOOGLE_CLIENT_ID } from './utils/constants';
 
 function App() {
   const queryClient = new QueryClient({
@@ -15,12 +17,14 @@ function App() {
     }
   });
   return (
-    <QueryClientProvider client={queryClient}>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <Router />
         </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 }
 

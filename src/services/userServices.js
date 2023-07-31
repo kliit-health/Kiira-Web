@@ -33,3 +33,8 @@ export const addSubscriptionCard = async (data) => {
   const res = await Api.payment.addSubscriptionCard(data);
   return res;
 };
+
+export const contactDoctor = async (data) => {
+  const res = await Api.user.contactDoctor(data);
+  return res;
+};

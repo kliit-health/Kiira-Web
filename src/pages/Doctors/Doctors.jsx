@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogBody } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { DoctorsCard, Empty, SearchInput } from 'src/components';
+import { DoctorsCard, EmailForm, Empty, SearchInput } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import { useAppointmentTypes, useDoctorsCalendars } from 'src/queries/queryHooks';
@@ -13,10 +13,10 @@ const Doctors = () => {
   const doctors = data?.data?.calendars ?? [];
 
   const [searchText, setSearchText] = useState('');
-  // const [doctorList, setDoctorList] = useState(doctors);
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
 
   useEffect(() => {
+    if (isEmpty(doctors)) return;
     setFilteredDoctors(doctors);
   }, [doctors]);
 
@@ -29,7 +29,7 @@ const Doctors = () => {
     searchFilter(text, 'name', setSearchText, doctors, setFilteredDoctors);
   };
 
-  const { data: appointmentTypes, isLoading: typesLoading, error } = useAppointmentTypes();
+  const { data: appointmentTypes } = useAppointmentTypes();
   const appointment_types = appointmentTypes?.data?.appointment_types ?? [];
   const [docAppointmentType, setDocAppointmentType] = useState([]);
 
@@ -95,11 +95,6 @@ const Doctors = () => {
                         const filteredDocAppointment = appointment_types?.filter((elem) =>
                           elem?.calendarIDs?.find((id) => doc?.id === id)
                         );
-                        console.log(
-                          '\n 🚀 ~ file: Doctors.jsx:97 ~ ?filteredDoctors?.map ~ doc?.id:',
-                          doc?.id
-                        );
-
                         setDocAppointmentType(filteredDocAppointment);
                         setOpen(true);
                       }}
@@ -109,33 +104,40 @@ const Doctors = () => {
               : null}
           </div>
         </ContentContainer>
+
         {isEmpty(filteredDoctors) && !isLoading ? (
           <ContentContainer className="h-40 w-full">
             <Empty />
           </ContentContainer>
         ) : null}
+
         <Dialog
           open={open}
           handler={handleOpen}
           size="xxl"
-  
           animate={{
             mount: { scale: 1, y: 0 },
             unmount: { scale: 0.9, y: -100 }
           }}>
-          <DialogBody className="min-h-[65vh] p-0">
-            <ContentContainer column width="100%" height="100%" margin="auto" padding="0">
-              <ContentContainer className="w-full py-2 text-center font-poppins flex-row items-center gap-4 flex-wrap">
+          <DialogBody className="min-h-[65vh] h-full p-0">
+            <ContentContainer
+              column
+              width="100%"
+              height="100%"
+              margin="auto"
+              padding="0"
+              className="xl:max-w-screen-2xl lg:relative">
+              <ContentContainer className="w-full p-2 text-center font-poppins flex-row items-center justify-center gap-2 flex-wrap">
                 <Button
-                  size="md"
+                  size="sm"
                   variant="text"
-                  className="max-w-max text-blue-700 hover:bg-gray-100 pl-2 capitalize"
+                  className="lg:absolute lg:left-4 max-w-max text-orange-900 hover:bg-gray-100 capitalize gap-1 inline-flex items-center"
                   onClick={() => {
                     setSelectedDoctor({});
                     setDocAppointmentType([]);
                     handleOpen();
                   }}>
-                  <i className="fa fa-long-arrow-left" aria-hidden="true"></i> Reselect doctor
+                  <i className="fa fa-long-arrow-left" aria-hidden="true"></i>Go Back
                 </Button>
                 <ContentContainer className="py-2 text-center font-poppins flex-row items-center justify-center flex-wrap">
                   <AppTypography variant="h4" className="text-md text-kiiraText">
@@ -144,11 +146,22 @@ const Doctors = () => {
                   <span className="max-w-max text-kiiraBlue p-0 pl-2 font-bold text-md">
                     {selectedDoctor?.name}
                   </span>
-                  ?
                 </ContentContainer>
               </ContentContainer>
               {isEmpty(docAppointmentType) ? (
-                <Empty label="Not Available" />
+                <ContentContainer className="w-full gap-4 items-center justify-center p-4 overflow-hidden overflow-y-auto">
+                  <AppTypography
+                    variant="h6"
+                    className="font-semibold text-sm text-orange-900 text-center">
+                    No appointment available for {selectedDoctor?.name} at this time
+                  </AppTypography>
+                  <AppTypography
+                    variant="small"
+                    className="text-kiiraText font-semibold text-center">
+                    Would you like to contact doctor via email instead?
+                  </AppTypography>
+                  <EmailForm contact={selectedDoctor} />
+                </ContentContainer>
               ) : (
                 <BookAppointment
                   docAppointmentType={docAppointmentType}

@@ -23,6 +23,9 @@ import Empty from './shared/Empty/Empty';
 import BlogItem from './BlogItem/BlogItem';
 import DynamicForms from './DynamicForms/DynamicForms';
 import DefaultFormInput from './DefaultFormInput/DefaultFormInput';
+import EmailForm from './EmailForm/EmailForm';
+import ApplyPromoCode from './ApplyPromoCode/ApplyPromoCode';
+import SaveBooking from './SaveBooking/SaveBooking';
 
 export {
   AppNavBar,
@@ -47,5 +50,8 @@ export {
   Empty,
   BlogItem,
   DynamicForms,
-  DefaultFormInput
+  DefaultFormInput,
+  EmailForm,
+  ApplyPromoCode,
+  SaveBooking
 };

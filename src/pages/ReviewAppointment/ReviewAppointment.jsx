@@ -2,7 +2,7 @@ import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
+import { ApplyPromoCode, BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
 import {
   AppButton,
   AppLink,
@@ -18,7 +18,6 @@ import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { truncate } from 'src/utils/truncate';
-import Swal from 'sweetalert2';
 
 const ReviewAppointment = () => {
   const navigate = useNavigate();
@@ -226,13 +225,7 @@ const ReviewAppointment = () => {
             </ContentContainer>
 
             <ContentContainer className="flex flex-row gap-1 rounded-xl items-center w-full md:w-auto justify-center md:justify-end  p-4">
-              <AppLink to="#" className="w-full lg:w-auto mt-2 lg:mt-0">
-                <AppTypography
-                  variant="small"
-                  className="font-medium text-kiiraBlue text-center text-sm">
-                  + Add Promo Code
-                </AppTypography>
-              </AppLink>
+              <ApplyPromoCode />
             </ContentContainer>
           </ContentContainer>
 

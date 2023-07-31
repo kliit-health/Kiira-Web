@@ -1,5 +1,6 @@
 import isEmpty from 'src/utils/isEmpty';
 import ApiHandler from './ApiHandler';
+import { data } from 'autoprefixer';
 
 const Api = {
   auth: {
@@ -16,7 +17,8 @@ const Api = {
     // logout: (data) => ApiHandler.post(`/auth/logout`, data),
   },
   user: {
-    getProfile: () => ApiHandler.get(`/users/profile`)
+    getProfile: () => ApiHandler.get(`/users/profile`),
+    contactDoctor: (data) => ApiHandler.post(`/users/contact/email`, data)
   },
   bookings: {
     getProducts: () => ApiHandler.get(`/products`),
@@ -59,7 +61,7 @@ const Api = {
     confirmPayment: (id) => ApiHandler.get(`/appointments/book/confirmation/${id}`),
     viewSavedCards: () => ApiHandler.get(`/users/saved-card`),
     deleteSavedCards: () => ApiHandler.delete(`/users/saved-card`),
-    addSubscriptionCard: (data) => ApiHandler.put(`/users/saved-card`, data),
+    addSubscriptionCard: (data) => ApiHandler.put(`/users/saved-card`, data)
   }
 };
 
