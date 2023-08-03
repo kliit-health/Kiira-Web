@@ -29,3 +29,14 @@ export const verifyEmail = async (data) => {
   const res = await Api.auth.verifyEmail(data);
   return res;
 };
+
+export const signinWithGoogle = async (data) => {
+  const res = await Api.auth.signinWithGoogle(data);
+  return res;
+};
+
+export const signupWithGoogle = async (data) => {
+  const res = await Api.auth.signupWithGoogle(data);
+  return res;
+};
+

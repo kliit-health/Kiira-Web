@@ -4,13 +4,14 @@ import { Alert, Button, Card, Input, Textarea } from '@material-tailwind/react';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
-import { object } from 'prop-types';
+import { func, object } from 'prop-types';
 import { useContactDoctor } from 'src/queries/queryHooks';
 import { Loader } from '..';
-import { IMAGES } from 'src/data';
+import { InfinitySpin } from 'react-loader-spinner';
 
-const EmailForm = ({ contact }) => {
+const EmailForm = ({ contact, onSuccessCallback }) => {
   const [err, setError] = useState({ e: false, message: '' });
+  const [message, setMessage] = useState({ show: false, description: '' });
   const { mutate, isLoading } = useContactDoctor();
 
   const {
@@ -21,12 +22,12 @@ const EmailForm = ({ contact }) => {
     formState: { errors }
   } = useForm();
 
-  const messageValue = watch('message');
+  const messageValue = watch('content');
 
   const onSubmit = (data) => {
     const payload = {
       ...data,
-      doctorID: contact?.id
+      calendarID: contact?.id
     };
     setError({
       e: false,
@@ -34,11 +35,18 @@ const EmailForm = ({ contact }) => {
     });
     mutate(payload, {
       onSuccess: (response) => {
-        reset({ subject: '', message: '' });
-        Toast.fire({
-          icon: 'success',
-          title: response?.data?.message
+        reset({ title: '', content: '' });
+        setMessage({
+          show: true,
+          description: `Email was sent successfully.`
         });
+        setTimeout(() => {
+          Toast.fire({
+            icon: 'success',
+            title: `Email sent successfully.`
+          });
+        }, 1500);
+        onSuccessCallback();
       },
       onError: (error) => {
         console.log('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
@@ -60,31 +68,30 @@ const EmailForm = ({ contact }) => {
             <Input
               required
               size="lg"
-              label="Subject"
-              name="subject"
-              error={!isEmpty(errors.subject)}
-              {...register('subject', {
+              label="Title"
+              name="title"
+              error={!isEmpty(errors.title)}
+              {...register('title', {
                 required: 'Kindly input the subject of this mail.'
               })}
             />
-            {errors.subject && (
+            {errors.title && (
               <ContentContainer className="text-red-500 font-medium text-xs">
-                {errors.subject.message}
+                {errors.title.message}
               </ContentContainer>
             )}
           </ContentContainer>
           <ContentContainer>
             <Textarea
               rows={11}
-              type="password"
               size="lg"
               label="Message"
-              value={messageValue?.message}
-              name="message"
-              {...register('message', {
+              value={messageValue?.content}
+              name="content"
+              {...register('content', {
                 required: 'Message content required'
               })}
-              error={!isEmpty(errors.message)}
+              error={!isEmpty(errors.content)}
             />
             {messageValue?.length > 0 ? (
               <AppTypography
@@ -97,9 +104,9 @@ const EmailForm = ({ contact }) => {
                 {messageValue?.length}/650
               </AppTypography>
             ) : null}
-            {errors.message && (
+            {errors.content && (
               <ContentContainer className="text-red-500 font-medium text-xs">
-                {errors.message.message}
+                {errors.content.message}
               </ContentContainer>
             )}
           </ContentContainer>
@@ -122,17 +129,33 @@ const EmailForm = ({ contact }) => {
           }>
           {err.message}
         </Alert>
+        <Alert
+          open={message?.show}
+          className="text-white flex items-center font-bold text-sm"
+          color="green"
+          icon={<i className="fa-solid fa-envelope-circle-check text-xl/"></i>}>
+          {message.description}
+        </Alert>
         <ContentContainer row className="flex gap-4 justify-end mt-3">
           <Button
             size="sm"
             color="red"
             variant="text"
             className="rounded-md"
-            onClick={() => reset({ subject: '', message: '' })}>
-            Cancel
+            onClick={() => {
+              reset({ title: '', content: '' });
+              setError({ e: false, message: '' });
+              setMessage({ show: false, description: '' });
+            }}>
+            Clear all
           </Button>
           {isLoading ? (
-            <Loader size="sm" fullWidth={false} />
+            <Loader
+              spinner={<InfinitySpin color="#fff" />}
+              size="sm"
+              fullWidth={false}
+              className="w-28 h-8 px-4 py-2"
+            />
           ) : (
             <AppButton size="sm" className="px-12" type="submit">
               Send
@@ -152,9 +175,11 @@ const EmailForm = ({ contact }) => {
 export default EmailForm;
 
 EmailForm.propTypes = {
-  contact: object
+  contact: object,
+  onSuccessCallback: func
 };
 
 EmailForm.defaultProps = {
-  contact: {}
+  contact: {},
+  onSuccessCallback: () => {}
 };

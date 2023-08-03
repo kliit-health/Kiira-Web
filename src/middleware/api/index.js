@@ -10,7 +10,9 @@ const Api = {
     verifyEmail: (data) => ApiHandler.post(`/users/verify/email`, data),
     forgotPassword: (data) => ApiHandler.patch(`/users/forgot-password`, data),
     resetPassword: (data) => ApiHandler.patch(`/users/reset-password`, data),
-    changePassword: (data) => ApiHandler.patch(`/users/change-password`, data)
+    changePassword: (data) => ApiHandler.patch(`/users/change-password`, data),
+    signinWithGoogle: (data) => ApiHandler.post(`/users/sign-in/google`, data),
+    signupWithGoogle: (data) => ApiHandler.post(`/users/sign-up/google`, data)
     // refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
     // signInSocial: (token) =>
     //   ApiHandler.get(`/auth/socials/redirect?idToken=${token}`),
@@ -18,7 +20,7 @@ const Api = {
   },
   user: {
     getProfile: () => ApiHandler.get(`/users/profile`),
-    contactDoctor: (data) => ApiHandler.post(`/users/contact/email`, data)
+    contactDoctor: (data) => ApiHandler.post(`/calendars/contact`, data)
   },
   bookings: {
     getProducts: () => ApiHandler.get(`/products`),

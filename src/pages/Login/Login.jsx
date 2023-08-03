@@ -10,7 +10,7 @@ import {
 } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
-import { useLogin } from 'src/queries/queryHooks';
+import { useLogin, useSigninWithGoogle } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import { useForm } from 'react-hook-form';
 import isEmpty from 'src/utils/isEmpty';
@@ -30,6 +30,7 @@ const Login = () => {
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useLogin();
+  const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSigninWithGoogle();
 
   const {
     register,
@@ -186,7 +187,54 @@ const Login = () => {
             data-content="Or login with"
           />
 
-          <SocialAuth />
+          <SocialAuth
+            onGoogleAuthSuccess={(response) => {
+              console.log('\n 🚀 ~ file: Login.jsx:191 ~ Login ~ response:', response);
+              const data = { accessToken: response };
+
+              mutateGoogleAuth(data, {
+                onSuccess: (response) => {
+                  console.log("\n 🚀 ~ file: Login.jsx:197 ~ Login ~ response:", response)
+                  queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
+                  queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
+
+                  setStoredEmail({ email: data?.email });
+                  Auth.setUser(response.data?.user);
+                  Auth.setToken(response.data?.token);
+
+                  Toast.fire({
+                    icon: 'success',
+                    title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
+                  });
+
+                  const { user } = response?.data;
+
+                  if (!user?.is_email_verified) {
+                    const emailData = {
+                      email: response.data?.user?.email
+                    };
+                    Api.auth.resendVerification(emailData);
+                    navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
+                    return;
+                  }
+
+                  navigate(previousLocation, { replace: true });
+                  return;
+                },
+                onError: (error) => {
+                  console.log(
+                    '\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:',
+                    error,
+                    error?.response
+                  );
+                  Toast.fire({
+                    icon: 'error',
+                    title: error.response?.data?.message
+                  });
+                }
+              });
+            }}
+          />
         </CardBody>
       </Card>
     </AuthLayout>

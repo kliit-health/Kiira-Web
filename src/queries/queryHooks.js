@@ -5,7 +5,9 @@ import {
   forgotPassword,
   login,
   resetPassword,
+  signinWithGoogle,
   signup,
+  signupWithGoogle,
   verifyEmail
 } from 'src/services/authServices';
 import {
@@ -311,3 +313,22 @@ export const useContactDoctor = () => {
   });
   return data;
 };
+export const useSigninWithGoogle = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return signinWithGoogle(data);
+    }
+  });
+  return data;
+  
+}
+
+export const useSignupWithGoogle = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return signupWithGoogle(data);
+    }
+  });
+  return data;
+  
+}

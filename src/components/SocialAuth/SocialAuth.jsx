@@ -4,8 +4,9 @@ import { ReactComponent as GoogleIcon } from 'src/assets/icons/google.svg';
 import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { Button } from '@material-tailwind/react';
 import { GoogleLogin } from '@react-oauth/google';
+import { func } from 'prop-types';
 
-const SocialAuth = () => {
+const SocialAuth = ({ onGoogleAuthSuccess, onGoogleAuthFailed }) => {
   return (
     <>
       <div className="flex flex-row justify-center w-full gap-5">
@@ -20,10 +21,16 @@ const SocialAuth = () => {
           logo_alignment="left"
           theme="filled_blue"
           onSuccess={(credentialResponse) => {
-            console.log(credentialResponse);
+            console.log(
+              '\n 🚀 ~ file: SocialAuth.jsx:23 ~ SocialAuth ~ credentialResponse:',
+              credentialResponse
+            );
+            onGoogleAuthSuccess(credentialResponse);
           }}
-          onError={() => {
+          onError={(err) => {
+            console.log('\n 🚀 ~ file: SocialAuth.jsx:26 ~ SocialAuth ~ err:', err);
             console.log('Login Failed');
+            onGoogleAuthFailed(err);
           }}
         />
         {/* <Button
@@ -37,3 +44,13 @@ const SocialAuth = () => {
 };
 
 export default SocialAuth;
+
+SocialAuth.propTypes = {
+  onGoogleAuthSuccess: func,
+  onGoogleAuthFailed: func
+};
+
+SocialAuth.defaultProps = {
+  onGoogleAuthFailed: () => {},
+  onGoogleAuthSuccess: () => {}
+};

@@ -160,7 +160,7 @@ const Doctors = () => {
                     className="text-kiiraText font-semibold text-center">
                     Would you like to contact doctor via email instead?
                   </AppTypography>
-                  <EmailForm contact={selectedDoctor} />
+                  <EmailForm contact={selectedDoctor} onSuccessCallback={handleOpen} />
                 </ContentContainer>
               ) : (
                 <BookAppointment
