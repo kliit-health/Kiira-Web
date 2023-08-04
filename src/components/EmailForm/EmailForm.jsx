@@ -49,7 +49,7 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
         onSuccessCallback();
       },
       onError: (error) => {
-        console.log('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
+        console.error('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
         setError({
           e: true,
           message: error.response?.data?.message || 'An error occurred, please try again later.'

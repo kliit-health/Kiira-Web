@@ -162,12 +162,12 @@ const Login = () => {
             </div>
 
             {isLoading || isLoadingGoogleAuth ? (
-              <Loader className="mt-4" />
+              <Loader className="mt-6" />
             ) : (
               <AppButton
                 size="md"
                 background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
-                className="text-sm font-medium text-white capitalize shadow-transparent"
+                className="text-sm font-medium text-white capitalize shadow-transparent mt-6"
                 fullWidth
                 type="submit">
                 login

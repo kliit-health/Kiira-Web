@@ -56,7 +56,7 @@ const ChangePassword = () => {
         navigate(ROUTES.LOGIN);
       },
       onError: (error) => {
-        console.log(' \n 🚀 ~ file: ResetPassword.jsx:53 ~ onSubmit ~ error:', error);
+        // console.log(' \n 🚀 ~ file: ResetPassword.jsx:53 ~ onSubmit ~ error:', error);
 
         Toast.fire({
           icon: 'error',

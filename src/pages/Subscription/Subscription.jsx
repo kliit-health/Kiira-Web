@@ -54,10 +54,6 @@ const Subscription = () => {
       {
         onSuccess: (response) => {
           queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY, KEYS.PROFILE] });
-          console.log(
-            '\n 🚀 ~ file: Subscription.jsx:47 ~ handleCancelSubscription ~ response:',
-            response
-          );
           Toast.fire({
             icon: 'success',
             title: `Subscription cancelled successfully`
@@ -67,10 +63,7 @@ const Subscription = () => {
           Auth.setUser(profile);
         },
         onError: (error) => {
-          console.log(
-            '\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:',
-            error
-          );
+         
           Toast.fire({
             icon: 'error',
             title: error.response?.data?.message

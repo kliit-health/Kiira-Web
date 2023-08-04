@@ -36,7 +36,6 @@ const RescheduleAppointment = () => {
   }, [error]);
 
   const doctors = data?.data?.calendars;
-  // console.log("\n 🚀 ~ file: RescheduleAppointment.jsx:37 ~ RescheduleAppointment ~ doctors:", doctors)
   const [doctorState, setDoctorState] = useState(location.state?.doctor);
   const [rescheduleData, setRescheduleData] = useState({});
 
@@ -46,21 +45,9 @@ const RescheduleAppointment = () => {
   useEffect(() => {
     if (isEmpty(doctors)) return;
     if (isEmpty(service)) return;
-    // const r = doctors?.filter((elem) => service?.appointment_type?.calendarIDs?.find((id) => elem?.id === id));
-    // console.log('\n 🚀 ~ file: RescheduleAppointment.jsx:55 ~ useEffect ~ r:', r);
     const doc = doctors?.find((elem) => {
-      console.log('\n 🚀 ~ file: RescheduleAppointment.jsx:50 ~ doc ~ elem:', elem);
       return elem?.id == service?.appointment?.calendarID;
     });
-    console.log(
-      '\n 🚀 ~ file: RescheduleAppointment.jsx:46 ~ RescheduleAppointment ~ doc:',
-      doc,
-      service?.appointment?.calendarID
-    );
-    console.log(
-      '\n 🚀 ~ file: RescheduleAppointment.jsx:46 ~ RescheduleAppointment ~ doctors:',
-      doctors
-    );
     setDoctorState(doc);
   }, [id, doctors, service]);
 
@@ -83,10 +70,6 @@ const RescheduleAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        console.log(
-          '\n 🚀 ~ file: RescheduleAppointment.jsx:66 ~ handleReschedule ~ response:',
-          response
-        );
         Toast.fire({
           icon: 'success',
           html: `<div className='text-xs'>Booking appointment has been rescheduled successfully</div>`,

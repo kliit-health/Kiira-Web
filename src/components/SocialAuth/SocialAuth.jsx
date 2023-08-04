@@ -49,7 +49,6 @@ const SocialAuth = ({
           }}
           onError={(err) => {
             console.log('\n 🚀 ~ file: SocialAuth.jsx:26 ~ SocialAuth ~ err:', err);
-            console.log('Login Failed');
             onGoogleAuthFailed(err);
           }}
         />

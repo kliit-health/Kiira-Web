@@ -149,12 +149,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
       });
 
       if (result.error) {
-        console.log(
-          '\n 🚀 ~ file: PaymentCard.jsx:136 ~ handleCardTokenisation ~ result.error:',
-          result.error,
-          result.error.code
-        );
-
         setLoading(false);
         setError({
           e: true,
@@ -180,11 +174,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               },
               {
                 onSuccess: (response) => {
-                  console.log(
-                    '\n 🚀 ~ file: PaymentCard.jsx:183 ~ handleCardTokenisation ~ mutateAddCard response:',
-                    response
-                  );
-
                   elements.getElement(CardNumberElement).clear();
                   elements.getElement(CardExpiryElement).clear();
                   elements.getElement(CardCvcElement).clear();
@@ -198,10 +187,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                   dismissHandler();
                 },
                 onError: (error) => {
-                  console.log(
-                    '\n 🚀 ~ file: PaymentCard.jsx:184 ~ handleCardTokenisation ~ error:',
-                    error
-                  );
                   setError({
                     e: true,
                     message: error.response?.data?.message
@@ -231,10 +216,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 dismissHandler();
               },
               onError: (error) => {
-                console.log(
-                  '\n 🚀 ~ file: PaymentCard.jsx:184 ~ handleCardTokenisation ~ error:',
-                  error
-                );
                 setError({
                   e: true,
                   message: error.response?.data?.message
@@ -243,11 +224,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             });
       }
     } catch (error) {
-      console.log('\n 🚀 ~ file: PaymentCard.jsx:152 ~ handleCardTokenisation ~ error:', error);
-      console.log(
-        '\n 🚀 ~ file: PaymentCard.jsx:155 ~ handleCardTokenisation ~ error.response:',
-        error.response
-      );
       setError({
         e: true,
         message: error.response ? error.response?.data?.title : error?.toString()

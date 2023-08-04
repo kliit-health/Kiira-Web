@@ -27,7 +27,6 @@ import { useAppointmentHistoryByID, useCancelAppointment } from 'src/queries/que
 import QRCode from 'react-qr-code';
 import { ThreeDots } from 'react-loader-spinner';
 import { Empty, SaveBooking } from 'src/components';
-import { ConfirmBooking } from '..';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
 
@@ -38,9 +37,8 @@ const ViewBooking = () => {
 
   const { id } = useParams();
   const { data, isLoading, refetch, error } = useAppointmentHistoryByID(id);
-  console.log('\n 🚀 ~ file: ViewBooking.jsx:41 ~ ViewBooking ~ error:', error);
+
   const booking = data?.data?.booking;
-  console.log('\n 🚀 ~ file: ViewBooking.jsx:45 ~ ViewBooking ~ booking:', booking);
 
   const { mutate, isLoading: cancelLoading } = useCancelAppointment();
 

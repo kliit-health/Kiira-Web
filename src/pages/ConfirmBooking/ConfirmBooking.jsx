@@ -25,7 +25,6 @@ const ConfirmBooking = ({ bookingID }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const ref = searchParams.get('ref') || bookingID;
-  console.log('\n 🚀 ~ file: ConfirmBooking.jsx:27 ~ ConfirmBooking ~ ref:', ref);
 
   const { data, isLoading, error, refetch } = useConfirmPayment(ref);
 
