@@ -9,8 +9,8 @@ import {
   PopoverContent,
   PopoverHandler
 } from '@material-tailwind/react';
-import { useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   AppNavLink,
   AppTypography,
@@ -20,8 +20,6 @@ import { IMAGES } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import { DividerIcon, ShareIcon } from 'src/components/shared/AppIcons/AppIcons';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
 import { ScrollToTop, Toast } from 'src/utils';
@@ -35,16 +33,16 @@ import KEYS from 'src/queries/queryKeys';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const queryClient = useQueryClient();
   const downloadRef = useRef(null);
 
   const { id } = useParams();
-  const { data, isLoading, refetch } = useAppointmentHistoryByID(id);
+  const { data, isLoading, refetch, error } = useAppointmentHistoryByID(id);
+  console.log('\n 🚀 ~ file: ViewBooking.jsx:41 ~ ViewBooking ~ error:', error);
   const booking = data?.data?.booking;
+  console.log('\n 🚀 ~ file: ViewBooking.jsx:45 ~ ViewBooking ~ booking:', booking);
 
   const { mutate, isLoading: cancelLoading } = useCancelAppointment();
-  // const booking = location?.state;
 
   const handleCancelAppointment = () => {
     if (!booking?.appointment?.canClientReschedule) {
@@ -117,7 +115,7 @@ const ViewBooking = () => {
         </ContentContainer>
       ) : null}
 
-      {!isLoading && id !== 'undefined' ? (
+      {!isLoading && id !== 'undefined' && !error ? (
         <ContentContainer
           ref={downloadRef}
           className="w-full h-full flex flex-col gap-6 p-2 xl:p-8 rounded-lg">
@@ -399,15 +397,53 @@ const ViewBooking = () => {
         </ContentContainer>
       ) : null}
 
-      {!isLoading && isEmpty(booking) ? (
+      {!isLoading && isEmpty(booking) && !error ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <Empty />
         </ContentContainer>
       ) : null}
 
-      {id === 'undefined' ? (
+      {error ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
-          <Empty label={<ConfirmBooking />} />
+          <Empty
+            label={
+              <ContentContainer className="p-4 md:p-8 md:pb-2 w-full h-full gap-4 bg-kiiraBg2 rounded-2xl  max-w-max">
+                <AppTypography className="text-center">
+                  <i
+                    className="fa fa-exclamation-triangle text-red-500 text-8xl"
+                    aria-hidden="true"></i>
+                </AppTypography>
+                <AppTypography
+                  variant="lead"
+                  color="blue"
+                  className="capitalise text-kiiraDark text-xl font-poppins lg:text-2xl font-medium text-center my-4  w-full">
+                  ERROR
+                </AppTypography>
+                <Alert
+                  variant="gradient"
+                  color="red"
+                  open={true}
+                  className="uppercase whitespace-pre-wrap font-bold"
+                  icon={
+                    <IconButton variant="text" className="">
+                      <i className="fa fa-bullhorn text-white text-2xl" aria-hidden="true"></i>
+                    </IconButton>
+                  }>
+                  <span className="flex flex-row flex-wrap h-full w-full items-center text-center">
+                    {error?.response?.data?.message}
+                  </span>
+                </Alert>
+
+                <Button
+                  variant="text"
+                  onClick={() => navigate(ROUTES.HISTORY, { replace: true })}
+                  className="shadow-transparent mt-auto mb-4"
+                  size="sm">
+                  Return to Booking History
+                </Button>
+              </ContentContainer>
+            }
+          />
         </ContentContainer>
       ) : null}
 

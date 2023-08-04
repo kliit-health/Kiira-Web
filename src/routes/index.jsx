@@ -25,6 +25,7 @@ import {
 } from 'src/pages';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import { AuthProvider } from 'src/contexts/AuthProvider';
+import { PageNotFound } from 'src/components';
 
 export const Router = () => {
   return (
@@ -64,7 +65,7 @@ export const Router = () => {
               />
             </Route>
           </Route>
-          
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

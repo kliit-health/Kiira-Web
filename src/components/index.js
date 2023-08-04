@@ -26,6 +26,7 @@ import DefaultFormInput from './DefaultFormInput/DefaultFormInput';
 import EmailForm from './EmailForm/EmailForm';
 import ApplyPromoCode from './ApplyPromoCode/ApplyPromoCode';
 import SaveBooking from './SaveBooking/SaveBooking';
+import PageNotFound from './PageNotFound/PageNotFound';
 
 export {
   AppNavBar,
@@ -53,5 +54,6 @@ export {
   DefaultFormInput,
   EmailForm,
   ApplyPromoCode,
-  SaveBooking
+  SaveBooking,
+  PageNotFound
 };

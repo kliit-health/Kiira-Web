@@ -8,6 +8,7 @@ import {
   IconButton
 } from '@material-tailwind/react';
 import moment from 'moment-timezone';
+import { string } from 'prop-types';
 import React, { useEffect } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -20,10 +21,11 @@ import { ROUTES } from 'src/routes/Paths';
 import isEmpty from 'src/utils/isEmpty';
 import Swal from 'sweetalert2';
 
-const ConfirmBooking = () => {
+const ConfirmBooking = ({ bookingID }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const ref = searchParams.get('ref');
+  const ref = searchParams.get('ref') || bookingID;
+  console.log('\n 🚀 ~ file: ConfirmBooking.jsx:27 ~ ConfirmBooking ~ ref:', ref);
 
   const { data, isLoading, error, refetch } = useConfirmPayment(ref);
 
@@ -227,3 +229,11 @@ const ConfirmBooking = () => {
 };
 
 export default ConfirmBooking;
+
+ConfirmBooking.propTypes = {
+  bookingID: string
+};
+
+ConfirmBooking.defaultProps = {
+  bookingID: null
+};

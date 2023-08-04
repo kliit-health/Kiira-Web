@@ -177,11 +177,7 @@ export default function InnerNavBar() {
               </ContentContainer>
             ) : (
               <Link to={ROUTES.LOGIN}>
-                <AppButton
-                  variant="text"
-                  className="text-kiiraText bg-kiiraBg3 capitalize font-medium">
-                  Log in
-                </AppButton>
+                <AppButton className="text-white font-bold">Log in</AppButton>
               </Link>
             )}
           </div>
