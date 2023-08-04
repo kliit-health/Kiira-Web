@@ -11,6 +11,7 @@ import moment from 'moment-timezone';
 import { truncate } from 'src/utils/truncate';
 import QRCode from 'react-qr-code';
 import { object } from 'prop-types';
+import { ThreeDots } from 'react-loader-spinner';
 
 const SaveBooking = ({ booking }) => {
   const [open, setOpen] = useState(false);
@@ -21,7 +22,6 @@ const SaveBooking = ({ booking }) => {
     if (isEmpty(downloadRef?.current)) return;
     try {
       const element = downloadRef?.current;
-
       const pdf = new jsPDF({
         orientation: 'portrait',
         format: 'a4',
@@ -54,7 +54,7 @@ const SaveBooking = ({ booking }) => {
           handleOpen();
           setTimeout(() => {
             downloadPdfDocument();
-          }, 25);
+          }, 10);
         }}>
         Download
       </Button>
@@ -66,13 +66,26 @@ const SaveBooking = ({ booking }) => {
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 }
         }}>
-        <DialogBody className="max-h-screen h-full w-full min-w-[1440px] overflow-hidden overflow-y-auto">
-          <IconButton onClick={handleOpen} variant="outlined">
-            <CloseIcon className="font-bold text-orange-900" />
-          </IconButton>
+        <DialogBody className="max-h-screen h-auto w-full min-w-[1440px] overflow-hidden overflow-y-auto relative">
+          <ContentContainer className="h-full w-full absolute z-50 bg-kiiraBlackishGreen/60 items-center justify-center">
+            {' '}
+            <ThreeDots
+              height="180"
+              width="180"
+              radius="9"
+              color="#005eff"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          </ContentContainer>
+
           <ContentContainer
             ref={downloadRef}
-            className={'w-full min-w-[1440px] h-full flex flex-col gap-6 p-5 rounded-lg bg-white'}>
+            className={
+              'w-full min-w-[1440px] max-w-max h-full flex flex-col gap-6 px-8 py-12 rounded-lg bg-white whitespace-normal'
+            }>
             <ContentContainer className="-mb-6">
               <KiiraLogoSvg />
             </ContentContainer>
@@ -80,13 +93,13 @@ const SaveBooking = ({ booking }) => {
               <AppTypography
                 variant="h6"
                 color="blue"
-                className="capitalise text-kiiraBlackishGreen text-xl font-semibold">
+                className="capitalise text-kiiraBlackishGreen text-xl font-semibold tracking-wide">
                 {booking?.appointment_type?.name}
               </AppTypography>
               <ContentContainer className="gap-2">
                 <AppTypography
                   variant="h4"
-                  className="text-right font-montserrat text-kiiraBlue/70 font-bold">
+                  className="text-right font-montserrat text-kiiraBlue/70 font-bold tracking-wide">
                   ${booking?.checkout_session?.amount_total || 0}
                 </AppTypography>
               </ContentContainer>
@@ -96,19 +109,29 @@ const SaveBooking = ({ booking }) => {
               <ContentContainer className="flex-row w-full shadow-none rounded-2xl gap-0 flex-nowrap">
                 <ContentContainer className="w-2/6 m-0 rounded-r-none p-4 justify-between bg-[#E8F0FF] rounded-l-2xl rounded-tr-none flex-col  gap-2 flex-nowrap">
                   <ContentContainer className="w-auto items-start">
-                    <AppTypography variant="h4" color="blue-gray" className="text-2xl">
+                    <AppTypography
+                      variant="h4"
+                      color="blue-gray"
+                      className="text-2xl tracking-wide">
                       {moment(booking?.appointment_datetime).format('ddd MMM D,')}
                     </AppTypography>
-                    <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
+                    <AppTypography
+                      color="gray"
+                      className="text-xs text-kiiraText/80 font-normal tracking-wide">
                       Date
                     </AppTypography>
                   </ContentContainer>
                   <DividerIcon className="rotate-0 w-auto max-w-min " />
                   <ContentContainer className="w-auto items-start">
-                    <AppTypography variant="h4" color="blue-gray" className="text-2xl">
+                    <AppTypography
+                      variant="h4"
+                      color="blue-gray"
+                      className="text-2xl tracking-wide">
                       {moment(booking?.appointment_datetime).format('HH:mm A')}
                     </AppTypography>
-                    <AppTypography color="gray" className="text-xs text-kiiraText/80 font-normal">
+                    <AppTypography
+                      color="gray"
+                      className="text-xs text-kiiraText/80 font-normal tracking-wide">
                       Time
                     </AppTypography>
                   </ContentContainer>
@@ -130,14 +153,14 @@ const SaveBooking = ({ booking }) => {
                       <AppTypography
                         variant="h6"
                         color="blue"
-                        className="text-white text-xs font-semibold font-poppins">
+                        className="text-white text-xs font-semibold font-poppins tracking-wide">
                         {booking?.appointment?.firstName} {booking?.appointment?.lastName}
                       </AppTypography>
                     </ContentContainer>
                     <AppTypography
                       variant="h6"
                       color="blue"
-                      className="text-white text-xs text-right font-normal font-poppins">
+                      className="text-white text-xs text-right font-normal font-poppins tracking-wide">
                       {booking?.appointment_type?.name}
                     </AppTypography>
                   </ContentContainer>
@@ -145,13 +168,13 @@ const SaveBooking = ({ booking }) => {
                   <ContentContainer className="bg-kiiraBg2 gap-1 h-full justify-between p-3 flex-nowrap rounded-br-2xl rounded-bl-2xl md:rounded-bl-none overflow-hidden">
                     <ContentContainer className="gap-2  min-h-max break-words ">
                       <AppTypography className="text-base overflow-auto break-words h-8 w-full">
-                        <b className="font-bold">Booking ID: </b>{' '}
+                        <b className="font-bold tracking-wide">Booking ID: </b>{' '}
                         <span className="">{booking?.id}</span>
                       </AppTypography>
 
                       {!isEmpty(booking?.reference) ? (
                         <AppTypography className="text-base overflow-auto break-words h-8 w-full">
-                          <b className="font-bold">Payment Ref:</b>{' '}
+                          <b className="font-bold tracking-wide">Payment Ref:</b>{' '}
                           <span className="">{booking?.reference}</span>
                         </AppTypography>
                       ) : null}
@@ -159,23 +182,29 @@ const SaveBooking = ({ booking }) => {
                     <ContentContainer className="w-full flex-row gap-1 flex-nowrap justify-between">
                       <ContentContainer>
                         {!isEmpty(booking?.calendar?.name) ? (
-                          <AppTypography variant="h4" color="blue-gray" className="text-2xl my-2">
+                          <AppTypography
+                            variant="h4"
+                            color="blue-gray"
+                            className="text-2xl my-2 tracking-wider">
                             {booking?.calendar?.name}
                           </AppTypography>
                         ) : (
-                          <AppTypography variant="h6" color="blue-gray" className="text-base my-2">
+                          <AppTypography
+                            variant="h6"
+                            color="blue-gray"
+                            className="text-base my-2 tracking-wide">
                             Any available doctor
                           </AppTypography>
                         )}
                         {!isEmpty(booking?.calendar?.description) ? (
                           <AppTypography
                             color="gray"
-                            className="text-xs text-kiiraText/60 font-normal break-words">
-                            {truncate(booking?.calendar?.description, 100)}
+                            className="text-xs text-kiiraText/60 font-normal break-words tracking-wide">
+                            {truncate(booking?.calendar?.description, 275)}
                           </AppTypography>
                         ) : null}
                       </ContentContainer>
-                      <ContentContainer className="h-24 w-24 min-w-[50px] min-h-[50px] ml-auto mt-auto">
+                      <ContentContainer className="w-[200px] h-[100px] ml-auto mt-auto">
                         <QRCode
                           value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
                           size={256}
@@ -189,7 +218,7 @@ const SaveBooking = ({ booking }) => {
               </ContentContainer>
 
               {!isEmpty(booking) ? (
-                <ContentContainer className="flex flex-col gap-4 w-full flex-nowrap whitespace-pre-wrap">
+                <ContentContainer className="flex flex-col gap-4 w-full flex-nowrap whitespace-pre-wrap tracking-wide">
                   {booking?.appointment?.formsText}
                   <ContentContainer className=" bg-kiiraBg2 rounded p-4 flex flex-col gap-1 text-[0.8rem] mb-2">
                     <p className="font-bold uppercase text-kiiraBlackishGreen">
@@ -209,7 +238,7 @@ const SaveBooking = ({ booking }) => {
                     </p>
                     <p>Thank you for your understanding!</p>
                     <p>We are excited to serve you and we look forward to your appointment.</p>
-                    <b> Best, Kiira Team</b>
+                    <b>Best, Kiira Team</b>
                   </ContentContainer>
                 </ContentContainer>
               ) : null}

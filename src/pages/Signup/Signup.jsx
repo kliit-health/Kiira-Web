@@ -2,12 +2,12 @@ import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppPasswordInput, Loader } from 'src/components';
+import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import Api from 'src/middleware/api';
 import Auth from 'src/middleware/storage';
-import { useSignup } from 'src/queries/queryHooks';
+import { useSignup, useSignupWithGoogle } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
@@ -21,6 +21,7 @@ const Signup = () => {
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
 
   const { mutate, isLoading } = useSignup();
+  const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSignupWithGoogle();
 
   const {
     register,
@@ -30,7 +31,6 @@ const Signup = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-
     if (!checked) {
       Toast.fire({
         icon: 'warning',
@@ -55,7 +55,7 @@ const Signup = () => {
         reset();
 
         if (!response.data?.user?.is_email_verified) {
-          navigate(ROUTES.VERIFY_ACCOUNT, {replace: true});
+          navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
           return;
         }
       },
@@ -255,7 +255,7 @@ const Signup = () => {
               </span>
             </div>
 
-            {isLoading ? (
+            {isLoading || isLoadingGoogleAuth ? (
               <Loader />
             ) : (
               <AppButton
@@ -274,6 +274,44 @@ const Signup = () => {
               Login
             </Link>
           </AppTypography>
+
+          <SocialAuth
+            dividerClassName="my-2"
+            dividerText="Or continue with"
+            onGoogleAuthSuccess={(credential) => {
+              const data = { accessToken: credential };
+
+              mutateGoogleAuth(data, {
+                onSuccess: (response) => {
+                  Auth.setUser(response.data?.user);
+                  Auth.setToken(response.data?.token);
+                  setStoredEmail({ email: data?.email });
+                  reset();
+
+                  if (!response.data?.user?.is_email_verified) {
+                    navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
+                    return;
+                  }
+                  Toast.fire({
+                    icon: 'success',
+                    title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
+                  });
+                  navigate(ROUTES.INDEX, { replace: true });
+                },
+                onError: (error) => {
+                  console.log(
+                    '\n 🚀 ~ file: Signup.jsx:307 ~ Signup ~ SocialAuth error:',
+                    error,
+                    error?.response
+                  );
+                  Toast.fire({
+                    icon: 'error',
+                    title: error.response?.data?.message
+                  });
+                }
+              });
+            }}
+          />
         </CardBody>
       </Card>
     </AuthLayout>

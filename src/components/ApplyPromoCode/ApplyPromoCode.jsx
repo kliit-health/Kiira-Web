@@ -5,10 +5,11 @@ import { useLocalStore } from 'src/store';
 import isEmpty from 'src/utils/isEmpty';
 
 const ApplyPromoCode = () => {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(!open);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
   const storedData = useLocalStore((state) => state.storedData);
   const setPromoCode = useLocalStore((state) => state.setStoredData);
+
   return (
     <ContentContainer className="w-full lg:w-auto mt-2 lg:mt-0">
       <Button
@@ -19,17 +20,17 @@ const ApplyPromoCode = () => {
           handleOpen();
         }}
         className="font-medium text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75 capitalize">
-        +{' '}
+    {' '}
         {!isEmpty(storedData?.promoCode) ? (
-          <span className="uppercase font-bold">{storedData?.promoCode} applied</span>
+          <span className="uppercase font-bold text-indigo-400 text-lg">{storedData?.promoCode}</span>
         ) : (
-          'Add Promo Code'
+          '+ Add Promo Code'
         )}
       </Button>
       <Dialog
         open={open}
         handler={handleOpen}
-        size="xl"
+        size={'xl'}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 }
@@ -52,7 +53,7 @@ const ApplyPromoCode = () => {
                 x
               </Button>
             </ContentContainer>
-            <ContentContainer className="w-full h-full items-center justify-center">
+            <ContentContainer className="w-full h-full items-center justify-center py-2 px-4 ">
               <AppTypography
                 variant="h2"
                 className="text-center font-bold text-kiiraText uppercase">

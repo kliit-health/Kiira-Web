@@ -4,6 +4,7 @@ import { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Auth from 'src/middleware/storage';
 import { ROUTES } from 'src/routes/Paths';
+import { googleLogout } from '@react-oauth/google';
 
 // create a context for the auth provider
 export const AuthContext = createContext();
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     Auth?.destroyToken();
+    googleLogout();
     setUser({});
     queryClient.clear();
     navigate(ROUTES.LOGIN);

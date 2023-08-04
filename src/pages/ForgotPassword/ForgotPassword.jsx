@@ -88,12 +88,12 @@ const ForgotPassword = () => {
             )}
 
             {isLoading ? (
-              <Loader className="mt-4" />
+              <Loader className="mt-6" />
             ) : (
               <AppButton
                 size="md"
                 background="linear-gradient(306.23deg, #0A02E2 0%, #00C0E2 102.89%)"
-                className="text-sm font-medium text-white capitalize shadow-transparent mt-4"
+                className="text-sm font-semibold text-white capitalize shadow-transparent mt-6"
                 fullWidth
                 type="submit">
                 Submit
@@ -101,9 +101,7 @@ const ForgotPassword = () => {
             )}
           </form>
 
-          <Divider className="my-4 text-sm text-kiiraText" data-content="Or login with" />
-
-          <SocialAuth />
+          {/* <SocialAuth /> */}
         </CardBody>
       </Card>
     </AuthLayout>

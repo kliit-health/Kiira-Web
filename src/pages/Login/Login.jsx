@@ -161,7 +161,7 @@ const Login = () => {
               </Link>
             </div>
 
-            {isLoading ? (
+            {isLoading || isLoadingGoogleAuth ? (
               <Loader className="mt-4" />
             ) : (
               <AppButton
@@ -182,19 +182,12 @@ const Login = () => {
             </Link>
           </AppTypography>
 
-          <Divider
-            className="my-4 md:my-6 text-xs backdrop:md:text-sm text-kiiraText"
-            data-content="Or login with"
-          />
-
           <SocialAuth
-            onGoogleAuthSuccess={(response) => {
-              console.log('\n 🚀 ~ file: Login.jsx:191 ~ Login ~ response:', response);
-              const data = { accessToken: response };
+            onGoogleAuthSuccess={(credential) => {
+              const data = { accessToken: credential };
 
               mutateGoogleAuth(data, {
                 onSuccess: (response) => {
-                  console.log("\n 🚀 ~ file: Login.jsx:197 ~ Login ~ response:", response)
                   queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
                   queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
 
