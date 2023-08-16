@@ -5,14 +5,16 @@ const useStore = create(
   persist(
     (set) => ({
       email: '',
-      getStoredEmail: () => set((state) => state.email),
       setStoredEmail: (email) => set(() => ({ email: email })),
       bookingData: {},
       getStoredBookingCheckout: () => set((state) => state.bookingData),
       setStoredBookingCheckout: (data) => set(() => ({ bookingData: data })),
       storedData: {},
-      getStoredData: () => set((state) => state.storedData),
-      setStoredData: (data) => set(() => ({ storedData: data }))
+      setStoredData: (data) => set(() => ({ storedData: data })),
+      googleAuthScriptLoaded: false,
+      setGoogleAuthScriptLoaded: (data) => set(() => ({ googleAuthScriptLoaded: data })),
+      coupon: '',
+      setCoupon: (data) => set(() => ({ coupon: data }))
     }),
     {
       name: 'local-store',

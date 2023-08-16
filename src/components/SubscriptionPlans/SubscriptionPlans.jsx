@@ -8,6 +8,7 @@ import moment from 'moment-timezone';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
+import { ApplyPromoCode } from '..';
 
 const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
   const location = useLocation();
@@ -73,11 +74,19 @@ const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
           </AppButton>
         </ContentContainer>
 
+        {!isEmpty(selected) && selected?.id === subscription?.id ? (
+          <ContentContainer column>
+            <ApplyPromoCode />
+          </ContentContainer>
+        ) : null}
+
         {!isEmpty(profile?.subscription_expiry_date) &&
         profile?.subscription_id === subscription?.id &&
         pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
           <AppTypography variant="small" className="text-[0.675rem] text-center text-kiiraText">
-            {moment().isSameOrBefore(profile?.subscription_expiry_date, 'day') ? 'Expires' : 'Expired'}{' '}
+            {moment().isSameOrBefore(profile?.subscription_expiry_date, 'day')
+              ? 'Expires'
+              : 'Expired'}{' '}
             {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
           </AppTypography>
         ) : null}

@@ -8,7 +8,14 @@ import {
   PopoverHandler
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import { DownloadIcon, Empty, PdfIcon, SavedCards, SubscriptionPlans } from 'src/components';
+import {
+  ApplyPromoCode,
+  DownloadIcon,
+  Empty,
+  PdfIcon,
+  SavedCards,
+  SubscriptionPlans
+} from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import {
@@ -63,7 +70,6 @@ const Subscription = () => {
           Auth.setUser(profile);
         },
         onError: (error) => {
-         
           Toast.fire({
             icon: 'error',
             title: error.response?.data?.message

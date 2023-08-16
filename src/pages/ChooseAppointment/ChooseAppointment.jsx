@@ -134,7 +134,7 @@ const ChooseAppointment = () => {
             <ContentContainer className="flex flex-row gap-1 w-full bg-white rounded-xl items-center justify-between p-4 flex-wrap">
               <AppTypography
                 variant="lead"
-                className="text-sm text-justify md:text-sm text-kiiraText w-full lg:w-3/4">
+                className="text-sm text-justify md:text-sm text-kiiraText w-full lg:w-4/6">
                 All Kiira members have a unique membership code that can be applied at checkout for
                 a discount. If you do not have your "unique code", you may email us at{' '}
                 <AppLinkExternal href="mailto:appointments@kiira.io" className="underline">
@@ -142,7 +142,7 @@ const ChooseAppointment = () => {
                 </AppLinkExternal>{' '}
                 for retrieval.
               </AppTypography>
-              <ApplyPromoCode />
+              <ApplyPromoCode disabled />
             </ContentContainer>
           </ContentContainer>
 

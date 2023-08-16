@@ -3,29 +3,37 @@ import { AppLinkExternal, AppTypography, ContentContainer } from '../shared/styl
 import { Button, Dialog, DialogBody, Input } from '@material-tailwind/react';
 import { useLocalStore } from 'src/store';
 import isEmpty from 'src/utils/isEmpty';
+import { bool, string } from 'prop-types';
 
-const ApplyPromoCode = () => {
+const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
-  const storedData = useLocalStore((state) => state.storedData);
-  const setPromoCode = useLocalStore((state) => state.setStoredData);
+  const coupon = useLocalStore((state) => state.coupon);
+  const setCoupon = useLocalStore((state) => state.setCoupon);
 
   return (
     <ContentContainer className="w-full lg:w-auto mt-2 lg:mt-0">
       <Button
+        disabled={disabled}
         variant="text"
         size="sm"
         fullWidth={false}
         onClick={() => {
           handleOpen();
         }}
-        className="font-medium text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75 capitalize">
-    {' '}
-        {!isEmpty(storedData?.promoCode) ? (
-          <span className="uppercase font-bold text-indigo-400 text-lg">{storedData?.promoCode}</span>
+        className="font-semibold text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75 hover:bg-transparent capitalize">
+        {' '}
+        {!isEmpty(coupon?.coupon) && !disabled ? (
+          <span className="font-manrope font-semibold -tracking-wide">
+            Applying coupon -{' '}
+            <span className="uppercase font-bold text-white text-base bg-indigo-500 font-montserrat px-2 py-1 rounded">
+              {coupon?.coupon}
+            </span>
+          </span>
         ) : (
-          '+ Add Promo Code'
-        )}
+          <>{placeholderText} </>
+        )}{' '}
+        <i className="fa-solid fa-gift"></i>
       </Button>
       <Dialog
         open={open}
@@ -46,7 +54,7 @@ const ApplyPromoCode = () => {
               <Button
                 size="md"
                 variant="text"
-                className="text-orange-900 rounded-full border h-8 w-8 p-0 border-orange-900 hover:bg-gray-100 capitalize gap-1 inline-flex items-center justify-center"
+                className="text-orange-900 font-bold font-montserrat rounded-full border h-8 w-8 p-0 border-orange-900 hover:border-yellow-600 hover:border hover:bg-orange-900 hover:text-white capitalize gap-1 inline-flex items-center justify-center"
                 onClick={() => {
                   handleOpen();
                 }}>
@@ -58,7 +66,7 @@ const ApplyPromoCode = () => {
                 variant="h2"
                 className="text-center font-bold text-kiiraText uppercase">
                 {' '}
-                APPLY PROMO CODE
+                {label}
               </AppTypography>
 
               <ContentContainer className="w-full items-center my-5">
@@ -68,9 +76,9 @@ const ApplyPromoCode = () => {
                       required
                       size="lg"
                       label="Coupon Code"
-                      value={storedData?.promoCode || ''}
+                      value={coupon?.coupon || ''}
                       onChange={(e) => {
-                        setPromoCode({ promoCode: e.target.value });
+                        setCoupon({ coupon: e.target.value });
                       }}
                       className="pr-20"
                       containerProps={{
@@ -108,3 +116,14 @@ const ApplyPromoCode = () => {
 };
 
 export default ApplyPromoCode;
+
+ApplyPromoCode.propTypes = {
+  label: string,
+  placeholderText: string,
+  disabled: bool
+};
+ApplyPromoCode.defaultProps = {
+  label: 'APPLY COUPON CODE',
+  placeholderText: '+ Apply Coupon Code',
+  disabled: false
+};

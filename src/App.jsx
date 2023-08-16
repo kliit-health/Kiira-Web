@@ -5,8 +5,10 @@ import { ThemeProvider } from '@material-tailwind/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
 import { GOOGLE_CLIENT_ID } from './utils/constants';
+import { useLocalStore } from './store';
 
 function App() {
+  const setGoogleAuthScriptLoaded = useLocalStore((state) => state.setGoogleAuthScriptLoaded);
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -17,7 +19,14 @@ function App() {
     }
   });
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider
+      clientId={GOOGLE_CLIENT_ID}
+      onScriptLoadSuccess={() => {
+        setGoogleAuthScriptLoaded(true);
+      }}
+      onScriptLoadError={() => {
+        setGoogleAuthScriptLoaded(false);
+      }}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <Router />

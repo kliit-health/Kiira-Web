@@ -225,7 +225,7 @@ const ReviewAppointment = () => {
             </ContentContainer>
 
             <ContentContainer className="flex flex-row gap-1 rounded-xl items-center w-full md:w-auto justify-center md:justify-end  p-4">
-              <ApplyPromoCode />
+              <ApplyPromoCode disabled />
             </ContentContainer>
           </ContentContainer>
 

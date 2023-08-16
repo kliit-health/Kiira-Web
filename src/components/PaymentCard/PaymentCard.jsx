@@ -82,6 +82,8 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
   const { pathname } = location;
   const { refetch: refetchProfileData } = useProfile();
   const selectedPlan = useLocalStore((state) => state.storedData);
+  const couponCode = useLocalStore((state) => state.coupon);
+  const setCoupon = useLocalStore((state) => state.setCoupon);
   const queryClient = useQueryClient();
   const stripe = useStripe();
   const elements = useElements();
@@ -164,7 +166,10 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
       } else {
         const payload = {
           card_token: result.token.id,
-          product_id: selectedPlan?.id
+          product_id: selectedPlan?.id,
+          ...(!isEmpty(selectedPlan?.id) && { product_id: selectedPlan?.id }),
+          ...(!isEmpty(selectedPlan?.id) &&
+            !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
         };
 
         isEmpty(selectedPlan)
@@ -206,6 +211,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                   icon: 'success',
                   title: `Subscription successful`
                 });
+                setCoupon({ coupon: '' });
                 refetchProfileData();
                 if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
                   setTimeout(() => {
@@ -251,8 +257,10 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             variant="h6"
             className="text-black font-poppins font-normal text-xl md:text-3xl ">
             {!isEmpty(selectedPlan) ? (
-              <span className="text-base md:text-2xl">
-                Subscribe to <b className="text-kiiraBlue">{selectedPlan?.name}</b>
+              <span
+                className="text-base md:text-2xl font-semibold">
+                Subscribe to <br />
+                <span className="text-kiiraBlue font-bold">{selectedPlan?.name}</span>
               </span>
             ) : (
               'Add a new Card'

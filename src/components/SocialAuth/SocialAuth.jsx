@@ -6,6 +6,7 @@ import { Button } from '@material-tailwind/react';
 import { GoogleLogin } from '@react-oauth/google';
 import { bool, func, string } from 'prop-types';
 import { Divider } from '../shared/styledComponents';
+import { useLocalStore } from 'src/store';
 
 const SocialAuth = ({
   onGoogleAuthSuccess,
@@ -14,9 +15,11 @@ const SocialAuth = ({
   dividerText,
   dividerClassName
 }) => {
+  const googleAuthScriptLoaded = useLocalStore((state) => state.googleAuthScriptLoaded);
+
   return (
     <>
-      {showDivder ? (
+      {showDivder && googleAuthScriptLoaded ? (
         <Divider
           className={
             dividerClassName

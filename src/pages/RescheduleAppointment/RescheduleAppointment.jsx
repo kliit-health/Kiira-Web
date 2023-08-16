@@ -193,7 +193,7 @@ const RescheduleAppointment = () => {
                 for retrieval.
               </AppTypography>
 
-              <ApplyPromoCode />
+              <ApplyPromoCode  disabled/>
             </ContentContainer>
           </ContentContainer>
 
