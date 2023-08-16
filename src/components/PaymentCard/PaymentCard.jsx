@@ -257,8 +257,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             variant="h6"
             className="text-black font-poppins font-normal text-xl md:text-3xl ">
             {!isEmpty(selectedPlan) ? (
-              <span
-                className="text-base md:text-2xl font-semibold">
+              <span className="text-base md:text-2xl font-semibold">
                 Subscribe to <br />
                 <span className="text-kiiraBlue font-bold">{selectedPlan?.name}</span>
               </span>
@@ -352,6 +351,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
             </Select>
           </SelectWrapper>
         </div>
+
         <div className="flex flex-row flex-nowrap items-center -ml-2.5">
           <Checkbox
             color="indigo"
@@ -380,6 +380,17 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               : 'Subscribe'}
           </Button>
         )}
+        {!isEmpty(couponCode?.coupon) && !isEmpty(selectedPlan) ? (
+          <ContentContainer className="items-center">
+            <span className="font-poppins font-medium -tracking-wide text-brown-600 text-sm text-center">
+              Coupon code{' '}
+              <span className="uppercase font-bold text-white text-sm bg-indigo-500 font-montserrat px-2 py-1 rounded">
+                {couponCode?.coupon}
+              </span>{' '}
+              will be applied.
+            </span>
+          </ContentContainer>
+        ) : null}
 
         <Alert
           open={err.e}
