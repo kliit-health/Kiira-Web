@@ -29,7 +29,7 @@ const RequestAcuityMigration = () => {
           icon: 'success',
           title: `Kindly check your email to continue`
         });
-        navigate(ROUTES.MIGRATE_ACUITY_ACCOUNT);
+        navigate(ROUTES.ACTIVATE_USER);
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: RequestAcuityMigration.jsx:54 ~ onSubmit ~ error:', error);

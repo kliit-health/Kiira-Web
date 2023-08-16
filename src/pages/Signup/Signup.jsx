@@ -68,7 +68,7 @@ const Signup = () => {
 
         if (error.response?.status === 426) {
           setStoredEmail({ email: data?.email });
-          navigate(ROUTES.REQUEST_ACUITY_MIGRATION);
+          navigate(ROUTES.GET_ACTIVATION_CODE);
           return;
         }
       }
@@ -284,7 +284,7 @@ const Signup = () => {
             {/* <AppTypography variant="small" className="text-center">
               You may also click
               <Link
-                to={ROUTES.REQUEST_ACUITY_MIGRATION}
+                to={ROUTES.GET_ACTIVATION_CODE}
                 className="font-bold text-red-700 mx-1 uppercase">
                 here to Activate
               </Link>{' '}

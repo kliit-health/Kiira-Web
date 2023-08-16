@@ -43,7 +43,7 @@ const ForgotPassword = () => {
         });
         if (error.response?.status === 426) {
           setStoredEmail({ email: data?.email });
-          navigate(ROUTES.REQUEST_ACUITY_MIGRATION);
+          navigate(ROUTES.GET_ACTIVATION_CODE);
           return;
         }
       }

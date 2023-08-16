@@ -37,8 +37,8 @@ export const Router = () => {
           <Route index path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.SIGINUP} element={<Signup />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES.REQUEST_ACUITY_MIGRATION} element={<RequestAcuityMigration />} />
-          <Route path={ROUTES.MIGRATE_ACUITY_ACCOUNT} element={<MigrateAcuityUser />} />
+          <Route path={ROUTES.GET_ACTIVATION_CODE} element={<RequestAcuityMigration />} />
+          <Route path={ROUTES.ACTIVATE_USER} element={<MigrateAcuityUser />} />
           <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={ROUTES.VERIFY_ACCOUNT} element={<CodeVerification />} />
 
