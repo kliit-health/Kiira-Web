@@ -3,6 +3,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { MainOutletLayout } from 'src/layouts';
 import { ROUTES } from './Paths';
 import {
+  ActivateAccuityAccount,
   BookAppointment,
   ChangePassword,
   ChooseAppointment,
@@ -14,6 +15,7 @@ import {
   Home,
   Inbox,
   Login,
+  MigrateAcuityUser,
   Profile,
   RescheduleAppointment,
   ResetPassword,
@@ -35,6 +37,8 @@ export const Router = () => {
           <Route index path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.SIGINUP} element={<Signup />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={ROUTES.REQUEST_ACUITY_MIGRATION} element={<ActivateAccuityAccount />} />
+          <Route path={ROUTES.MIGRATE_ACUITY_ACCOUNT} element={<MigrateAcuityUser />} />
           <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
           <Route path={ROUTES.VERIFY_ACCOUNT} element={<CodeVerification />} />
 

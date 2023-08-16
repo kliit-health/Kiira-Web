@@ -4,6 +4,8 @@ import {
   changePassword,
   forgotPassword,
   login,
+  migrateAcuityUser,
+  requestAcuityMigration,
   resetPassword,
   signinWithGoogle,
   signup,
@@ -320,8 +322,7 @@ export const useSigninWithGoogle = () => {
     }
   });
   return data;
-  
-}
+};
 
 export const useSignupWithGoogle = () => {
   const data = useMutation({
@@ -330,5 +331,22 @@ export const useSignupWithGoogle = () => {
     }
   });
   return data;
-  
-}
+};
+
+export const useRequesAcuityMigration = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return requestAcuityMigration(data);
+    }
+  });
+  return data;
+};
+
+export const useMigrateAcuityUser = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return migrateAcuityUser(data);
+    }
+  });
+  return data;
+};

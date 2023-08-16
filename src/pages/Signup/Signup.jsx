@@ -72,7 +72,7 @@ const Signup = () => {
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
-        <CardBody className="flex flex-col h-full gap-4 lg:gap-6 p-4 lg:p-8 overflow-y-auto">
+        <CardBody className="flex flex-col h-full max-h-[83vh] gap-4 lg:gap-6 p-4 lg:p-8 overflow-y-auto">
           <AppTypography variant="h2" className="text-[#252539] font-medium">
             Hello 👋🏽,
           </AppTypography>
@@ -268,15 +268,26 @@ const Signup = () => {
               </AppButton>
             )}
           </form>
-          <AppTypography variant="small" className="flex justify-center flex-wrap -mt-1">
-            Already have an account?
-            <Link to={ROUTES.LOGIN} className="ml-1 font-semibold text-kiiraBlue">
-              Login
-            </Link>
-          </AppTypography>
+          <ContentContainer column className="items-center justify-center gap-2">
+            <AppTypography variant="small" className="flex justify-center flex-wrap -mt-1">
+              Already have an account?
+              <Link to={ROUTES.LOGIN} className="ml-1 font-semibold text-kiiraBlue">
+                Login
+              </Link>
+            </AppTypography>
+            <AppTypography variant="small" className="text-center">
+              You may also click
+              <Link
+                to={ROUTES.REQUEST_ACUITY_MIGRATION}
+                className="font-bold text-red-700 mx-1 uppercase">
+                here to Activate
+              </Link>{' '}
+              your existing Kiira Acuity account
+            </AppTypography>
+          </ContentContainer>
 
           <SocialAuth
-            dividerClassName="my-2"
+            // dividerClassName="my-2"
             dividerText="Or continue with"
             onGoogleAuthSuccess={(credential) => {
               const data = { accessToken: credential };

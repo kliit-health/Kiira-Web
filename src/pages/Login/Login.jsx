@@ -174,13 +174,23 @@ const Login = () => {
               </AppButton>
             )}
           </form>
-
-          <AppTypography variant="small" className="flex justify-center -mt-1">
-            Don't have an account?
-            <Link to={ROUTES.SIGINUP} className="ml-1 font-semibold text-kiiraBlue">
-              Sign up
-            </Link>
-          </AppTypography>
+          <ContentContainer column className="items-center justify-center gap-2">
+            <AppTypography variant="small" className="flex justify-center -mt-1">
+              Don't have an account?
+              <Link to={ROUTES.SIGINUP} className="ml-1 font-semibold text-kiiraBlue">
+                Sign up
+              </Link>
+            </AppTypography>
+            <AppTypography variant="small" className="text-center">
+              You may also click{' '}
+              <Link
+                to={ROUTES.REQUEST_ACUITY_MIGRATION}
+                className="font-bold text-red-700 mx-1 uppercase">
+                here to Activate
+              </Link>{' '}
+              your existing Kiira Acuity account
+            </AppTypography>
+          </ContentContainer>
 
           <SocialAuth
             onGoogleAuthSuccess={(credential) => {

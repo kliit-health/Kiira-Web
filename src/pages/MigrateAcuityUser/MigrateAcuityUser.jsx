@@ -7,28 +7,29 @@ import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
-import { useResetPassword } from 'src/queries/queryHooks';
+import { useMigrateAcuityUser } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
+import { useQueryClient } from '@tanstack/react-query';
+import Auth from 'src/middleware/storage';
 
-const ResetPassword = () => {
+const MigrateAcuityUser = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
- 
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMigrateAcuityUser();
   const getStoredEmail = useLocalStore((state) => state.email);
-  const { mutate, isLoading } = useResetPassword();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors }
-    
   } = useForm();
 
   const onSubmit = (data) => {
-    if (data?.new_password !== data?.confirm_new_password) {
+    if (data?.password !== data?.confirm_password) {
       Toast.fire({
         icon: 'warning',
         title: `Passwords do not match`
@@ -44,11 +45,30 @@ const ResetPassword = () => {
     mutate(payload, {
       onSuccess: (response) => {
         reset();
+        queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
+        queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
+
+        Auth.setUser(response.data?.user);
+        Auth.setToken(response.data?.token);
+
         Toast.fire({
           icon: 'success',
-          title: response?.data?.message
+          title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
         });
-        navigate(ROUTES.LOGIN);
+
+        const { user } = response?.data;
+
+        if (!user?.is_email_verified) {
+          const emailData = {
+            email: response.data?.user?.email
+          };
+          Api.auth.resendVerification(emailData);
+          navigate(ROUTES.VERIFY_ACCOUNT, { replace: true });
+          return;
+        }
+
+        navigate(ROUTES.INDEX, { replace: true });
+        return;
       },
       onError: (error) => {
         Toast.fire({
@@ -101,10 +121,10 @@ const ResetPassword = () => {
               <AppPasswordInput
                 ref={appPasswordRef}
                 autoComplete="off"
-                label="Create Password"
+                label="Password"
                 size="lg"
-                name="new_password"
-                {...register('new_password', {
+                name="password"
+                {...register('password', {
                   required: 'Password is required.',
                   validate: {
                     checkLength: (value) => value.length >= 6
@@ -112,19 +132,19 @@ const ResetPassword = () => {
                     //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
                   }
                 })}
-                error={!isEmpty(errors.new_password)}
+                error={!isEmpty(errors.password)}
               />
-              {errors.new_password && errors.new_password.type === 'required' && (
+              {errors.password && errors.password.type === 'required' && (
                 <ContentContainer className="text-red-500 font-medium text-xs">
-                  {errors.new_password.message}
+                  {errors.password.message}
                 </ContentContainer>
               )}
-              {errors?.new_password?.type === 'checkLength' && (
+              {errors?.password?.type === 'checkLength' && (
                 <ContentContainer className="text-kiiraBlue font-medium text-xs">
                   Password should be at least 6 characters.
                 </ContentContainer>
               )}
-              {errors?.new_password?.type === 'matchPattern' && (
+              {errors?.password?.type === 'matchPattern' && (
                 <ContentContainer className="text-red-500 font-medium text-xs">
                   Password should contain at least one uppercase letter, lowercase letter, digit,
                   and special symbol.
@@ -137,8 +157,8 @@ const ResetPassword = () => {
                 autoComplete="off"
                 label="Re-enter Password"
                 size="lg"
-                name="confirm_new_password"
-                {...register('confirm_new_password', {
+                name="confirm_password"
+                {...register('confirm_password', {
                   required: 'Confirm Password is required.',
                   validate: {
                     checkLength: (value) => value.length >= 6
@@ -146,19 +166,19 @@ const ResetPassword = () => {
                     //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
                   }
                 })}
-                error={!isEmpty(errors.confirm_new_password)}
+                error={!isEmpty(errors.confirm_password)}
               />
-              {errors.confirm_new_password && errors.confirm_new_password.type === 'required' && (
+              {errors.confirm_password && errors.confirm_password.type === 'required' && (
                 <ContentContainer className="text-red-500 font-medium text-xs">
-                  {errors.confirm_new_password.message}
+                  {errors.confirm_password.message}
                 </ContentContainer>
               )}
-              {errors?.confirm_new_password?.type === 'checkLength' && (
+              {errors?.confirm_password?.type === 'checkLength' && (
                 <ContentContainer className="text-kiiraBlue font-medium text-xs">
                   Password should be at least 6 characters.
                 </ContentContainer>
               )}
-              {errors?.confirm_new_password?.type === 'matchPattern' && (
+              {errors?.confirm_password?.type === 'matchPattern' && (
                 <ContentContainer className="text-red-500 font-medium text-xs">
                   Password should contain at least one uppercase letter, lowercase letter, digit,
                   and special symbol.
@@ -185,4 +205,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default MigrateAcuityUser;

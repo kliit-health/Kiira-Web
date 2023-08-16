@@ -12,10 +12,10 @@ const Api = {
     resetPassword: (data) => ApiHandler.patch(`/users/reset-password`, data),
     changePassword: (data) => ApiHandler.patch(`/users/change-password`, data),
     signinWithGoogle: (data) => ApiHandler.post(`/users/sign-in/google`, data),
-    signupWithGoogle: (data) => ApiHandler.post(`/users/sign-up/google`, data)
+    signupWithGoogle: (data) => ApiHandler.post(`/users/sign-up/google`, data),
+    requestAcuityMigration: (data) => ApiHandler.post(`/users/request-migration`, data),
+    migrateAcuityUser: (data) => ApiHandler.post(`/users/migration`, data)
     // refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
-    // signInSocial: (token) =>
-    //   ApiHandler.get(`/auth/socials/redirect?idToken=${token}`),
     // logout: (data) => ApiHandler.post(`/auth/logout`, data),
   },
   user: {

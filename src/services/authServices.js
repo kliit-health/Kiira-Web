@@ -40,3 +40,12 @@ export const signupWithGoogle = async (data) => {
   return res;
 };
 
+export const requestAcuityMigration = async (data) => {
+  const res = await Api.auth.requestAcuityMigration(data);
+  return res;
+};
+
+export const migrateAcuityUser = async (data) => {
+  const res = await Api.auth.migrateAcuityUser(data);
+  return res;
+};

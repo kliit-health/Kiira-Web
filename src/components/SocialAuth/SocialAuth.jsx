@@ -5,7 +5,7 @@ import { ReactComponent as AppleIcon } from 'src/assets/icons/apple.svg';
 import { Button } from '@material-tailwind/react';
 import { GoogleLogin } from '@react-oauth/google';
 import { bool, func, string } from 'prop-types';
-import { Divider } from '../shared/styledComponents';
+import { ContentContainer, Divider } from '../shared/styledComponents';
 import { useLocalStore } from 'src/store';
 
 const SocialAuth = ({
@@ -18,13 +18,13 @@ const SocialAuth = ({
   const googleAuthScriptLoaded = useLocalStore((state) => state.googleAuthScriptLoaded);
 
   return (
-    <>
+    <ContentContainer className='w-full gap-6'>
       {showDivder && googleAuthScriptLoaded ? (
         <Divider
           className={
             dividerClassName
-              ? 'my-4 md:my-6 text-xs backdrop:md:text-sm text-kiiraText ' + dividerClassName
-              : 'my-4 md:my-6 text-xs backdrop:md:text-sm text-kiiraText'
+              ? 'text-xs backdrop:md:text-sm text-kiiraText ' + dividerClassName
+              : 'text-xs backdrop:md:text-sm text-kiiraText'
           }
           data-content={dividerText}
         />
@@ -61,7 +61,7 @@ const SocialAuth = ({
           <AppleIcon />
         </Button> */}
       </div>
-    </>
+    </ContentContainer>
   );
 };
 

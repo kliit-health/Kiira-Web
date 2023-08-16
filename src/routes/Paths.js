@@ -17,5 +17,7 @@ export const ROUTES = {
   VIEW_BOOKING: '/history/view-booking',
   RESCHEDULE_APPOINTMENT: '/reschedule-appointment',
   PROFILE: '/profile',
-  CHANGE_PASSWORD: '/profile/change-password'
+  CHANGE_PASSWORD: '/profile/change-password',
+  REQUEST_ACUITY_MIGRATION: '/request-acuity-migration',
+  MIGRATE_ACUITY_ACCOUNT: '/migrate-acuity-account'
 };
