@@ -65,6 +65,12 @@ const Signup = () => {
           icon: 'error',
           title: error.response?.data?.message
         });
+
+        if (error.response?.status === 426) {
+          setStoredEmail({ email: data?.email });
+          navigate(ROUTES.REQUEST_ACUITY_MIGRATION);
+          return;
+        }
       }
     });
   };
@@ -275,7 +281,7 @@ const Signup = () => {
                 Login
               </Link>
             </AppTypography>
-            <AppTypography variant="small" className="text-center">
+            {/* <AppTypography variant="small" className="text-center">
               You may also click
               <Link
                 to={ROUTES.REQUEST_ACUITY_MIGRATION}
@@ -283,11 +289,10 @@ const Signup = () => {
                 here to Activate
               </Link>{' '}
               your existing Kiira Acuity account
-            </AppTypography>
+            </AppTypography> */}
           </ContentContainer>
 
           <SocialAuth
-            // dividerClassName="my-2"
             dividerText="Or continue with"
             onGoogleAuthSuccess={(credential) => {
               const data = { accessToken: credential };

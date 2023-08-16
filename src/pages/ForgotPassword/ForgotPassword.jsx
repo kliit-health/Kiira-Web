@@ -41,6 +41,11 @@ const ForgotPassword = () => {
           icon: 'error',
           title: error.response?.data?.message
         });
+        if (error.response?.status === 426) {
+          setStoredEmail({ email: data?.email });
+          navigate(ROUTES.REQUEST_ACUITY_MIGRATION);
+          return;
+        }
       }
     });
   };

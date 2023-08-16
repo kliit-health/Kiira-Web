@@ -17,7 +17,7 @@ import ViewBooking from './ViewBooking/ViewBooking';
 import RescheduleAppointment from './RescheduleAppointment/RescheduleAppointment';
 import Profile from './Account/Profile/Profile';
 import ChangePassword from './Account/ChangePassword/ChangePassword';
-import ActivateAccuityAccount from './ActivateAccuityAccount/ActivateAccuityAccount';
+import RequestAcuityMigration from './RequestAcuityMigration/RequestAcuityMigration';
 import MigrateAcuityUser from './MigrateAcuityUser/MigrateAcuityUser';
 
 export {
@@ -40,6 +40,6 @@ export {
   RescheduleAppointment,
   Profile,
   ChangePassword,
-  ActivateAccuityAccount,
+  RequestAcuityMigration,
   MigrateAcuityUser
 };

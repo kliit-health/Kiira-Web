@@ -10,10 +10,11 @@ import { useForm } from 'react-hook-form';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 
-const ActivateAccuityAccount = () => {
+const RequestAcuityMigration = () => {
   const navigate = useNavigate();
   const { mutate, isLoading } = useRequesAcuityMigration();
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
+  const storedEmail = useLocalStore((state) => state.email);
   const {
     register,
     handleSubmit,
@@ -31,7 +32,7 @@ const ActivateAccuityAccount = () => {
         navigate(ROUTES.MIGRATE_ACUITY_ACCOUNT);
       },
       onError: (error) => {
-        console.log('\n🚀 ~ file: ActivateAccuityAccount.jsx:54 ~ onSubmit ~ error:', error);
+        console.log('\n🚀 ~ file: RequestAcuityMigration.jsx:54 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
           title: error.response?.data?.message
@@ -54,7 +55,7 @@ const ActivateAccuityAccount = () => {
             </Button>
           </ContentContainer>
           <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">
-            Activate Acuity Profile?
+            Activate Acuity Account?
           </AppTypography>
           <AppTypography variant="small" className="text-kiiraText text-lg">
             A link will be sent to your email address
@@ -65,6 +66,7 @@ const ActivateAccuityAccount = () => {
             <Input
               autoFocus
               label="Email"
+              defaultValue={storedEmail?.email}
               size="lg"
               className="ring-transparent ring-0 "
               name="email"
@@ -104,4 +106,4 @@ const ActivateAccuityAccount = () => {
   );
 };
 
-export default ActivateAccuityAccount;
+export default RequestAcuityMigration;
