@@ -136,7 +136,7 @@ const SavedCards = () => {
         ) : null}
 
         <AddButton
-          label="Add a new card"
+          label={isEmpty(selectedPlan) ? 'Add a new card' : 'Subscribe to selected plan'}
           onAddClick={() => {
             isEmpty(selectedPlan) && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
               ? Toast.fire({

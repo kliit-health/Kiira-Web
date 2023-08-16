@@ -233,8 +233,8 @@ const ReviewAppointment = () => {
             <AppTypography
               variant="lead"
               className="text-sm text-justify md:text-base text-kiiraText w-full ">
-              All Kiira members have a unique membership code that can be applied at checkout for a
-              discount. If you do not have your "unique code", you may email us at{' '}
+              Coupon codes can be applied at checkout for a discount. If you do not have your
+              "unique code", you may email us at{' '}
               <AppLinkExternal
                 href="mailto:appointments@kiira.io"
                 className="underline text-sm md:text-base ">

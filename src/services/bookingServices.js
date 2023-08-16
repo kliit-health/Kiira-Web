@@ -76,4 +76,9 @@ export const fetchAppointmentHistoryByID = async (id) => {
   return res;
 };
 
+export const validateCouponCode = async (data) => {
+  const res = await Api.payment.validateCoupon(data);
+  return res;
+};
+
 

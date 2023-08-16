@@ -36,7 +36,8 @@ import {
   fetchDoctorsCalendars,
   fetchKiiraProducts,
   initialiseBookingPayment,
-  rescheduleBookedAppointment
+  rescheduleBookedAppointment,
+  validateCouponCode
 } from 'src/services/bookingServices';
 import isEmpty from 'src/utils/isEmpty';
 
@@ -346,6 +347,15 @@ export const useMigrateAcuityUser = () => {
   const data = useMutation({
     mutationFn: (data) => {
       return migrateAcuityUser(data);
+    }
+  });
+  return data;
+};
+
+export const useValidateCoupon = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return validateCouponCode(data);
     }
   });
   return data;
