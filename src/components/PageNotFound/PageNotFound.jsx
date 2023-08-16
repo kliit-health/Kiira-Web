@@ -19,7 +19,7 @@ const PageNotFound = () => {
             Hey! You seem to be lost...
           </ContentContainer>
           <AppTypography className="text-kiiraBlackishGreen  text-sm font-medium font-poppins text-center">
-            Sorry, the page you were looking for could not be found, you can go back to your{' '}
+            Sorry, the page you were looking for could not be found, you can go back to the{' '}
             <Link to={-1} className="text-kiiraBlue hover:text-red-600 font-bold">
               previous page
             </Link>{' '}

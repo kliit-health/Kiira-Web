@@ -157,7 +157,9 @@ const ChooseAppointment = () => {
 
             {!hideDoctors && !isLoading && isEmpty(selectedDoctor) ? (
               <ContentContainer className=" flex-row flex-wrap gap-1 items-center justify-end text-red-500 font-medium text-xs text-right">
-                Please select appointment with doctor or{' '}
+                {isEmpty(doctorsData) && !hideDoctors
+                  ? null
+                  : 'Please select appointment with doctor or'}{' '}
                 <Button
                   variant="text"
                   size="sm"

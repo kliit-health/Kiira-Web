@@ -14,7 +14,7 @@ const Api = {
     signinWithGoogle: (data) => ApiHandler.post(`/users/sign-in/google`, data),
     signupWithGoogle: (data) => ApiHandler.post(`/users/sign-up/google`, data),
     requestAcuityMigration: (data) => ApiHandler.post(`/users/request-migration`, data),
-    migrateAcuityUser: (data) => ApiHandler.post(`/users/migration`, data)
+    migrateAcuityUser: (data) => ApiHandler.post(`/users/migrate`, data)
     // refreshToken: (data) => ApiHandler.post(`/auth/refresh-token`, data),
     // logout: (data) => ApiHandler.post(`/auth/logout`, data),
   },

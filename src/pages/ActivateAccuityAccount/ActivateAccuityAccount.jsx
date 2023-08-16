@@ -57,7 +57,7 @@ const ActivateAccuityAccount = () => {
             Activate Acuity Profile?
           </AppTypography>
           <AppTypography variant="small" className="text-kiiraText text-lg">
-            Enter your email below
+            A link will be sent to your email address
             <br />
             to migrate your Acuity profile
           </AppTypography>

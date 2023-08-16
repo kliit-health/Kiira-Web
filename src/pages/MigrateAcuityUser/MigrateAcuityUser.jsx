@@ -12,6 +12,7 @@ import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import Auth from 'src/middleware/storage';
+import KEYS from 'src/queries/queryKeys';
 
 const MigrateAcuityUser = () => {
   const navigate = useNavigate();
