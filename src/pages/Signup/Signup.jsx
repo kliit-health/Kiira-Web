@@ -63,7 +63,7 @@ const Signup = () => {
         console.log(' \n 🚀 ~ file: Signup.jsx:74 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
-          title: error.response?.data?.message
+          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
         });
 
         if (error.response?.status === 426) {
@@ -322,7 +322,7 @@ const Signup = () => {
                   );
                   Toast.fire({
                     icon: 'error',
-                    title: error.response?.data?.message
+                    title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
                   });
                 }
               });

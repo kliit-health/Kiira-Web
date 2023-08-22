@@ -49,7 +49,9 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
         setResponseMessage({
           isOpen: true,
           e: true,
-          message: error.response?.data?.message
+          message: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

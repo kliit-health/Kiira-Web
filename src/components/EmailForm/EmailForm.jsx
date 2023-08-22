@@ -52,7 +52,9 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
         console.error('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
         setError({
           e: true,
-          message: error.response?.data?.message || 'An error occurred, please try again later.'
+          message: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message || 'An error occurred, please try again later.'
         });
       }
     });

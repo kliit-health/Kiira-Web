@@ -84,7 +84,9 @@ const RescheduleAppointment = () => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          html: `<div className='text-xs'>${error.response?.data?.message}</div>`,
+          html: `<div className='text-xs'>${
+            !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          }</div>`,
           confirmButtonColor: 'red',
           showClass: {
             popup: 'animate__animated animate__fadeInDown'

@@ -74,7 +74,7 @@ const MigrateAcuityUser = () => {
       onError: (error) => {
         Toast.fire({
           icon: 'error',
-          title: error.response?.data?.message
+          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
         });
       }
     });

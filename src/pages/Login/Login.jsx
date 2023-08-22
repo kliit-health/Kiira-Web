@@ -72,7 +72,7 @@ const Login = () => {
         console.log('\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error, error?.response);
         Toast.fire({
           icon: 'error',
-          title: error.response?.data?.message
+          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
         });
 
         if (error.response?.status === 426) {
@@ -239,7 +239,7 @@ const Login = () => {
                   );
                   Toast.fire({
                     icon: 'error',
-                    title: error.response?.data?.message
+                    title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
                   });
                 }
               });

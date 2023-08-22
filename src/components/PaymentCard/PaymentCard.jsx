@@ -194,7 +194,9 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 onError: (error) => {
                   setError({
                     e: true,
-                    message: error.response?.data?.message
+                    message: !isEmpty(error.response?.data?.message)
+                      ? error.response?.data?.message
+                      : error?.message
                   });
                 }
               }
@@ -224,7 +226,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               onError: (error) => {
                 setError({
                   e: true,
-                  message: error.response?.data?.message
+                  message: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
                 });
               }
             });

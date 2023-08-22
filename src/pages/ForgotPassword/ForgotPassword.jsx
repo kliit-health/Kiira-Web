@@ -39,7 +39,7 @@ const ForgotPassword = () => {
         console.log('\n🚀 ~ file: ForgotPassword.jsx:54 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
-          title: error.response?.data?.message
+          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
         });
         if (error.response?.status === 426) {
           setStoredEmail({ email: data?.email });

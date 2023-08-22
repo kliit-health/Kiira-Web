@@ -52,7 +52,7 @@ const CodeVerification = () => {
         console.log(' \n 🚀 ~ file: CodeVerification.jsx:45 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
-          title: error.response?.data?.message
+          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
         });
       }
     });
