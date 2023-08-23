@@ -34,9 +34,8 @@ import KEYS from 'src/queries/queryKeys';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import Auth from 'src/middleware/storage';
-import useAuth from 'src/hooks/useAuth';
-import mixpanel from 'mixpanel-browser';
 import { STRIPE_PK } from 'src/utils/constants';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const PaymentCard = (props) => {
   const [stripePromise] = useState(async () => {
@@ -185,7 +184,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                   setField({ name: '', country: '', postalCode: '' });
                   Auth.fetchUser();
 
-                  mixpanel.track('Success - New Payment card Added', {
+                  Mixpanel.track('Success - New Payment card Added', {
                     id: profile?.id,
                     data: {
                       first_name: profile?.first_name,
@@ -202,7 +201,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                   dismissHandler();
                 },
                 onError: (error) => {
-                  mixpanel.track('Failed - Unable to add new payment card.', {
+                  Mixpanel.track('Failed - Unable to add new payment card.', {
                     error: error,
                     data: {
                       id: profile?.id,
@@ -232,7 +231,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 setField({ name: '', country: '', postalCode: '' });
                 Auth.fetchUser();
 
-                mixpanel.track(
+                Mixpanel.track(
                   `Success - New subscription plan activated ${
                     !isEmpty(payload?.coupon_code) ? 'with Coupon' : null
                   } !`,
@@ -264,8 +263,8 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 dismissHandler();
               },
               onError: (error) => {
-                mixpanel.track('Failed - Subscription activation error', {
-                  error: error,
+                Mixpanel.track('Failed - Subscription activation error', {
+                  // error: error,
                   data: {
                     id: profile?.id,
                     message: !isEmpty(error.response?.data?.message)

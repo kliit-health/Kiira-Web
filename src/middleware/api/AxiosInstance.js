@@ -3,6 +3,7 @@ import { BASE_URL } from 'src/utils/constants';
 import Auth from '../storage';
 import { ROUTES } from 'src/routes/Paths';
 import { redirect } from 'react-router-dom';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const axiosApiInstance = axios.create();
 
@@ -34,6 +35,7 @@ axiosApiInstance.interceptors.response.use(
 
     // if (error?.response?.status === 401 && refreshurl) {
     if (error?.response?.status === 401) {
+      Mixpanel.reset();
       Auth?.destroyToken();
       redirect(ROUTES.LOGIN);
       return;

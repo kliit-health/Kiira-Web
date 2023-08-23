@@ -10,7 +10,7 @@ import { Toast } from 'src/utils';
 import { useResetPassword } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const ResetPassword = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        mixpanel.track('Password Reset Successful! ->', {
+        Mixpanel.track('Password Reset Successful! ->', {
           email: payload?.email
         });
 
@@ -55,8 +55,8 @@ const ResetPassword = () => {
         navigate(ROUTES.LOGIN);
       },
       onError: (error) => {
-        mixpanel.track('Password reset failed! ->', {
-          error: error,
+        Mixpanel.track('Password reset failed! ->', {
+          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

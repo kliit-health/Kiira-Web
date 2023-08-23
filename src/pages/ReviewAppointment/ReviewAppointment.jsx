@@ -1,5 +1,4 @@
 import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
-import mixpanel from 'mixpanel-browser';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -18,6 +17,7 @@ import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { truncate } from 'src/utils/truncate';
 
 const ReviewAppointment = () => {
@@ -128,9 +128,9 @@ const ReviewAppointment = () => {
             appointment: response?.data?.appointment
           };
 
-          mixpanel.track('Success - Appointment Booking ($0.00)', {
-            id: response.data?.booking_id,
+          Mixpanel.track('Success - Appointment Booking ($0.00)', {
             data: {
+              id: response.data?.booking_id,
               ...booking
             }
           });
@@ -140,13 +140,16 @@ const ReviewAppointment = () => {
         }
 
         function initiateCheckoutRedirect() {
-          mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`, {
-            id: response.data?.booking_id,
-            data: {
-              time: response?.data?.availability_time,
-              appointment: response?.data?.appointment
-            }
-          });
+          setTimeout(() => {
+            Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`, {
+              data: {
+                id: response.data?.booking_id,
+                time: response?.data?.availability_time,
+                appointment: response?.data?.appointment
+              }
+            });
+          }, 250);
+
           window.open(response?.data?.checkout_session?.url, '_self');
         }
 
@@ -165,8 +168,8 @@ const ReviewAppointment = () => {
         return;
       },
       onError: (error) => {
-        mixpanel.track('Failed - Appointment Booking Failed!', {
-          error: error,
+        Mixpanel.track('Failed - Appointment Booking Failed!', {
+          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

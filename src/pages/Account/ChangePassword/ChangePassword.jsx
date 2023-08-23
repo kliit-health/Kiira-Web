@@ -13,7 +13,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import { useChangePassword, useProfile } from 'src/queries/queryHooks';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const ChangePassword = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        mixpanel.track('Password Changed Successful', {
+        Mixpanel.track('Password Changed Successful', {
           id: profile?.id,
           data: {
             first_name: profile?.first_name,
@@ -66,8 +66,8 @@ const ChangePassword = () => {
       },
       onError: (error) => {
         // console.log(' \n 🚀 ~ file: ResetPassword.jsx:53 ~ onSubmit ~ error:', error);
-        mixpanel.track('Password Changed Failed', {
-          error: error,
+        Mixpanel.track('Password Changed Failed', {
+          // error: error,
           data: {
             id: profile?.id,
             first_name: profile?.first_name,

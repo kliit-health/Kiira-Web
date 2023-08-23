@@ -1,5 +1,4 @@
 import { Breadcrumbs, Button, Dialog, IconButton } from '@material-tailwind/react';
-import mixpanel from 'mixpanel-browser';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
@@ -17,6 +16,7 @@ import { useDoctorsCalendars, useProfile, useRescheduleAppointment } from 'src/q
 import { ROUTES } from 'src/routes/Paths';
 import { ScrollToTop, Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 import Swal from 'sweetalert2';
 
 const RescheduleAppointment = () => {
@@ -71,7 +71,7 @@ const RescheduleAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
-        mixpanel.track('Success - Reschedule Appointment', {
+        Mixpanel.track('Success - Reschedule Appointment', {
           id: profile?.id,
           data: {
             ...payload,
@@ -92,8 +92,8 @@ const RescheduleAppointment = () => {
         return;
       },
       onError: (error) => {
-        mixpanel.track('Failed - Reschedule Appointment', {
-          error: error,
+        Mixpanel.track('Failed - Reschedule Appointment', {
+          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

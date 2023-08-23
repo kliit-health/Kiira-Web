@@ -2,11 +2,10 @@ import { bool, object } from 'prop-types';
 import React from 'react';
 import { AppTypography, ContentContainer } from '../shared/styledComponents';
 import { Avatar, Button, Card, CardBody, CardHeader } from '@material-tailwind/react';
-import { Link } from 'react-router-dom';
 import { IMAGES } from 'src/data';
 import { truncate } from 'src/utils/truncate';
 import isEmpty from 'src/utils/isEmpty';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const BlogItem = ({ item, loading }) => {
   let formattedItem = Object.entries(item).reduce((obj, [key, value]) => {
@@ -76,13 +75,15 @@ const BlogItem = ({ item, loading }) => {
               variant="text"
               className="flex flex-row items-center hover:bg-transparent p-0 py-2 w-auto"
               onClick={() => {
-                mixpanel.track_links('#kiira_blog_item', 'Blog item clicked', {
-                  id: formattedItem?.id,
-                  data: {
-                    name: formattedItem?.name,
-                    link: `https://www.kiira.io/blog-posts/${formattedItem?.slug}`
-                  }
-                });
+                setTimeout(() => {
+                  Mixpanel.track('Blog item clicked', {
+                    data: {
+                      id: formattedItem?.id,
+                      name: formattedItem?.name,
+                      link: `https://www.kiira.io/blog-posts/${formattedItem?.slug}`
+                    }
+                  });
+                }, 50);
                 window.open(`https://www.kiira.io/blog-posts/${formattedItem?.slug}`, '_blank');
               }}>
               <AppTypography

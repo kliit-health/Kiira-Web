@@ -19,10 +19,10 @@ import Auth from 'src/middleware/storage';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
+import moment from 'moment-timezone';
 
 const Login = () => {
-  mixpanel.track('Login - visited');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,7 +35,7 @@ const Login = () => {
   const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSigninWithGoogle();
 
   useEffect(() => {
-    mixpanel.track(`Login - A user has visited Kiira's Login Page`);
+    Mixpanel.track(`Login - A user has visited Kiira's Login Page`);
   }, []);
 
   const {
@@ -54,13 +54,17 @@ const Login = () => {
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
 
-        mixpanel.track('Login Success ->', {
-          id: response.data?.user?.id,
-          data: {
-            first_name: response.data?.user?.first_name,
-            last_name: response.data?.user?.last_name,
-            email: response.data?.user?.email
-          }
+        Mixpanel.identify(response.data?.user?.id);
+        Mixpanel.people.set({
+          $distinct_id: response.data?.user?.id,
+          $first_name: response.data?.user?.first_name,
+          $last_name: response.data?.user?.last_name,
+          $email: response.data?.user?.email,
+          $phone: response.data?.user?.phone_number,
+          $timezone: moment.tz.guess(true)
+        });
+        Mixpanel.track('Login Success ->', {
+          id: response.data?.user?.id
         });
 
         Toast.fire({
@@ -91,8 +95,8 @@ const Login = () => {
             : error?.message
         });
 
-        mixpanel.track('Login Failed ->', {
-          error: error,
+        Mixpanel.track('Login Failed ->', {
+          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
@@ -238,13 +242,17 @@ const Login = () => {
                   Auth.setUser(response.data?.user);
                   Auth.setToken(response.data?.token);
 
-                  mixpanel.track('Google Authentication Success', {
-                    id: response.data?.user?.id,
-                    data: {
-                      first_name: response.data?.user?.first_name,
-                      last_name: response.data?.user?.last_name,
-                      email: response.data?.user?.email
-                    }
+                  Mixpanel.identify(response.data?.user?.id);
+                  Mixpanel.people.set({
+                    $distinct_id: response.data?.user?.id,
+                    $first_name: response.data?.user?.first_name,
+                    $last_name: response.data?.user?.last_name,
+                    $email: response.data?.user?.email,
+                    $phone: response.data?.user?.phone_number,
+                    $timezone: moment.tz.guess(true)
+                  });
+                  Mixpanel.track('Google Authentication Success', {
+                    data: { id: response.data?.user?.id }
                   });
 
                   Toast.fire({
@@ -272,8 +280,8 @@ const Login = () => {
                     error,
                     error?.response
                   );
-                  mixpanel.track('Google Authentication Failed', {
-                    error: error,
+                  Mixpanel.track('Google Authentication Failed', {
+                    // error: error,
                     data: {
                       message: !isEmpty(error.response?.data?.message)
                         ? error.response?.data?.message

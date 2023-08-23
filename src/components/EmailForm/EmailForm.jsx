@@ -8,7 +8,7 @@ import { func, object } from 'prop-types';
 import { useContactDoctor, useProfile } from 'src/queries/queryHooks';
 import { Loader } from '..';
 import { InfinitySpin } from 'react-loader-spinner';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const EmailForm = ({ contact, onSuccessCallback }) => {
   const { data: userProfile } = useProfile();
@@ -38,7 +38,7 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
     });
     mutate(payload, {
       onSuccess: (response) => {
-        mixpanel.track('Success - Contact Doctor via Email Form', {
+        Mixpanel.track('Success - Contact Doctor via Email Form', {
           id: profile?.id,
           data: {
             first_name: profile?.first_name,
@@ -62,7 +62,7 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
       },
       onError: (error) => {
         console.error('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
-        mixpanel.track('Failed - Contact Doctor via Email Form', {
+        Mixpanel.track('Failed - Contact Doctor via Email Form', {
           error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)

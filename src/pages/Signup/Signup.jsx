@@ -1,5 +1,5 @@
 import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
-import mixpanel from 'mixpanel-browser';
+import moment from 'moment-timezone';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -53,6 +54,22 @@ const Signup = () => {
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
         setStoredEmail({ email: data?.email });
+        Mixpanel.people.set({
+          $distinct_id: response.data?.user?.id,
+          $first_name: response.data?.user?.first_name,
+          $last_name: response.data?.user?.last_name,
+          $email: response.data?.user?.email,
+          $phone: response.data?.user?.phone_number,
+          $timezone: moment.tz.guess(true)
+        });
+        Mixpanel.track('User Registration Success', {
+          data: {
+            id: response.data?.user?.id,
+            first_name: response.data?.user?.first_name,
+            last_name: response.data?.user?.last_name,
+            email: response.data?.user?.email
+          }
+        });
         reset();
 
         if (!response.data?.user?.is_email_verified) {
@@ -304,10 +321,17 @@ const Signup = () => {
                 onSuccess: (response) => {
                   Auth.setUser(response.data?.user);
                   Auth.setToken(response.data?.token);
-
-                  mixpanel.track('Google Authentication Success', {
-                    id: response.data?.user?.id,
+                  Mixpanel.people.set({
+                    $distinct_id: response.data?.user?.id,
+                    $first_name: response.data?.user?.first_name,
+                    $last_name: response.data?.user?.last_name,
+                    $email: response.data?.user?.email,
+                    $phone: response.data?.user?.phone_number,
+                    $timezone: moment.tz.guess(true)
+                  });
+                  Mixpanel.track('Google Authentication Success', {
                     data: {
+                      id: response.data?.user?.id,
                       first_name: response.data?.user?.first_name,
                       last_name: response.data?.user?.last_name,
                       email: response.data?.user?.email
@@ -334,7 +358,7 @@ const Signup = () => {
                     error?.response
                   );
 
-                  mixpanel.track('Google Authentication Failed', {
+                  Mixpanel.track('Google Authentication Failed', {
                     error: error,
                     data: {
                       message: !isEmpty(error.response?.data?.message)

@@ -32,7 +32,7 @@ import KEYS from 'src/queries/queryKeys';
 import { Toast } from 'src/utils';
 import Auth from 'src/middleware/storage';
 import { useQueryClient } from '@tanstack/react-query';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const Subscription = () => {
   const queryClient = useQueryClient();
@@ -63,9 +63,9 @@ const Subscription = () => {
         onSuccess: (response) => {
           queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY, KEYS.PROFILE] });
 
-          mixpanel.track('Success - Subscription Canceled', {
-            id: profile?.id,
+          Mixpanel.track('Success - Subscription Canceled', {
             data: {
+              id: profile?.id,
               first_name: profile?.first_name,
               last_name: profile?.last_name,
               email: profile?.email,
@@ -82,8 +82,8 @@ const Subscription = () => {
           Auth.setUser(profile);
         },
         onError: (error) => {
-          mixpanel.track('Failed - Cancel subscription failed', {
-            error: error,
+          Mixpanel.track('Failed - Cancel subscription failed', {
+            // error: error,
             data: {
               message: !isEmpty(error.response?.data?.message)
                 ? error.response?.data?.message

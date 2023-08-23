@@ -13,7 +13,7 @@ import { Loader } from 'src/components';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 import Auth from 'src/middleware/storage';
-import mixpanel from 'mixpanel-browser';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
@@ -39,8 +39,7 @@ const CodeVerification = () => {
     };
     mutate(payload, {
       onSuccess: (response) => {
-        mixpanel.track('Success - Account Verification Successful!', {
-          id: '',
+        Mixpanel.track('Success - Account Verification Successful!', {
           data: {
             email: payload?.email
           }
@@ -58,8 +57,8 @@ const CodeVerification = () => {
       },
       onError: (error) => {
         console.log(' \n 🚀 ~ file: CodeVerification.jsx:45 ~ onSubmit ~ error:', error);
-        mixpanel.track('Failed - Account verification failed!', {
-          error: error,
+        Mixpanel.track('Failed - Account verification failed!', {
+          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
