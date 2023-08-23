@@ -32,7 +32,7 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
     };
     mutate(data, {
       onSuccess: (response) => {
-        console.log('\n 🚀 ~ file: ApplyPromoCode.jsx:30 ~ handleSubmit ~ response:', response);
+        // console.log('\n 🚀 ~ file: ApplyPromoCode.jsx:30 ~ handleSubmit ~ response:', response);
         Toast.fire({
           icon: 'success',
           title: response?.data?.message

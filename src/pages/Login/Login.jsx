@@ -39,7 +39,6 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log('\n 🚀 ~ file: Login.jsx:42 ~ onSubmit ~ data:', data);
     mutate(data, {
       onSuccess: (response) => {
         queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
@@ -72,7 +71,9 @@ const Login = () => {
         console.log('\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error, error?.response);
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
 
         if (error.response?.status === 426) {
@@ -239,7 +240,9 @@ const Login = () => {
                   );
                   Toast.fire({
                     icon: 'error',
-                    title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+                    title: !isEmpty(error.response?.data?.message)
+                      ? error.response?.data?.message
+                      : error?.message
                   });
                 }
               });

@@ -114,10 +114,10 @@ const ReviewAppointment = () => {
       fields: field,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
     };
-    console.log(
-      '\n 🚀 ~ file: ReviewAppointment.jsx:104 ~ handleInitialisePayment ~ payload:',
-      payload
-    );
+    // console.log(
+    //   '\n 🚀 ~ file: ReviewAppointment.jsx:104 ~ handleInitialisePayment ~ payload:',
+    //   payload
+    // );
 
     mutate(payload, {
       onSuccess: (response) => {

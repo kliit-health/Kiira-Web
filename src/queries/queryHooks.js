@@ -140,7 +140,7 @@ export const useAvailableDates = (payload) => {
       queryClient.invalidateQueries({ queryKey: [KEYS.AVAILABLE_TIMES] });
     },
     onError: (err) => {
-      console.log(' \n 🚀 ~ file: queryHooks.js:124 ~ useAvailableDates ~ err:', err);
+      // console.log(' \n 🚀 ~ file: queryHooks.js:124 ~ useAvailableDates ~ err:', err);
     }
   });
   return data;
