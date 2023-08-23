@@ -13,6 +13,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import { useChangePassword, useProfile } from 'src/queries/queryHooks';
+import mixpanel from 'mixpanel-browser';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -48,6 +49,14 @@ const ChangePassword = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
+        mixpanel.track('Password Changed Successful', {
+          id: profile?.id,
+          data: {
+            first_name: profile?.first_name,
+            last_name: profile?.last_name,
+            email: profile?.email
+          }
+        });
         reset();
         Toast.fire({
           icon: 'success',
@@ -57,10 +66,24 @@ const ChangePassword = () => {
       },
       onError: (error) => {
         // console.log(' \n 🚀 ~ file: ResetPassword.jsx:53 ~ onSubmit ~ error:', error);
+        mixpanel.track('Password Changed Failed', {
+          error: error,
+          data: {
+            id: profile?.id,
+            first_name: profile?.first_name,
+            last_name: profile?.last_name,
+            email: profile?.email,
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          }
+        });
 
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

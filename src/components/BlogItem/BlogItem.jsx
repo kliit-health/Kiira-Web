@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { IMAGES } from 'src/data';
 import { truncate } from 'src/utils/truncate';
 import isEmpty from 'src/utils/isEmpty';
+import mixpanel from 'mixpanel-browser';
 
 const BlogItem = ({ item, loading }) => {
   let formattedItem = Object.entries(item).reduce((obj, [key, value]) => {
@@ -70,10 +71,18 @@ const BlogItem = ({ item, loading }) => {
           </ContentContainer>
           <ContentContainer className="flex flex-col gap-2 bg-kiiraBg2">
             <Button
+              id="kiira_blog_item"
               disabled={loading}
               variant="text"
               className="flex flex-row items-center hover:bg-transparent p-0 py-2 w-auto"
               onClick={() => {
+                mixpanel.track_links('#kiira_blog_item', 'Blog item clicked', {
+                  id: formattedItem?.id,
+                  data: {
+                    name: formattedItem?.name,
+                    link: `https://www.kiira.io/blog-posts/${formattedItem?.slug}`
+                  }
+                });
                 window.open(`https://www.kiira.io/blog-posts/${formattedItem?.slug}`, '_blank');
               }}>
               <AppTypography

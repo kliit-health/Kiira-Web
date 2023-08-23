@@ -9,6 +9,7 @@ import { Toast } from 'src/utils';
 import { useForm } from 'react-hook-form';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
+import mixpanel from 'mixpanel-browser';
 
 const RequestAcuityMigration = () => {
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ const RequestAcuityMigration = () => {
     mutate(data, {
       onSuccess: () => {
         setStoredEmail({ email: data.email });
+
+        mixpanel.track('Success - Initiated Existing Kiira Account Migration Request', {
+          id: '',
+          data: {
+            email: data?.email
+          }
+        });
+
         Toast.fire({
           icon: 'success',
           title: `Kindly check your email to continue`
@@ -33,9 +42,21 @@ const RequestAcuityMigration = () => {
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: RequestAcuityMigration.jsx:54 ~ onSubmit ~ error:', error);
+        mixpanel.track('Failed - Initiated Existing Kiira Account Migration Request', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: data?.email
+          }
+        });
+
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

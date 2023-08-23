@@ -1,4 +1,5 @@
 import { Breadcrumbs, Button, Dialog, IconButton } from '@material-tailwind/react';
+import mixpanel from 'mixpanel-browser';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
@@ -11,7 +12,7 @@ import {
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES, kiiraDoctors, kiiraServices } from 'src/data';
+import { IMAGES } from 'src/data';
 import { useDoctorsCalendars, useProfile, useRescheduleAppointment } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { ScrollToTop, Toast } from 'src/utils';
@@ -70,6 +71,16 @@ const RescheduleAppointment = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
+        mixpanel.track('Success - Reschedule Appointment', {
+          id: profile?.id,
+          data: {
+            ...payload,
+            first_name: profile?.first_name,
+            last_name: profile?.last_name,
+            email: profile?.email
+          }
+        });
+
         Toast.fire({
           icon: 'success',
           html: `<div className='text-xs'>Booking appointment has been rescheduled successfully</div>`,
@@ -81,6 +92,19 @@ const RescheduleAppointment = () => {
         return;
       },
       onError: (error) => {
+        mixpanel.track('Failed - Reschedule Appointment', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            first_name: profile?.first_name,
+            last_name: profile?.last_name,
+            email: profile?.email,
+            ...payload
+          }
+        });
+
         Swal.fire({
           icon: 'error',
           title: 'Error',

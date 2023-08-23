@@ -13,6 +13,7 @@ import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import Auth from 'src/middleware/storage';
 import KEYS from 'src/queries/queryKeys';
+import mixpanel from 'mixpanel-browser';
 
 const MigrateAcuityUser = () => {
   const navigate = useNavigate();
@@ -52,6 +53,15 @@ const MigrateAcuityUser = () => {
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
 
+        mixpanel.track('Existing Kiira Account Migration Success!', {
+          id: response.data?.user?.id,
+          data: {
+            first_name: response.data?.user?.first_name,
+            last_name: response.data?.user?.last_name,
+            email: response.data?.user?.email
+          }
+        });
+
         Toast.fire({
           icon: 'success',
           title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
@@ -72,9 +82,21 @@ const MigrateAcuityUser = () => {
         return;
       },
       onError: (error) => {
+        mixpanel.track('Existing Kiira Account Migration Failed!', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: data?.email
+          }
+        });
+
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

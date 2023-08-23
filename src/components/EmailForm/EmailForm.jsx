@@ -5,11 +5,14 @@ import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { func, object } from 'prop-types';
-import { useContactDoctor } from 'src/queries/queryHooks';
+import { useContactDoctor, useProfile } from 'src/queries/queryHooks';
 import { Loader } from '..';
 import { InfinitySpin } from 'react-loader-spinner';
+import mixpanel from 'mixpanel-browser';
 
 const EmailForm = ({ contact, onSuccessCallback }) => {
+  const { data: userProfile } = useProfile();
+  const profile = userProfile?.data?.user;
   const [err, setError] = useState({ e: false, message: '' });
   const [message, setMessage] = useState({ show: false, description: '' });
   const { mutate, isLoading } = useContactDoctor();
@@ -35,6 +38,15 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
     });
     mutate(payload, {
       onSuccess: (response) => {
+        mixpanel.track('Success - Contact Doctor via Email Form', {
+          id: profile?.id,
+          data: {
+            first_name: profile?.first_name,
+            last_name: profile?.last_name,
+            email: profile?.email
+          }
+        });
+
         reset({ title: '', content: '' });
         setMessage({
           show: true,
@@ -50,6 +62,16 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
       },
       onError: (error) => {
         console.error('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
+        mixpanel.track('Failed - Contact Doctor via Email Form', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: profile?.email
+          }
+        });
+
         setError({
           e: true,
           message: !isEmpty(error.response?.data?.message)

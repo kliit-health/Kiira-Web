@@ -13,6 +13,7 @@ import { Loader } from 'src/components';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 import Auth from 'src/middleware/storage';
+import mixpanel from 'mixpanel-browser';
 
 const CodeVerification = () => {
   const navigate = useNavigate();
@@ -38,6 +39,13 @@ const CodeVerification = () => {
     };
     mutate(payload, {
       onSuccess: (response) => {
+        mixpanel.track('Success - Account Verification Successful!', {
+          id: '',
+          data: {
+            email: payload?.email
+          }
+        });
+
         Toast.fire({
           icon: 'success',
           title: response?.data?.message
@@ -50,9 +58,21 @@ const CodeVerification = () => {
       },
       onError: (error) => {
         console.log(' \n 🚀 ~ file: CodeVerification.jsx:45 ~ onSubmit ~ error:', error);
+        mixpanel.track('Failed - Account verification failed!', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: payload?.email
+          }
+        });
+
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

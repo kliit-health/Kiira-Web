@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
@@ -19,8 +19,10 @@ import Auth from 'src/middleware/storage';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
+import mixpanel from 'mixpanel-browser';
 
 const Login = () => {
+  mixpanel.track('Login - visited');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,6 +33,10 @@ const Login = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading } = useLogin();
   const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSigninWithGoogle();
+
+  useEffect(() => {
+    mixpanel.track(`Login - A user has visited Kiira's Login Page`);
+  }, []);
 
   const {
     register,
@@ -47,6 +53,15 @@ const Login = () => {
         setStoredEmail({ email: data?.email });
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
+
+        mixpanel.track('Login Success ->', {
+          id: response.data?.user?.id,
+          data: {
+            first_name: response.data?.user?.first_name,
+            last_name: response.data?.user?.last_name,
+            email: response.data?.user?.email
+          }
+        });
 
         Toast.fire({
           icon: 'success',
@@ -74,6 +89,16 @@ const Login = () => {
           title: !isEmpty(error.response?.data?.message)
             ? error.response?.data?.message
             : error?.message
+        });
+
+        mixpanel.track('Login Failed ->', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: data?.email
+          }
         });
 
         if (error.response?.status === 426) {
@@ -213,6 +238,15 @@ const Login = () => {
                   Auth.setUser(response.data?.user);
                   Auth.setToken(response.data?.token);
 
+                  mixpanel.track('Google Authentication Success', {
+                    id: response.data?.user?.id,
+                    data: {
+                      first_name: response.data?.user?.first_name,
+                      last_name: response.data?.user?.last_name,
+                      email: response.data?.user?.email
+                    }
+                  });
+
                   Toast.fire({
                     icon: 'success',
                     title: `Login ${response?.data?.message}:\nWelcome ${response?.data?.user?.first_name}`
@@ -238,6 +272,15 @@ const Login = () => {
                     error,
                     error?.response
                   );
+                  mixpanel.track('Google Authentication Failed', {
+                    error: error,
+                    data: {
+                      message: !isEmpty(error.response?.data?.message)
+                        ? error.response?.data?.message
+                        : error?.message
+                    }
+                  });
+
                   Toast.fire({
                     icon: 'error',
                     title: !isEmpty(error.response?.data?.message)

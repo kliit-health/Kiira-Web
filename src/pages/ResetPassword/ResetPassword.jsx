@@ -10,12 +10,13 @@ import { Toast } from 'src/utils';
 import { useResetPassword } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
+import mixpanel from 'mixpanel-browser';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
- 
+
   const getStoredEmail = useLocalStore((state) => state.email);
   const { mutate, isLoading } = useResetPassword();
 
@@ -24,7 +25,6 @@ const ResetPassword = () => {
     handleSubmit,
     reset,
     formState: { errors }
-    
   } = useForm();
 
   const onSubmit = (data) => {
@@ -43,6 +43,10 @@ const ResetPassword = () => {
 
     mutate(payload, {
       onSuccess: (response) => {
+        mixpanel.track('Password Reset Successful! ->', {
+          email: payload?.email
+        });
+
         reset();
         Toast.fire({
           icon: 'success',
@@ -51,9 +55,21 @@ const ResetPassword = () => {
         navigate(ROUTES.LOGIN);
       },
       onError: (error) => {
+        mixpanel.track('Password reset failed! ->', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: payload?.email
+          }
+        });
+
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

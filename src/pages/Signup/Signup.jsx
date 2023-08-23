@@ -1,4 +1,5 @@
 import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
+import mixpanel from 'mixpanel-browser';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -63,7 +64,9 @@ const Signup = () => {
         console.log(' \n 🚀 ~ file: Signup.jsx:74 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
 
         if (error.response?.status === 426) {
@@ -301,6 +304,16 @@ const Signup = () => {
                 onSuccess: (response) => {
                   Auth.setUser(response.data?.user);
                   Auth.setToken(response.data?.token);
+
+                  mixpanel.track('Google Authentication Success', {
+                    id: response.data?.user?.id,
+                    data: {
+                      first_name: response.data?.user?.first_name,
+                      last_name: response.data?.user?.last_name,
+                      email: response.data?.user?.email
+                    }
+                  });
+
                   setStoredEmail({ email: data?.email });
                   reset();
 
@@ -320,9 +333,21 @@ const Signup = () => {
                     error,
                     error?.response
                   );
+
+                  mixpanel.track('Google Authentication Failed', {
+                    error: error,
+                    data: {
+                      message: !isEmpty(error.response?.data?.message)
+                        ? error.response?.data?.message
+                        : error?.message
+                    }
+                  });
+
                   Toast.fire({
                     icon: 'error',
-                    title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+                    title: !isEmpty(error.response?.data?.message)
+                      ? error.response?.data?.message
+                      : error?.message
                   });
                 }
               });

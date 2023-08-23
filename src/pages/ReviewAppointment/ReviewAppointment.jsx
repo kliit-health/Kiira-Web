@@ -1,4 +1,5 @@
 import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
+import mixpanel from 'mixpanel-browser';
 import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -126,9 +127,27 @@ const ReviewAppointment = () => {
             ...response?.data?.availability_time,
             appointment: response?.data?.appointment
           };
+
+          mixpanel.track('Success - Appointment Booking ($0.00)', {
+            id: response.data?.booking_id,
+            data: {
+              ...booking
+            }
+          });
           navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
             state: booking
           });
+        }
+
+        function initiateCheckoutRedirect() {
+          mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`, {
+            id: response.data?.booking_id,
+            data: {
+              time: response?.data?.availability_time,
+              appointment: response?.data?.appointment
+            }
+          });
+          window.open(response?.data?.checkout_session?.url, '_self');
         }
 
         Toast.fire({
@@ -141,14 +160,26 @@ const ReviewAppointment = () => {
 
         isEmpty(response?.data?.checkout_session)
           ? viewBookingRedirect()
-          : window.open(response?.data?.checkout_session?.url, '_self');
+          : initiateCheckoutRedirect();
 
         return;
       },
       onError: (error) => {
+        mixpanel.track('Failed - Appointment Booking Failed!', {
+          error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: profile?.email
+          }
+        });
+
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Auth from 'src/middleware/storage';
 import { ROUTES } from 'src/routes/Paths';
 import { googleLogout } from '@react-oauth/google';
+import mixpanel from 'mixpanel-browser';
 
 // create a context for the auth provider
 export const AuthContext = createContext();
@@ -19,6 +20,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
   const logout = () => {
+    mixpanel.track('Log Out - User logged out', {
+      id: userData?.id,
+      data: {
+        first_name: userData?.first_name,
+        last_name: userData?.last_name,
+        email: userData?.email
+      }
+    });
     Auth?.destroyToken();
     googleLogout();
     setUser({});

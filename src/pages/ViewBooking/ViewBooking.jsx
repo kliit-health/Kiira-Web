@@ -29,6 +29,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { Empty, SaveBooking } from 'src/components';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
+import mixpanel from 'mixpanel-browser';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
@@ -55,15 +56,33 @@ const ViewBooking = () => {
       onSuccess: (response) => {
         queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
         refetch();
+        mixpanel.track('Success - Appointment Cancelled', {
+          id: id,
+          data: {
+            ...booking
+          }
+        });
+
         Toast.fire({
           icon: 'success',
           title: response?.data?.message
         });
       },
       onError: (error) => {
+        mixpanel.track('Failed - Cancel Appointment failed', {
+          error: error,
+          data: {
+            id: id,
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          }
+        });
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
       }
     });
