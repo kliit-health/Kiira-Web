@@ -1,7 +1,11 @@
 import mixpanel from 'mixpanel-browser';
 import { MIXED_PANEL_TOKEN } from './constants';
 
-mixpanel.init(MIXED_PANEL_TOKEN, { debug: true, persistence: 'localStorage', ignore_dnt: true });
+mixpanel.init(MIXED_PANEL_TOKEN, {
+  persistence: 'localStorage',
+  ignore_dnt: true,
+  ...(import.meta.env.DEV && { debug: true })
+});
 
 let env_check = import.meta.env.MODE === 'production';
 

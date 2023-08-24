@@ -35,7 +35,7 @@ const Login = () => {
   const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSigninWithGoogle();
 
   useEffect(() => {
-    Mixpanel.track(`Login - A user has visited Kiira's Login Page`);
+    Mixpanel.track(`Page Tracking - Login Page`);
   }, []);
 
   const {
