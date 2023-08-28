@@ -8,6 +8,7 @@ import { useValidateCoupon } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import { Loader } from '..';
 import { ColorRing, ThreeDots } from 'react-loader-spinner';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
   const [open, setOpen] = useState(false);
@@ -33,6 +34,9 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
     mutate(data, {
       onSuccess: (response) => {
         // console.log('\n 🚀 ~ file: ApplyPromoCode.jsx:30 ~ handleSubmit ~ response:', response);
+        Mixpanel.track('Success: Coupon Validation Successful ->', {
+          coupon: coupon?.coupon
+        });
         Toast.fire({
           icon: 'success',
           title: response?.data?.message
@@ -45,7 +49,16 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
           error,
           error?.response
         );
-
+        Mixpanel.track('Error: Validate coupon code: ->', {
+          // error: error,
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error?.response?.data?.message
+              : error?.message,
+            email: data?.email,
+            url: error?.response?.config?.url
+          }
+        });
         setResponseMessage({
           isOpen: true,
           e: true,

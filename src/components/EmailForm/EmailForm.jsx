@@ -68,7 +68,8 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: profile?.email
+            email: profile?.email,
+            url: error?.response?.config?.url
           }
         });
 

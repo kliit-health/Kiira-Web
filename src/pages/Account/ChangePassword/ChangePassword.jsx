@@ -70,12 +70,11 @@ const ChangePassword = () => {
           // error: error,
           data: {
             id: profile?.id,
-            first_name: profile?.first_name,
-            last_name: profile?.last_name,
             email: profile?.email,
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
-              : error?.message
+              : error?.message,
+            url: error?.response?.config?.url
           }
         });
 

@@ -332,8 +332,6 @@ const Signup = () => {
                   Mixpanel.track('Google Authentication Success', {
                     data: {
                       id: response.data?.user?.id,
-                      first_name: response.data?.user?.first_name,
-                      last_name: response.data?.user?.last_name,
                       email: response.data?.user?.email
                     }
                   });
@@ -363,7 +361,8 @@ const Signup = () => {
                     data: {
                       message: !isEmpty(error.response?.data?.message)
                         ? error.response?.data?.message
-                        : error?.message
+                        : error?.message,
+                      url: error?.response?.config?.url
                     }
                   });
 

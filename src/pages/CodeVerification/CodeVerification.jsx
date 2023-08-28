@@ -63,7 +63,8 @@ const CodeVerification = () => {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: payload?.email
+            email: payload?.email,
+            url: error?.response?.config?.url
           }
         });
 

@@ -16,6 +16,7 @@ import { useBookingForms, useInitialisePayment, useProfile } from 'src/queries/q
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
+import { APP_URL } from 'src/utils/constants';
 import isEmpty from 'src/utils/isEmpty';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { truncate } from 'src/utils/truncate';
@@ -69,13 +70,13 @@ const ReviewAppointment = () => {
   }, [bookingData]);
 
   const handleInitialisePayment = () => {
-    if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
-      Toast.fire({
-        icon: 'error',
-        title: 'Your current subscription has expired. Please renew your subscription'
-      });
-      return;
-    }
+    // if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
+    //   Toast.fire({
+    //     icon: 'error',
+    //     title: 'Your current subscription has expired. Please renew your subscription'
+    //   });
+    //   return;
+    // }
 
     const keys = Object.keys(formResult);
 
@@ -109,8 +110,8 @@ const ReviewAppointment = () => {
     const payload = {
       datetime: bookingData?.bookingCheckout?.time,
       appointmentTypeID: appointmentType.id,
-      success_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
-      cancel_url: `https://kiira-hmp.netlify.app${ROUTES.CONFIRM_BOOKING}`,
+      success_url: `${APP_URL}${ROUTES.CONFIRM_BOOKING}`,
+      cancel_url: `${APP_URL}${ROUTES.CONFIRM_BOOKING}`,
       book_on_hold: reserveBooking,
       fields: field,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
@@ -128,12 +129,7 @@ const ReviewAppointment = () => {
             appointment: response?.data?.appointment
           };
 
-          Mixpanel.track('Success - Appointment Booking ($0.00)', {
-            data: {
-              id: response.data?.booking_id,
-              ...booking
-            }
-          });
+          Mixpanel.track('Success - Appointment Booking ($0.00)');
           navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
             state: booking
           });
@@ -141,13 +137,7 @@ const ReviewAppointment = () => {
 
         function initiateCheckoutRedirect() {
           setTimeout(() => {
-            Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`, {
-              data: {
-                id: response.data?.booking_id,
-                time: response?.data?.availability_time,
-                appointment: response?.data?.appointment
-              }
-            });
+            Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`);
           }, 250);
 
           window.open(response?.data?.checkout_session?.url, '_self');
@@ -174,7 +164,8 @@ const ReviewAppointment = () => {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: profile?.email
+            email: profile?.email,
+            url: error?.response?.config?.url
           }
         });
 
@@ -184,6 +175,18 @@ const ReviewAppointment = () => {
             ? error.response?.data?.message
             : error?.message
         });
+
+        if (error?.response?.status === 423) {
+          setTimeout(() => {
+            Toast.fire({
+              icon: 'error',
+              title: 'Your current subscription has expired. Please renew your subscription'
+            });
+            navigate(ROUTES.SUBSCRIPTION);
+          }, 1500);
+
+          return;
+        }
       }
     });
   };

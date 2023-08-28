@@ -55,13 +55,14 @@ const ResetPassword = () => {
         navigate(ROUTES.LOGIN);
       },
       onError: (error) => {
-        Mixpanel.track('Password reset failed! ->', {
+        Mixpanel.track('Failed: Password reset failed! ->', {
           // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: payload?.email
+            email: payload?.email,
+            url: error?.response?.config?.url
           }
         });
 

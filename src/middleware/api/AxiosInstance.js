@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from 'src/utils/constants';
+import { APP_URL } from 'src/utils/constants';
 import Auth from '../storage';
 import { ROUTES } from 'src/routes/Paths';
 import { redirect } from 'react-router-dom';
@@ -30,8 +30,8 @@ axiosApiInstance.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    const url = error.config.url !== `${BASE_URL}/users/sign-in`;
-    // const refreshurl = error.config.url === `${BASE_URL}/auth/refresh-token`;
+    const url = error.config.url !== `${APP_URL}${ROUTES.LOGIN}`;
+    // const refreshurl = error.config.url === `${APP_URL}/auth/refresh-token`;
 
     // if (error?.response?.status === 401 && refreshurl) {
     if (error?.response?.status === 401) {

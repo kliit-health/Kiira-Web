@@ -185,10 +185,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                   Auth.fetchUser();
 
                   Mixpanel.track('Success - New Payment card Added', {
-                    id: profile?.id,
                     data: {
-                      first_name: profile?.first_name,
-                      last_name: profile?.last_name,
                       email: profile?.email
                     }
                   });
@@ -203,14 +200,14 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 onError: (error) => {
                   Mixpanel.track('Failed - Unable to add new payment card.', {
                     error: error,
+                    url: error?.response?.config?.url,
                     data: {
                       id: profile?.id,
                       message: !isEmpty(error.response?.data?.message)
                         ? error.response?.data?.message
                         : error?.message,
-                      first_name: profile?.first_name,
-                      last_name: profile?.last_name,
-                      email: profile?.email
+                      email: profile?.email,
+                      url: error?.response?.config?.url
                     }
                   });
 
@@ -270,9 +267,8 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                     message: !isEmpty(error.response?.data?.message)
                       ? error.response?.data?.message
                       : error?.message,
-                    first_name: profile?.first_name,
-                    last_name: profile?.last_name,
-                    email: profile?.email
+                    email: profile?.email,
+                    url: error?.response?.config?.url
                   }
                 });
 

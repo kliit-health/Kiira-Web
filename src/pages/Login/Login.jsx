@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import moment from 'moment-timezone';
+import mixpanel from 'mixpanel-browser';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -99,9 +100,10 @@ const Login = () => {
           // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
-              ? error.response?.data?.message
+              ? error?.response?.data?.message
               : error?.message,
-            email: data?.email
+            email: data?.email,
+            url: error?.response?.config?.url
           }
         });
 
@@ -281,11 +283,11 @@ const Login = () => {
                     error?.response
                   );
                   Mixpanel.track('Google Authentication Failed', {
-                    // error: error,
                     data: {
                       message: !isEmpty(error.response?.data?.message)
                         ? error.response?.data?.message
-                        : error?.message
+                        : error?.message,
+                      url: error?.response?.config?.url
                     }
                   });
 

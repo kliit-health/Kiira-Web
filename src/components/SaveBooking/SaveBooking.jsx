@@ -12,6 +12,7 @@ import { truncate } from 'src/utils/truncate';
 import QRCode from 'react-qr-code';
 import { object } from 'prop-types';
 import { ThreeDots } from 'react-loader-spinner';
+import { APP_URL } from 'src/utils/constants';
 
 const SaveBooking = ({ booking }) => {
   const [open, setOpen] = useState(false);
@@ -206,7 +207,7 @@ const SaveBooking = ({ booking }) => {
                       </ContentContainer>
                       <ContentContainer className="w-[200px] h-[100px] ml-auto mt-auto">
                         <QRCode
-                          value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
+                          value={`${APP_URL}/history/view-booking/${booking?.id}`}
                           size={256}
                           style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                           viewBox={`0 0 256 256`}

@@ -15,7 +15,6 @@ import Auth from 'src/middleware/storage';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 
-
 const MigrateAcuityUser = () => {
   const navigate = useNavigate();
   const appPasswordRef = useRef(null);
@@ -83,13 +82,14 @@ const MigrateAcuityUser = () => {
         return;
       },
       onError: (error) => {
-        Mixpanel.track('Existing Kiira Account Migration Failed!', {
+        Mixpanel.track('Failed: Existing Kiira Account Migration Failed!', {
           // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: data?.email
+            email: data?.email,
+            url: error?.response?.config?.url
           }
         });
 

@@ -8,6 +8,7 @@ import { truncate } from 'src/utils/truncate';
 import { useNavigate } from 'react-router-dom';
 import isEmpty from 'src/utils/isEmpty';
 import { IMAGES } from 'src/data';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const ServiceContainer = styled(ContentContainer)`
   ${tw`col-auto flex-col w-full max-w-max rounded-3xl h-full bg-kiiraBg2 gap-2`};
@@ -58,11 +59,18 @@ const ServiceCard = ({ service, appointedDoctor }) => {
           <Button
             size="sm"
             className="w-32 rounded-full text-[8px] bg-kiiraBlue"
-            onClick={() =>
+            onClick={() => {
+              Mixpanel.track(
+                `${
+                  !isEmpty(appointedDoctor)
+                    ? "Appointment selected! -> via Doctor's List"
+                    : 'Appointment selected! -> via appointment list'
+                }`
+              );
               navigate(`${ROUTES.CHOOSE_APPOINTMENT}/appointment-type`, {
                 state: { service, ...(!isEmpty(appointedDoctor) && { doctor: appointedDoctor }) }
-              })
-            }>
+              });
+            }}>
             Book now
           </Button>
         </ContentContainer>

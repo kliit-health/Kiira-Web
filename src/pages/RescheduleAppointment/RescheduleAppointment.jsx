@@ -53,13 +53,13 @@ const RescheduleAppointment = () => {
   }, [id, doctors, service]);
 
   const handleReschedule = () => {
-    if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
-      Toast.fire({
-        icon: 'error',
-        title: 'Your current subscription has expired. Please renew your subscription'
-      });
-      return;
-    }
+    // if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
+    //   Toast.fire({
+    //     icon: 'error',
+    //     title: 'Your current subscription has expired. Please renew your subscription'
+    //   });
+    //   return;
+    // }
 
     const payload = {
       booking_id: service?.id,
@@ -98,10 +98,8 @@ const RescheduleAppointment = () => {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            first_name: profile?.first_name,
-            last_name: profile?.last_name,
             email: profile?.email,
-            ...payload
+            url: error?.response?.config?.url
           }
         });
 
@@ -109,7 +107,9 @@ const RescheduleAppointment = () => {
           icon: 'error',
           title: 'Error',
           html: `<div className='text-xs'>${
-            !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+            !isEmpty(error?.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
           }</div>`,
           confirmButtonColor: 'red',
           showClass: {
@@ -119,6 +119,18 @@ const RescheduleAppointment = () => {
             popup: 'animate__animated animate__fadeOutUp'
           }
         });
+
+        if (error?.response?.status === 423) {
+          setTimeout(() => {
+            Toast.fire({
+              icon: 'error',
+              title: 'Your current subscription has expired. Please renew your subscription'
+            });
+            navigate(ROUTES.SUBSCRIPTION);
+          }, 1500);
+
+          return;
+        }
       }
     });
   };

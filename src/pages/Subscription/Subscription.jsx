@@ -65,9 +65,6 @@ const Subscription = () => {
 
           Mixpanel.track('Success - Subscription Canceled', {
             data: {
-              id: profile?.id,
-              first_name: profile?.first_name,
-              last_name: profile?.last_name,
               email: profile?.email,
               subscriptionName: currentSubscriptionDetails?.name
             }
@@ -88,8 +85,8 @@ const Subscription = () => {
               message: !isEmpty(error.response?.data?.message)
                 ? error.response?.data?.message
                 : error?.message,
-              email: profile?.email,
-              subscriptionName: currentSubscriptionDetails?.name
+              subscriptionName: currentSubscriptionDetails?.name,
+              url: error?.response?.config?.url
             }
           });
           Toast.fire({

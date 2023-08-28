@@ -47,7 +47,8 @@ const RequestAcuityMigration = () => {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
               : error?.message,
-            email: data?.email
+            email: data?.email,
+            url: error?.response?.config?.url
           }
         });
 

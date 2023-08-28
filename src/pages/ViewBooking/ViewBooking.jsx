@@ -30,6 +30,7 @@ import { Empty, SaveBooking } from 'src/components';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import { APP_URL } from 'src/utils/constants';
 
 const ViewBooking = () => {
   const navigate = useNavigate();
@@ -56,12 +57,7 @@ const ViewBooking = () => {
       onSuccess: (response) => {
         queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
         refetch();
-        Mixpanel.track('Success - Appointment Cancelled', {
-          data: {
-            id: id,
-            ...booking
-          }
-        });
+        Mixpanel.track('Success - Appointment Cancelled');
 
         Toast.fire({
           icon: 'success',
@@ -75,7 +71,8 @@ const ViewBooking = () => {
             id: id,
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
-              : error?.message
+              : error?.message,
+            url: error?.response?.config?.url
           }
         });
         Toast.fire({
@@ -232,9 +229,7 @@ const ViewBooking = () => {
                   <ContentContainer row className="gap-2 items-center flex-wrap">
                     <IconButton
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          `https://kiira-hmp.netlify.app/history/view-booking/${id}`
-                        );
+                        navigator.clipboard.writeText(`${APP_URL}/history/view-booking/${id}`);
                         Toast.fire({
                           icon: 'success',
                           html: `<span className="text-[10px]">Link copied to clipboard</span>`,
@@ -342,7 +337,7 @@ const ViewBooking = () => {
                     </ContentContainer>
                     <ContentContainer className="h-12 w-12 md:h-24 md:w-24 min-w-[50px] min-h-[50px] ml-auto mt-auto">
                       <QRCode
-                        value={`https://kiira-hmp.netlify.app/history/view-booking/${booking?.id}`}
+                        value={`${APP_URL}/history/view-booking/${booking?.id}`}
                         size={256}
                         style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
                         viewBox={`0 0 256 256`}
