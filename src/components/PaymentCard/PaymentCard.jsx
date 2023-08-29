@@ -23,9 +23,7 @@ import {
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { Toast } from 'src/utils';
-import lookup from 'country-code-lookup';
 import isEmpty from 'src/utils/isEmpty';
-import countryList, { getCountryFlag } from 'src/utils/countryList';
 import { useAddSubscriptionCard, usePlanSubscription, useProfile } from 'src/queries/queryHooks';
 import { Loader } from '..';
 import { useLocalStore } from 'src/store';
@@ -36,6 +34,7 @@ import { ROUTES } from 'src/routes/Paths';
 import Auth from 'src/middleware/storage';
 import { STRIPE_PK } from 'src/utils/constants';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import countryCodes from 'country-codes-list';
 
 const PaymentCard = (props) => {
   const [stripePromise] = useState(async () => {
@@ -92,7 +91,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
 
   const [err, setError] = useState({ e: false, message: '' });
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
   const [field, setField] = useState({
     name: '',
     country: '',
@@ -199,8 +198,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                 },
                 onError: (error) => {
                   Mixpanel.track('Failed - Unable to add new payment card.', {
-                    error: error,
-                    url: error?.response?.config?.url,
                     data: {
                       id: profile?.id,
                       message: !isEmpty(error.response?.data?.message)
@@ -261,7 +258,6 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               },
               onError: (error) => {
                 Mixpanel.track('Failed - Subscription activation error', {
-                  // error: error,
                   data: {
                     id: profile?.id,
                     message: !isEmpty(error.response?.data?.message)
@@ -376,16 +372,16 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
               className="font-montserrat"
               label="Country or Region"
               size="lg">
-              {countryList
-                ?.map((name) => {
-                  const country = lookup.byCountry(name);
+              {countryCodes
+                ?.all()
+                ?.map((countryData) => {
+                  const name = countryData?.countryNameEn;
                   return (
                     <Option
                       key={name}
-                      value={country?.iso2}
-                      className="flex items-center gap-2 z-[999] font-montserrat">
-                      <span className="text-2xl rounded-full">{getCountryFlag(country?.iso2)}</span>{' '}
-                      {name}
+                      value={countryData?.countryCode}
+                      className="flex items-center gap-2 z-[999] font-montserrat max-w-md">
+                      <span className="text-2xl rounded-full">{countryData?.flag}</span> {name}
                     </Option>
                   );
                 })

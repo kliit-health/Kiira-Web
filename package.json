@@ -23,6 +23,7 @@
     "@tanstack/react-query-devtools": "^4.29.12",
     "axios": "^1.4.0",
     "country-code-lookup": "^0.1.0",
+    "country-codes-list": "^1.6.11",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "mixpanel-browser": "^2.47.0",

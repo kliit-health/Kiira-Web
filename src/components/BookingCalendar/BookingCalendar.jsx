@@ -61,7 +61,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
   // }, []);
 
   const datePayload = {
-    month: monthDate,
+    month: monthDate === 'Invalid date' ? moment(new Date()).format('YYYY-MM') : monthDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
     ...(!isEmpty(doctor) && { calendarID: doctor.id })
@@ -76,7 +76,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
   const availableDates = dateData?.data?.dates;
 
   const timePayload = {
-    date: timeDate,
+    date: timeDate === 'Invalid date' ? moment(new Date()).add(1, 'day').format('YYYY-MM-DD') : timeDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
     ...(!isEmpty(doctor) && { calendarID: doctor.id })
@@ -89,6 +89,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
     refetch: refetchTimeData,
     isFetching
   } = useAvailableTimes(timePayload);
+
   const timesDates = timeData?.data?.times;
 
   useEffect(() => {
@@ -224,6 +225,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                 label={
                   <Alert color="pink" className="text-white bg-opacity-85">
                     {errorMsg || ' No time slot available for selected date:'}
+                    <br />{' '}
                     <b>
                       {' '}
                       {
@@ -235,7 +237,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                         //   `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
                         //   'D-MM-YYY'
                         // ).format('MMMM DD,')
-                      }
+                      }{' '}
                       {moment(
                         `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
                         'D-MM-YYY'

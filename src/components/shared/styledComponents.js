@@ -219,6 +219,6 @@ export const SelectWrapper = styled(ContentContainer)`
   ${tw`z-[99] relative`}
 
   ul {
-    ${tw`w-full lg:!w-[70vw] !max-w-[70vw]`}
+    ${tw`w-full !min-w-[200px] !max-w-[70vw]  lg:!max-w-[400px] `}
   }
 `;

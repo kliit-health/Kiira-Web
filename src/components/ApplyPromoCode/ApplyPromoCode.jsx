@@ -50,7 +50,6 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
           error?.response
         );
         Mixpanel.track('Error: Validate coupon code: ->', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error?.response?.data?.message

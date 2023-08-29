@@ -67,7 +67,6 @@ const ChangePassword = () => {
       onError: (error) => {
         // console.log(' \n 🚀 ~ file: ResetPassword.jsx:53 ~ onSubmit ~ error:', error);
         Mixpanel.track('Password Changed Failed', {
-          // error: error,
           data: {
             id: profile?.id,
             email: profile?.email,

@@ -42,7 +42,6 @@ const RequestAcuityMigration = () => {
       onError: (error) => {
         console.log('\n🚀 ~ file: RequestAcuityMigration.jsx:54 ~ onSubmit ~ error:', error);
         Mixpanel.track('Failed - Initiated Existing Kiira Account Migration Request', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

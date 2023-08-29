@@ -6,7 +6,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
 import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
-import Api from 'src/middleware/api';
 import Auth from 'src/middleware/storage';
 import { useSignup, useSignupWithGoogle } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
@@ -86,6 +85,16 @@ const Signup = () => {
             : error?.message
         });
 
+        Mixpanel.track('Error: User Registration Failed', {
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            email: data?.email,
+            url: error?.response?.config?.url
+          }
+        });
+
         if (error.response?.status === 426) {
           setStoredEmail({ email: data?.email });
           navigate(ROUTES.GET_ACTIVATION_CODE);
@@ -153,7 +162,7 @@ const Signup = () => {
                     autoComplete="email"
                     label="Email"
                     size="lg"
-                    className="ring-transparent ring-0 w-full"
+                    className="ring-transparent ring-0 w-full lowercase"
                     name="email"
                     {...register('email', {
                       required: 'Email is required.',
@@ -312,7 +321,7 @@ const Signup = () => {
             </AppTypography> */}
           </ContentContainer>
 
-          <SocialAuth
+          {/* <SocialAuth
             dividerText="Or continue with"
             onGoogleAuthSuccess={(credential) => {
               const data = { accessToken: credential };
@@ -357,7 +366,6 @@ const Signup = () => {
                   );
 
                   Mixpanel.track('Google Authentication Failed', {
-                    error: error,
                     data: {
                       message: !isEmpty(error.response?.data?.message)
                         ? error.response?.data?.message
@@ -375,7 +383,7 @@ const Signup = () => {
                 }
               });
             }}
-          />
+          /> */}
         </CardBody>
       </Card>
     </AuthLayout>

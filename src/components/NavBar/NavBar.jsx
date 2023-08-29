@@ -56,14 +56,21 @@ export default function AppNavBar() {
                 </AppButton>
               </Link>
             ) : (
-              <AppLinkExternal href="https://www.kiira.io/become-a-member">
-                {' '}
+              <Link to={ROUTES.SUBSCRIPTION}>
                 <AppButton
                   size="sm"
                   className="px-4 py-2 text-white capitalize text-[10px] shadow-transparent">
                   Join Kiira
                 </AppButton>
-              </AppLinkExternal>
+              </Link>
+              // <AppLinkExternal href="https://www.kiira.io/become-a-member">
+              //   {' '}
+              //   <AppButton
+              //     size="sm"
+              //     className="px-4 py-2 text-white capitalize text-[10px] shadow-transparent">
+              //     Join Kiira
+              //   </AppButton>
+              // </AppLinkExternal>
             )}
             {pathname === ROUTES.SIGINUP_SUBSCRIPTION ? (
               <Button

@@ -58,7 +58,6 @@ const CodeVerification = () => {
       onError: (error) => {
         console.log(' \n 🚀 ~ file: CodeVerification.jsx:45 ~ onSubmit ~ error:', error);
         Mixpanel.track('Failed - Account verification failed!', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

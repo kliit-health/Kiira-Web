@@ -66,7 +66,6 @@ const ViewBooking = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed - Cancel Appointment failed', {
-          // error: error,
           data: {
             id: id,
             message: !isEmpty(error.response?.data?.message)
@@ -147,105 +146,116 @@ const ViewBooking = () => {
                 ${booking?.checkout_session?.amount_total || 0}
               </AppTypography>
 
-              {booking?.appointment?.canceled ? (
+              {booking?.status === 'external_appointment' ? (
                 <Button
                   size="sm"
                   variant="text"
                   className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                  Appointment Cancelled
+                  External appointment booking
                 </Button>
-              ) : booking?.status === 'payment_ticketed' && !booking?.appointment?.canceled ? (
-                <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
-                  <Button
-                    disabled={!booking?.appointment?.canClientReschedule}
-                    onClick={() =>
-                      navigate(
-                        `${ROUTES.HISTORY}/${booking?.appointment?.id}${ROUTES.RESCHEDULE_APPOINTMENT}`,
-                        {
-                          state: { service: booking }
-                        }
-                      )
-                    }
-                    size="sm"
-                    variant="text"
-                    className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:bg-transparent hover:opacity-80 hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
-                    {!booking?.appointment?.canClientReschedule
-                      ? 'Reschedule Unavailable'
-                      : 'Reschedule Appointment'}
-                  </Button>
-                  <Popover
-                    animate={{
-                      mount: { scale: 1, y: 0 },
-                      unmount: { scale: 0, y: 25 }
-                    }}>
-                    <PopoverHandler>
+              ) : (
+                <>
+                  {booking?.appointment?.canceled ? (
+                    <Button
+                      size="sm"
+                      variant="text"
+                      className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                      Appointment Cancelled
+                    </Button>
+                  ) : booking?.status === 'payment_ticketed' && !booking?.appointment?.canceled ? (
+                    <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                       <Button
-                        disabled={!booking?.appointment?.canClientCancel}
+                        disabled={!booking?.appointment?.canClientReschedule}
+                        onClick={() =>
+                          navigate(
+                            `${ROUTES.HISTORY}/${booking?.appointment?.id}${ROUTES.RESCHEDULE_APPOINTMENT}`,
+                            {
+                              state: { service: booking }
+                            }
+                          )
+                        }
                         size="sm"
                         variant="text"
-                        className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2 ">
-                        Cancel
+                        className="text-sm text-kiiraBlue font-poppins font-medium bg-transparent hover:bg-transparent hover:opacity-80 hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                        {!booking?.appointment?.canClientReschedule
+                          ? 'Reschedule Unavailable'
+                          : 'Reschedule Appointment'}
                       </Button>
-                    </PopoverHandler>
-                    <PopoverContent className="max-w-[90vw] sm:max-w-[60vw]">
-                      <ContentContainer className="items-center gap-1 ">
-                        <ContentContainer className=" flex flex-col gap-1 text-[0.8rem]">
-                          <p className="font-bold uppercase text-kiiraBlackishGreen">
-                            Cancellation / No-Show Policy:
-                          </p>
-                          <p>
-                            We require 48 hours of notice to cancel or reschedule an appointment,
-                            otherwise, a 50% fee will apply.
-                          </p>{' '}
-                          <p>
-                            If your appointment was canceled within 48 hours of your appointment
-                            start time, you will be charged 50% of your appointment fee.
-                          </p>
-                          <p>
-                            If your appointment was canceled prior to 48 hours then no worries, you
-                            will not be charged!
-                          </p>
-                          <p>Thank you for your understanding!</p>
-                          <p>
-                            We are excited to serve you and we look forward to your appointment.
-                          </p>
-                          <b> Best, Kiira Team</b>
-                        </ContentContainer>
-                        <AppTypography
-                          variant="small"
-                          className="text-kiiraBlackishGreen  font-medium">
-                          Proceed to cancel this appointment?
-                        </AppTypography>{' '}
-                        <Button
-                          onClick={handleCancelAppointment}
+                      <Popover
+                        animate={{
+                          mount: { scale: 1, y: 0 },
+                          unmount: { scale: 0, y: 25 }
+                        }}>
+                        <PopoverHandler>
+                          <Button
+                            disabled={!booking?.appointment?.canClientCancel}
+                            size="sm"
+                            variant="text"
+                            className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2 ">
+                            Cancel
+                          </Button>
+                        </PopoverHandler>
+                        <PopoverContent className="max-w-[90vw] sm:max-w-[60vw]">
+                          <ContentContainer className="items-center gap-1 ">
+                            <ContentContainer className=" flex flex-col gap-1 text-[0.8rem]">
+                              <p className="font-bold uppercase text-kiiraBlackishGreen">
+                                Cancellation / No-Show Policy:
+                              </p>
+                              <p>
+                                We require 48 hours of notice to cancel or reschedule an
+                                appointment, otherwise, a 50% fee will apply.
+                              </p>{' '}
+                              <p>
+                                If your appointment was canceled within 48 hours of your appointment
+                                start time, you will be charged 50% of your appointment fee.
+                              </p>
+                              <p>
+                                If your appointment was canceled prior to 48 hours then no worries,
+                                you will not be charged!
+                              </p>
+                              <p>Thank you for your understanding!</p>
+                              <p>
+                                We are excited to serve you and we look forward to your appointment.
+                              </p>
+                              <b> Best, Kiira Team</b>
+                            </ContentContainer>
+                            <AppTypography
+                              variant="small"
+                              className="text-kiiraBlackishGreen  font-medium">
+                              Proceed to cancel this appointment?
+                            </AppTypography>{' '}
+                            <Button
+                              onClick={handleCancelAppointment}
+                              size="sm"
+                              variant="outlined"
+                              className="text-sm text-red-500 font-poppins border border-red-500 font-medium bg-transparent hover:shadow-none hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2">
+                              Continue
+                            </Button>
+                          </ContentContainer>
+                        </PopoverContent>
+                      </Popover>
+                      <ContentContainer row className="gap-2 items-center flex-wrap">
+                        <IconButton
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${APP_URL}/history/view-booking/${id}`);
+                            Toast.fire({
+                              icon: 'success',
+                              html: `<span className="text-[10px]">Link copied to clipboard</span>`,
+                              position: 'top-right'
+                            });
+                          }}
+                          variant="text"
                           size="sm"
-                          variant="outlined"
-                          className="text-sm text-red-500 font-poppins border border-red-500 font-medium bg-transparent hover:shadow-none hover:bg-transparent shadow-none ring-transparent capitalize p-0.5 px-2">
-                          Continue
-                        </Button>
-                      </ContentContainer>
-                    </PopoverContent>
-                  </Popover>
-                  <ContentContainer row className="gap-2 items-center flex-wrap">
-                    <IconButton
-                      onClick={() => {
-                        navigator.clipboard.writeText(`${APP_URL}/history/view-booking/${id}`);
-                        Toast.fire({
-                          icon: 'success',
-                          html: `<span className="text-[10px]">Link copied to clipboard</span>`,
-                          position: 'top-right'
-                        });
-                      }}
-                      variant="text"
-                      size="sm"
-                      className="border border-kiiraBlue flex items-center justify-center">
-                      <ShareIcon />
-                    </IconButton>
+                          className="border border-kiiraBlue flex items-center justify-center">
+                          <ShareIcon />
+                        </IconButton>
 
-                    <SaveBooking booking={booking} />
-                  </ContentContainer>
-                </ContentContainer>
-              ) : null}
+                        <SaveBooking booking={booking} />
+                      </ContentContainer>
+                    </ContentContainer>
+                  ) : null}
+                </>
+              )}
             </ContentContainer>
           </ContentContainer>
 
@@ -313,6 +323,7 @@ const ViewBooking = () => {
                       </p>
                     ) : null}
                   </ContentContainer>
+
                   <ContentContainer className="w-full flex-row gap-1 flex-wrap sm:flex-nowrap justify-between">
                     <ContentContainer>
                       {!isEmpty(booking?.calendar?.name) ? (

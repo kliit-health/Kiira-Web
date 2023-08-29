@@ -97,7 +97,6 @@ const Login = () => {
         });
 
         Mixpanel.track('Login Failed ->', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error?.response?.data?.message
@@ -136,7 +135,7 @@ const Login = () => {
                 autoFocus
                 label="Email"
                 size="lg"
-                className="ring-transparent ring-0"
+                className="ring-transparent ring-0 lowercase"
                 name="email"
                 {...register('email', {
                   required: 'Email is required.',
@@ -234,7 +233,7 @@ const Login = () => {
           </ContentContainer>
 
           <SocialAuth
-          dividerClassName='mb-4'
+            dividerClassName="mb-4"
             onGoogleAuthSuccess={(credential) => {
               const data = { accessToken: credential };
 

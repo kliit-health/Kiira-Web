@@ -83,7 +83,6 @@ const MigrateAcuityUser = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed: Existing Kiira Account Migration Failed!', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

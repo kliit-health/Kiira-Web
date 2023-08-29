@@ -93,7 +93,6 @@ const RescheduleAppointment = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed - Reschedule Appointment', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
