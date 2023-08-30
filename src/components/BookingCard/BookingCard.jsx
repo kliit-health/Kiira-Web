@@ -13,6 +13,10 @@ const BookingContainer = styled(ContentContainer)(({ disabled }) => [
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
   const doctor = bookingData?.calendar;
+
+  const isViewableAppointment =
+    bookingData?.status === 'payment_ticketed' || bookingData?.status === 'external_appointment';
+
   return (
     <BookingContainer
       className={
@@ -239,6 +243,11 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 {bookingData?.status === 'payment_successful' ? (
                   <i className="fa-solid fa-circle-check text-kiiraBlue  font-semibold"></i>
                 ) : null}
+
+                {bookingData?.status === 'external_appointment' ? (
+                  <i className="fa-solid fa-arrows-turn-to-dots text-purple-600 font-semibold"></i>
+                ) : null}
+
                 {bookingData?.status === 'payment_ticketed' &&
                 bookingData?.appointment?.canceled ? (
                   <i className="fa-solid fa-calendar-xmark text-orange-500   font-semibold"></i>
@@ -272,11 +281,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 <AppButton
                   size="md"
                   fullWidth
-                  disabled={
-                    disabled ||
-                    bookingData?.status !== 'payment_ticketed' ||
-                    bookingData?.status !== 'external_appointment'
-                  }
+                  disabled={disabled || !isViewableAppointment}
                   onClick={() => bookingAction(bookingData)}>
                   View Booking
                 </AppButton>

@@ -84,6 +84,9 @@ const ViewBooking = () => {
     });
   };
 
+  const viewableAppointment =
+    booking?.status === 'payment_ticketed' || booking?.status === 'external_appointment';
+
   return (
     <ContentContainer
       width="100%"
@@ -107,6 +110,7 @@ const ViewBooking = () => {
           </AppNavLink>
         </Breadcrumbs>
       </ContentContainer>
+
       {isLoading && id !== 'undefined' ? (
         <ContentContainer className="flex flex-col h-full w-full min-h-[300px] items-center justify-center">
           <ThreeDots
@@ -150,7 +154,7 @@ const ViewBooking = () => {
                 <Button
                   size="sm"
                   variant="text"
-                  className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
+                  className="text-sm text-purple-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
                   External appointment booking
                 </Button>
               ) : (
@@ -376,7 +380,7 @@ const ViewBooking = () => {
                       Payment Booking Failed
                     </span>
                   </Alert>
-                ) : booking?.status !== 'payment_ticketed' ? (
+                ) : !viewableAppointment ? (
                   <Alert
                     variant="gradient"
                     color="amber"
@@ -394,6 +398,7 @@ const ViewBooking = () => {
                 ) : (
                   booking?.appointment?.formsText
                 )}
+
                 <ContentContainer className=" bg-kiiraBg2 rounded p-4 flex flex-col gap-1 text-[0.8rem]">
                   <p className="font-bold uppercase text-kiiraBlackishGreen">
                     Cancellation / No-Show Policy:
