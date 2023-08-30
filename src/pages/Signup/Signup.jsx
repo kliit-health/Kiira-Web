@@ -2,12 +2,19 @@ import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import moment from 'moment-timezone';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import PhoneInput, { isPossiblePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
+import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
-import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
+import { AppPasswordInput, Loader } from 'src/components';
+import {
+  AppButton,
+  AppTypography,
+  ContentContainer,
+  CustomPhoneInput
+} from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import Auth from 'src/middleware/storage';
-import { useSignup, useSignupWithGoogle } from 'src/queries/queryHooks';
+import { useSignup } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
@@ -19,23 +26,34 @@ const Signup = () => {
   const appPasswordRef = useRef(null);
   const appPasswordRef2 = useRef(null);
   const [checked, setChecked] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState({ phone: '', error: false, message: '' });
+
   const setStoredEmail = useLocalStore((state) => state.setStoredEmail);
 
   const { mutate, isLoading } = useSignup();
-  const { mutate: mutateGoogleAuth, isLoading: isLoadingGoogleAuth } = useSignupWithGoogle();
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors }
   } = useForm();
 
   const onSubmit = (data) => {
+    if (phoneNumber.phone.length < 5 || !isPossiblePhoneNumber(phoneNumber.phone)) {
+      setPhoneNumber({
+        ...phoneNumber,
+        error: true,
+        message: `Warning: Please enter a valid phone number`
+      });
+      return;
+    }
+
     if (!checked) {
       Toast.fire({
         icon: 'warning',
-        title: `Please checkout our terms and conditions before you proceed`,
+        title: `Please check our terms and conditions before you proceed`,
         width: '80vw'
       });
       return;
@@ -180,30 +198,26 @@ const Signup = () => {
                   )}
                 </ContentContainer>
                 <ContentContainer className="gap-1 w-full">
-                  <Input
-                    autoComplete="tel"
-                    label="Phone Number"
-                    size="lg"
-                    className="ring-transparent ring-0 w-full"
+                  <PhoneInputWithCountry
+                    international
+                    // countryCallingCodeEditable={false}
+                    defaultCountry="US"
+                    placeholder="Phone Number"
                     name="phone_number"
-                    {...register('phone_number', {
-                      required: 'Phone number is required.',
-                      validate: {
-                        // checkLength: (value) => value.length === 11
-                        // matchPattern: (value) =>
-                        //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
-                      }
-                    })}
-                    error={!isEmpty(errors.phone_number)}
+                    className="h-11 px-1.5 py-2 border border-gray-400 rounded-md focus-visible:border-gray-900"
+                    control={control}
+                    rules={{ required: 'Phone number is required.' }}
+                    value={phoneNumber.phone}
+                    onChange={(text) => {
+                      setPhoneNumber({ phone: text, error: false, message: '' });
+                    }}
+                    focusInputOnCountrySelection
+                    inputComponent={CustomPhoneInput}
+                    autoComplete="tel"
                   />
-                  {errors.phone_number && (
-                    <ContentContainer className="text-red-500 font-medium text-xs">
-                      {errors.phone_number.message}
-                    </ContentContainer>
-                  )}
-                  {errors?.phone_number?.type === 'checkLength' && (
-                    <ContentContainer className="text-red-500 font-medium text-xs">
-                      Wrong phone number format
+                  {phoneNumber.error && (
+                    <ContentContainer className=" text-red-500 font-medium text-xs">
+                      {phoneNumber?.message}
                     </ContentContainer>
                   )}
                 </ContentContainer>
@@ -290,7 +304,7 @@ const Signup = () => {
               </span>
             </div>
 
-            {isLoading || isLoadingGoogleAuth ? (
+            {isLoading ? (
               <Loader />
             ) : (
               <AppButton

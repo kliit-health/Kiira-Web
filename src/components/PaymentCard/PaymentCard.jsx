@@ -380,7 +380,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                     <Option
                       key={name}
                       value={countryData?.countryCode}
-                      className="flex items-center gap-2 z-[999] font-montserrat max-w-md">
+                      className="flex items-center gap-2 z-[999] font-montserrat max-w-lg">
                       <span className="text-2xl rounded-full">{countryData?.flag}</span> {name}
                     </Option>
                   );

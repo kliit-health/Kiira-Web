@@ -76,7 +76,10 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
   const availableDates = dateData?.data?.dates;
 
   const timePayload = {
-    date: timeDate === 'Invalid date' ? moment(new Date()).add(1, 'day').format('YYYY-MM-DD') : timeDate,
+    date:
+      timeDate === 'Invalid date'
+        ? moment(new Date()).add(1, 'day').format('YYYY-MM-DD')
+        : timeDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
     ...(!isEmpty(doctor) && { calendarID: doctor.id })
@@ -109,6 +112,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
       return;
     }
     const newMonth = `${selectedDay?.year}-${selectedDay?.month}-${selectedDay?.day}`;
+
     setMonthDate(moment(newMonth).format('YYYY-MM'));
     setTimeDate(moment(newMonth).format('YYYY-MM-DD'));
   }, [selectedDay]);
@@ -261,11 +265,11 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                           onTimeSelect({ appointmentType, doctor, bookingCheckout: time });
                         }, 250);
                       }}
-                      className={[
+                      className={
                         moment(timeSlots).format('hh:mm') == moment(selectedDate).format('hh:mm')
                           ? 'col bg-kiiraBg3 rounded-2xl flex items-center justify-center h-20 shadow-md cursor-pointer p-2 border-kiiraBlue'
                           : 'col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer p-2'
-                      ]}
+                      }
                       key={index.toString()}>
                       <AppTypography variant="small" className="font-medium text-sm text-center">
                         {moment(timeSlots).format('LT')}

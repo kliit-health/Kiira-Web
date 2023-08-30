@@ -1,13 +1,14 @@
 import { Navbar, IconButton, List, ListItem, Button } from '@material-tailwind/react';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
-import { AppButton, AppLink, AppLinkExternal } from '../shared/styledComponents';
+import { AppButton, AppLinkExternal } from '../shared/styledComponents';
 import { ReactComponent as GlobeIconSvg } from 'src/assets/images/globeIcon.svg';
 import useAuth from 'src/hooks/useAuth';
 
 export default function AppNavBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
   const { logout } = useAuth();
 
@@ -78,6 +79,7 @@ export default function AppNavBar() {
                 variant="text"
                 onClick={() => {
                   logout();
+                  navigate(ROUTES.LOGIN);
                 }}
                 className="text-red-500 hover:bg-white uppercase hover:shadow-sm">
                 Log Out

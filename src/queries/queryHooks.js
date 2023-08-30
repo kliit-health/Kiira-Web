@@ -39,6 +39,7 @@ import {
   rescheduleBookedAppointment,
   validateCouponCode
 } from 'src/services/bookingServices';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 import isEmpty from 'src/utils/isEmpty';
 
 export const useLogin = () => {
@@ -101,17 +102,59 @@ export const useChangePassword = () => {
 };
 
 export const useProfile = () => {
-  const data = useQuery({ queryKey: [KEYS.PROFILE], queryFn: fetchUserProfile });
+  const data = useQuery({
+    queryKey: [KEYS.PROFILE],
+    queryFn: fetchUserProfile,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch users profile: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
+  });
   return data;
 };
 
 export const useProducts = () => {
-  const data = useQuery({ queryKey: [KEYS.PRODUCTS], queryFn: fetchKiiraProducts });
+  const data = useQuery({
+    queryKey: [KEYS.PRODUCTS],
+    queryFn: fetchKiiraProducts,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch products / subscription: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
+  });
   return data;
 };
 
 export const useDoctorsCalendars = () => {
-  const data = useQuery({ queryKey: [KEYS.DOCTORS], queryFn: fetchDoctorsCalendars });
+  const data = useQuery({
+    queryKey: [KEYS.DOCTORS],
+    queryFn: fetchDoctorsCalendars,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch Doctors: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
+  });
   return data;
 };
 
@@ -120,7 +163,18 @@ export const useAppointmentTypes = (docAppointment) => {
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENT_TYPES],
     queryFn: fetchAppointmentTypes,
-    enabled: enabledQuery
+    enabled: enabledQuery,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch appointment types: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -139,8 +193,16 @@ export const useAvailableDates = (payload) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [KEYS.AVAILABLE_TIMES] });
     },
-    onError: (err) => {
-      // console.log(' \n 🚀 ~ file: queryHooks.js:124 ~ useAvailableDates ~ err:', err);
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch available date: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
     }
   });
   return data;
@@ -155,7 +217,18 @@ export const useAvailableTimes = (payload) => {
   const data = useQuery({
     queryKey: [KEYS.AVAILABLE_TIMES],
     queryFn: () => fetchAvailableTimes(payload),
-    enabled: enabledQuery
+    enabled: enabledQuery,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch available time: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -180,7 +253,18 @@ export const useConfirmPayment = (id) => {
   const data = useQuery({
     queryKey: [KEYS.CONFIRM_BOOKING],
     queryFn: () => confirmPayment(id),
-    enabled: enabledQuery
+    enabled: enabledQuery,
+    onError: (error) => {
+      Mixpanel.track('Error: Confirm Booking Payment: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -188,7 +272,18 @@ export const useConfirmPayment = (id) => {
 export const useAppointmentsHistory = () => {
   const data = useQuery({
     queryKey: [KEYS.HISTORY],
-    queryFn: () => fetchAppointmentHistory()
+    queryFn: () => fetchAppointmentHistory(),
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch appointment history: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -199,7 +294,18 @@ export const useAppointmentById = (id) => {
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENTS_BY_ID, id],
     queryFn: () => fetchAppointmentByID(id),
-    enabled: enabledQuery
+    enabled: enabledQuery,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch appointment by ID: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -209,7 +315,18 @@ export const useAppointmentHistoryByID = (id) => {
   const data = useQuery({
     queryKey: [KEYS.APPOINTMENTS_HISTORY_BY_ID, id],
     queryFn: () => fetchAppointmentHistoryByID(id),
-    enabled: enabledQuery
+    enabled: enabledQuery,
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch appointment history by ID: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -225,7 +342,18 @@ export const useBlogCollections = () => {
 export const useBookingForms = () => {
   const data = useQuery({
     queryKey: [KEYS.BOOKING_FORMS],
-    queryFn: () => fetchBookingForms()
+    queryFn: () => fetchBookingForms(),
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch appointment type booking forms: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          email: data?.email,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };
@@ -294,7 +422,17 @@ export const useCancelSubscription = () => {
 export const useViewSavedCards = () => {
   const data = useQuery({
     queryKey: [KEYS.SAVED_CARDS],
-    queryFn: () => viewSavedCards()
+    queryFn: () => viewSavedCards(),
+    onError: (error) => {
+      Mixpanel.track('Error: Get Saved Cards: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          url: error?.response?.config?.url
+        }
+      });
+    }
   });
   return data;
 };

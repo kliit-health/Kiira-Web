@@ -3,10 +3,10 @@ import { Router } from './routes';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@material-tailwind/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import './App.css';
-import 'react-phone-number-input/style.css';
 import { GOOGLE_CLIENT_ID } from './utils/constants';
 import { useLocalStore } from './store';
+import './App.css';
+import 'react-phone-number-input/style.css'
 
 function App() {
   const setGoogleAuthScriptLoaded = useLocalStore((state) => state.setGoogleAuthScriptLoaded);

@@ -222,3 +222,7 @@ export const SelectWrapper = styled(ContentContainer)`
     ${tw`w-full !min-w-[200px] !max-w-[70vw]  lg:!max-w-[400px] `}
   }
 `;
+
+export const CustomPhoneInput = styled.input`
+  ${tw`border-none !p-0 bg-transparent ring-0 focus-visible:outline-none placeholder:text-sm`}
+`;
