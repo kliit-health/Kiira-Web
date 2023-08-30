@@ -317,19 +317,19 @@ const ViewBooking = () => {
                   <ContentContainer className="gap-2">
                     <p className="text-sm md:text-base overflow-auto break-words">
                       <b className="font-bold">Booking ID: </b>{' '}
-                      <span className="">{booking?.id}</span>
+                      <span className="">{booking?.appointment?.id}</span>
                     </p>
 
-                    {!isEmpty(booking?.reference) ? (
+                    {!isEmpty(booking?.checkout_session) ? (
                       <p className="text-sm md:text-base overflow-auto break-words">
                         <b className="font-bold">Payment Ref:</b>{' '}
-                        <span className="">{booking?.reference}</span>
+                        <span className="">{booking?.checkout_session?.payment_intent}</span>
                       </p>
                     ) : null}
                   </ContentContainer>
 
                   <ContentContainer className="w-full flex-row gap-1 flex-wrap sm:flex-nowrap justify-between">
-                    <ContentContainer>
+                    <ContentContainer className="mt-auto">
                       {!isEmpty(booking?.calendar?.name) ? (
                         <AppTypography
                           variant="h4"

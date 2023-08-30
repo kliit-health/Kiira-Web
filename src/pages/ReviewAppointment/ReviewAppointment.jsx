@@ -220,8 +220,88 @@ const ReviewAppointment = () => {
         </Breadcrumbs>
       </ContentContainer>
 
-      <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse  ">
-        <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4 ">
+      <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse">
+
+        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg p-4 visible xl:hidden">
+          <BookingCard review bookingData={bookingData} />
+
+          <AppTypography
+            variant="lead"
+            className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center">
+            Secure payment by <b>Stripe</b>
+          </AppTypography>
+
+          <ContentContainer className="flex-col gap-4">
+            <AppTypography variant="lead" className="text-xs md:text-sm  w-full">
+              Price Details
+            </AppTypography>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Base Fare
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.price}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Discount
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.discount || 0}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Taxes
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.taxes || 0}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Service Fee
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.serviceFee || 0}
+              </AppTypography>
+            </ContentContainer>
+          </ContentContainer>
+
+          <hr />
+
+          <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+            <AppTypography
+              variant="h6"
+              className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+              Total
+            </AppTypography>
+            <AppTypography
+              variant="h6"
+              className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+              ${appointmentType?.price}
+            </AppTypography>
+          </ContentContainer>
+        </ContentContainer>
+
+        <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4">
           <ContentContainer row className="flex justify-between flex-wrap md:flex-nowrap gap-4">
             <ContentContainer className="flex flex-col gap-3">
               <AppTypography
@@ -241,7 +321,7 @@ const ReviewAppointment = () => {
             </ContentContainer>
           </ContentContainer>
 
-          <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
+          {/* <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
             <ContentContainer className="flex flex-row items-center justify-center rounded-2xl gap-4 bg-[#FFE9BA] p-4 w-full md:w-1/2 lg:w-1/2 shadow-sm">
               <IconButton variant="text" ripple={false}>
                 <IMAGES.KiiraBirdieBlack />
@@ -278,7 +358,7 @@ const ReviewAppointment = () => {
               </AppLinkExternal>{' '}
               for retrieval.
             </AppTypography>
-          </ContentContainer>
+          </ContentContainer> */}
 
           {/* Card Options */}
           {/* <SavedCards /> */}
@@ -327,7 +407,7 @@ const ReviewAppointment = () => {
         </ContentContainer>
 
         {/* Booking Cart review */}
-        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
+        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 hidden xl:flex xl:max-h-[65vh]">
           <BookingCard review bookingData={bookingData} />
 
           <AppTypography
