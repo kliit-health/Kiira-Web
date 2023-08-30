@@ -62,7 +62,7 @@ const Inbox = () => {
           );
         })} */}
 
-        <Empty />
+        <Empty label='No messages yet!'/>
       </ContentContainer>
     </MainLayout>
   );

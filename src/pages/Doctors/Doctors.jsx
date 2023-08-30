@@ -42,8 +42,9 @@ const Doctors = () => {
         height="100%"
         className="h-full min-h-[50vh] w-full  p-4 lg:px-10 lg:py-4 gap-4 overflow-hidden overflow-y-auto ">
         <ContentContainer className="flex flex-row w-full items-center justify-between flex-wrap xl:flex-nowrap gap-2">
+         
           <ContentContainer className="w-full flex flex-row items-center gap-2 flex-wrap md:flex-nowrap">
-            <AppTypography
+            {/* <AppTypography
               variant="small"
               className="text-kiiraText text-[0.6rem] uppercase font-medium">
               STATUS
@@ -60,7 +61,8 @@ const Doctors = () => {
                 <option value="bucharest">Unavailable</option>
                 <option value="bucharest">11:00 - 17:00</option>
               </select>
-            </div>
+            </div> */}
+
             <ContentContainer className="w-full lg:w-3/5">
               <SearchInput
                 label="Find doctors by name or title"
@@ -71,6 +73,7 @@ const Doctors = () => {
               />
             </ContentContainer>
           </ContentContainer>
+
         </ContentContainer>
         <ContentContainer>
           <div className="grid grid-flow-row md:grid-flow-row-dense md:grid-cols-2 lg:grid-cols-4 grid-col-1 gap-4 ">
