@@ -21,6 +21,7 @@ import KEYS from 'src/queries/queryKeys';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const SavedCards = () => {
   const location = useLocation();
@@ -70,6 +71,14 @@ const SavedCards = () => {
             '\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:',
             error
           );
+          Mixpanel.track('Error: Delete Saved Cards: ->', {
+            data: {
+              message: !isEmpty(error.response?.data?.message)
+                ? error?.response?.data?.message
+                : error?.message,
+              url: error?.response?.config?.url
+            }
+          });
           Toast.fire({
             icon: 'error',
             title: !isEmpty(error.response?.data?.message)

@@ -159,7 +159,6 @@ const ReviewAppointment = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed - Appointment Booking Failed!', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

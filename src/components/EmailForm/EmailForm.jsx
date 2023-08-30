@@ -63,7 +63,6 @@ const EmailForm = ({ contact, onSuccessCallback }) => {
       onError: (error) => {
         console.error('\n 🚀 ~ file: EmailForm.jsx:38 ~ onSubmit ~ error:', error);
         Mixpanel.track('Failed - Contact Doctor via Email Form', {
-          error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

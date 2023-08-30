@@ -7,7 +7,7 @@ mixpanel.init(MIXED_PANEL_TOKEN, {
   ...(import.meta.env.DEV && { debug: true })
 });
 
-let env_check = import.meta.env.PROD; // import.meta.env.MODE === 'production';
+let env_check = import.meta.env.PROD; // import.meta.env.DEV; // import.meta.env.PROD; // import.meta.env.MODE === 'production';
 
 let actions = {
   identify: (id) => {

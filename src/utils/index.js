@@ -23,3 +23,6 @@ export function ScrollToTop() {
 
   return null;
 }
+
+export const getCountryFlag = (iso2) =>
+  iso2?.replace(/./g, (ch) => String.fromCodePoint(0x1f1a5 + ch.toUpperCase().charCodeAt()));

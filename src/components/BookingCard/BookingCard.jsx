@@ -252,6 +252,8 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     ? 'Pending'
                     : bookingData?.status === 'payment_successful'
                     ? 'Success'
+                    : bookingData?.status === 'external_appointment'
+                    ? 'External appointment'
                     : bookingData?.status === 'payment_ticketed' &&
                       !bookingData?.appointment?.canceled
                     ? 'Appointment Confirmed'
@@ -262,14 +264,19 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
               </AppTypography>
             </ContentContainer>
 
-            {bookingData?.status === 'payment_ticketed' ? (
+            {bookingData?.status === 'payment_ticketed' ||
+            bookingData?.status === 'external_appointment' ? (
               <>
                 <hr className="bg-kiiraText" />
 
                 <AppButton
                   size="md"
                   fullWidth
-                  disabled={disabled || bookingData?.status !== 'payment_ticketed'}
+                  disabled={
+                    disabled ||
+                    bookingData?.status !== 'payment_ticketed' ||
+                    bookingData?.status !== 'external_appointment'
+                  }
                   onClick={() => bookingAction(bookingData)}>
                   View Booking
                 </AppButton>

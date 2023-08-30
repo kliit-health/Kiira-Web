@@ -80,7 +80,6 @@ const Subscription = () => {
         },
         onError: (error) => {
           Mixpanel.track('Failed - Cancel subscription failed', {
-            // error: error,
             data: {
               message: !isEmpty(error.response?.data?.message)
                 ? error.response?.data?.message

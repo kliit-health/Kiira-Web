@@ -79,47 +79,47 @@ const BookAppointment = ({ docAppointmentType, appointedDoctor }) => {
             <ButtonGroup ripple={true} size="sm" className="shadow-none bg-kiiraBg3 rounded-lg">
               <Button
                 onClick={() => handleSelectedFilter('')}
-                className={[
+                className={
                   selectedFilter === ''
                     ? 'bg-kiiraBlue text-white text-[10px]'
                     : 'bg-transparent text-kiiraText  text-[10px]'
-                ]}>
+                }>
                 ALL
               </Button>
               <Button
                 onClick={() => handleSelectedFilter('Kiira Health Palooza')}
-                className={[
+                className={
                   selectedFilter === 'Kiira Health Palooza'
                     ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
                     : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-                ]}>
+                }>
                 Kiira Health Palooza
               </Button>
               <Button
                 onClick={() => handleSelectedFilter('Melrose - In person Visit')}
-                className={[
+                className={
                   selectedFilter === 'Melrose - In person Visit'
                     ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
                     : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-                ]}>
+                }>
                 Melrose - In person Visit
               </Button>
               <Button
                 onClick={() => handleSelectedFilter('Melrose IV Drip - In person Visit')}
-                className={[
+                className={
                   selectedFilter === 'Melrose IV Drip - In person Visit'
                     ? 'bg-kiiraBlue text-white text-[10px] min-w-max'
                     : 'bg-transparent text-kiiraText text-[10px] min-w-max'
-                ]}>
+                }>
                 Melrose IV Drip - In person Visit
               </Button>
               <Button
                 onClick={() => handleSelectedFilter('Virtual Only')}
-                className={[
+                className={
                   selectedFilter === 'Virtual Only'
                     ? 'bg-kiiraBlue text-white text-[10px]'
                     : 'bg-transparent text-kiiraText  text-[10px]'
-                ]}>
+                }>
                 Virtual Only
               </Button>
             </ButtonGroup>

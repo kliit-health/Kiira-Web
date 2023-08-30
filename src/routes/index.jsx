@@ -31,8 +31,8 @@ import { PageNotFound } from 'src/components';
 
 export const Router = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
           <Route index path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.SIGINUP} element={<Signup />} />
@@ -71,7 +71,7 @@ export const Router = () => {
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
