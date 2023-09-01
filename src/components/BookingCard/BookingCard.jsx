@@ -260,7 +260,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     : bookingData?.status === 'pending'
                     ? 'Pending'
                     : bookingData?.status === 'payment_successful'
-                    ? 'Success'
+                    ? 'Requires attention'
                     : bookingData?.status === 'external_appointment'
                     ? 'External appointment'
                     : bookingData?.status === 'payment_ticketed' &&

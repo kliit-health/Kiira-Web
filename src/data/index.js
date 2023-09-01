@@ -39,6 +39,7 @@ import DrPilar from 'src/assets/images/doctors/DrPilar.png';
 import DrScut from 'src/assets/images/doctors/DrScut.png';
 import ConfirmBookingBirdie from 'src/assets/images/DrPenguin.png';
 import QR from 'src/assets/images/qrCode.png';
+import Stripe from 'src/assets/images/stripe.webp';
 import profilePlaceHolder from 'src/assets/images/profilePlaceHolder.jpeg';
 import { ReactComponent as PdfIcon } from 'src/assets/icons/pdfIcon.svg';
 import { ReactComponent as DownloadIcon } from 'src/assets/icons/Download.svg';
@@ -94,7 +95,8 @@ export const IMAGES = {
   EditIcon,
   subscriptionOval1: OvalPlan1,
   Empty,
-  CautionIcon
+  CautionIcon,
+  Stripe
 };
 
 export const profileState = {

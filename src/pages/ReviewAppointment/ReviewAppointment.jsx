@@ -138,7 +138,7 @@ const ReviewAppointment = () => {
         function initiateCheckoutRedirect() {
           setTimeout(() => {
             Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`);
-          }, 250);
+          }, 500);
 
           window.open(response?.data?.checkout_session?.url, '_self');
         }
@@ -221,14 +221,14 @@ const ReviewAppointment = () => {
       </ContentContainer>
 
       <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse">
-
         <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg p-4 visible xl:hidden">
           <BookingCard review bookingData={bookingData} />
 
           <AppTypography
             variant="lead"
-            className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center">
-            Secure payment by <b>Stripe</b>
+            className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center flex flex-row flex-nowrap items-center justify-center">
+            Secure payment by {/*<b>Stripe</b>*/}
+            <img loading="lazy" src={IMAGES.Stripe} alt="Stripe" className="h-7 w-16" />
           </AppTypography>
 
           <ContentContainer className="flex-col gap-4">

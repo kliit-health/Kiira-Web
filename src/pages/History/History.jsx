@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useNavigate } from 'react-router-dom';
 import { AddButton, BookingCard, Empty } from 'src/components';
-import { ContentContainer } from 'src/components/shared/styledComponents';
+import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { useAppointmentsHistory } from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
+import isEmpty from 'src/utils/isEmpty';
+import { searchFilter } from 'src/utils/searchFilter';
 
 const History = () => {
   const navigate = useNavigate();
 
   const { data, isLoading } = useAppointmentsHistory();
   const appointments = data?.data?.booking_history;
+
+  const [searchText, setSearchText] = useState('');
+  const [filteredAppointments, setFilteredAppointments] = useState(appointments);
+
+  useEffect(() => {
+    if (isEmpty(appointments)) return;
+    setFilteredAppointments(appointments);
+  }, [appointments]);
+
+  useEffect(() => {
+    if (!isEmpty(filteredAppointments)) return;
+    if (searchText === 'canceled') {
+      const filteer = appointments?.filter((booking) => booking?.appointment?.canceled);
+      setFilteredAppointments(filteer);
+    }
+    // searchFilter(searchText, 'status', setSearchText, appointments, setFilteredAppointments);
+  }, [filteredAppointments, searchText]);
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    searchFilter(text, 'status', setSearchText, appointments, setFilteredAppointments);
+  };
+
   return (
     <ContentContainer
       width="100%"
@@ -34,10 +59,37 @@ const History = () => {
       {!isLoading ? (
         <>
           <AddButton label="New Booking" onAddClick={() => navigate(ROUTES.BOOK_APPOINTMENT)} />
-          {appointments?.map((booking, index) => {
+          <ContentContainer className="flex-row gap-2 items-center w-full mt-8">
+            <AppTypography
+              variant="small"
+              className="text-kiiraText text-[0.875rem] uppercase font-medium">
+              Filter:
+            </AppTypography>
+
+            <div className="relative h-8 min-w-[60px]">
+              <select
+                value={searchText}
+                onChange={(e) => {
+                  handleSearch(e.target.value);
+                  return {};
+                }}
+                className="peer h-full w-full xl:w-5/12 rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+                <option value="" className="text-kiiraText text-xs">
+                  All
+                </option>
+                <option value="payment_ticketed" className="text-kiiraText text-xs">
+                  Upcoming Appointments
+                </option>
+                <option value="external_appointment">External Appointments</option>
+                <option value="canceled">Appointments Canceled</option>
+                <option value="payment_successful">Requires Attention</option>
+                <option value="payment_failed">Failed Bookings</option>
+              </select>
+            </div>
+          </ContentContainer>
+          {filteredAppointments?.map((booking, index) => {
             // console.log('\n 🚀 ~ file: History.jsx:40 ~ {appointments?.map ~ booking:', booking);
-            if (booking?.status === 'pending' || booking?.status === "payment_successful")
-              return;
+            if (booking?.status === 'pending' || booking?.status === 'payment_successful') return;
             return (
               <BookingCard
                 bookingData={booking}
@@ -48,6 +100,8 @@ const History = () => {
               />
             );
           })}
+
+          {isEmpty(filteredAppointments) && !isLoading ? <Empty /> : null}
         </>
       ) : null}
     </ContentContainer>

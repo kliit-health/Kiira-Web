@@ -320,10 +320,10 @@ const ViewBooking = () => {
                       <span className="">{booking?.appointment?.id}</span>
                     </p>
 
-                    {!isEmpty(booking?.checkout_session) ? (
+                    {!isEmpty(booking?.payment_intent_id) ? (
                       <p className="text-sm md:text-base overflow-auto break-words">
                         <b className="font-bold">Payment Ref:</b>{' '}
-                        <span className="">{booking?.checkout_session?.payment_intent}</span>
+                        <span className="">{booking?.payment_intent_id}</span>
                       </p>
                     ) : null}
                   </ContentContainer>
