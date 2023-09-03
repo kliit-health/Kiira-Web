@@ -14,7 +14,7 @@ const History = () => {
   const { data, isLoading } = useAppointmentsHistory();
   const appointments = data?.data?.booking_history;
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState(''); //'payment_ticketed'
   const [filteredAppointments, setFilteredAppointments] = useState(appointments);
 
   useEffect(() => {
@@ -23,13 +23,22 @@ const History = () => {
   }, [appointments]);
 
   useEffect(() => {
-    if (!isEmpty(filteredAppointments)) return;
     if (searchText === 'canceled') {
       const filteer = appointments?.filter((booking) => booking?.appointment?.canceled);
       setFilteredAppointments(filteer);
+      return;
+    }
+
+    if (searchText === 'payment_ticketed') {
+      const filteer = appointments?.filter(
+        (booking) => !booking?.appointment?.canceled && booking?.status === 'payment_ticketed'
+      );
+      console.log('\n 🚀 ~ file: History.jsx:36 ~ useEffect ~ filteer:', filteer);
+      setFilteredAppointments(filteer);
+      return;
     }
     // searchFilter(searchText, 'status', setSearchText, appointments, setFilteredAppointments);
-  }, [filteredAppointments, searchText]);
+  }, [appointments, searchText]);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -73,15 +82,16 @@ const History = () => {
                   handleSearch(e.target.value);
                   return {};
                 }}
-                className="peer h-full w-full xl:w-5/12 rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+                className="peer h-full w-full rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
                 <option value="" className="text-kiiraText text-xs">
                   All
                 </option>
                 <option value="payment_ticketed" className="text-kiiraText text-xs">
                   Upcoming Appointments
                 </option>
+                <option value="book_on_hold">Reserved Appointments</option>
                 <option value="external_appointment">External Appointments</option>
-                <option value="canceled">Appointments Canceled</option>
+                <option value="canceled">Canceled Appointments</option>
                 <option value="payment_successful">Requires Attention</option>
                 <option value="payment_failed">Failed Bookings</option>
               </select>

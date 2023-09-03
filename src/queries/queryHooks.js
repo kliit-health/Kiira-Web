@@ -19,6 +19,7 @@ import {
   deleteSavedCards,
   fetchSubscriptionHistory,
   fetchUserProfile,
+  getPaymentMethods,
   planSubscription,
   viewSavedCards
 } from 'src/services/userServices';
@@ -439,8 +440,8 @@ export const useViewSavedCards = () => {
 
 export const useDeleteUserCard = () => {
   const data = useMutation({
-    mutationFn: () => {
-      return deleteSavedCards();
+    mutationFn: (data) => {
+      return deleteSavedCards(data);
     }
   });
   return data;
@@ -494,6 +495,24 @@ export const useValidateCoupon = () => {
   const data = useMutation({
     mutationFn: (data) => {
       return validateCouponCode(data);
+    }
+  });
+  return data;
+};
+
+export const usePaymentMethods = () => {
+  const data = useQuery({
+    queryKey: [KEYS.PAYMENT_METHODS],
+    queryFn: () => getPaymentMethods(),
+    onError: (error) => {
+      Mixpanel.track('Error: Fetch payment methods failed: ->', {
+        data: {
+          message: !isEmpty(error?.response?.data?.message)
+            ? error?.response?.data?.message
+            : error?.message,
+          url: error?.response?.config?.url
+        }
+      });
     }
   });
   return data;

@@ -1,18 +1,20 @@
-import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
-import moment from 'moment-timezone';
+import { Breadcrumbs, Checkbox } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ApplyPromoCode, BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
+import { BookingCard, DynamicForms, Loader, PaymentMethods } from 'src/components';
 import {
   AppButton,
-  AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
-import { useBookingForms, useInitialisePayment, useProfile } from 'src/queries/queryHooks';
+import {
+  useBookingForms,
+  useInitialisePayment,
+  usePaymentMethods,
+  useProfile
+} from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
@@ -24,6 +26,9 @@ import { truncate } from 'src/utils/truncate';
 const ReviewAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { data: paymentMethodData } = usePaymentMethods();
+  const paymentMethods = paymentMethodData?.data?.payment_methods;
+
   const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
   const formsData = fData?.data.forms;
 
@@ -31,6 +36,10 @@ const ReviewAppointment = () => {
   const profile = profileData?.data?.user;
 
   const [reserveBooking, setReserveBooking] = useState(false);
+
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
+  const setSelectedPaymentMethod = useLocalStore((state) => state.setSelectedPaymentMethod);
+
   const [formResult, setFormResult] = useState({});
 
   const bookingParams = location.state?.data;
@@ -70,14 +79,6 @@ const ReviewAppointment = () => {
   }, [bookingData]);
 
   const handleInitialisePayment = () => {
-    // if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
-    //   Toast.fire({
-    //     icon: 'error',
-    //     title: 'Your current subscription has expired. Please renew your subscription'
-    //   });
-    //   return;
-    // }
-
     const keys = Object.keys(formResult);
 
     const isRequired = keys.filter((key) => {
@@ -100,6 +101,14 @@ const ReviewAppointment = () => {
       return;
     }
 
+    if (reserveBooking && (isEmpty(selectedPaymentMethod) || isEmpty(paymentMethods))) {
+      Toast.fire({
+        icon: 'error',
+        title: `An existing payment card is required to reserve your appointment booking`
+      });
+      return;
+    }
+
     let field = [];
 
     Object.entries(formResult).forEach(([key, value]) => {
@@ -108,6 +117,10 @@ const ReviewAppointment = () => {
     });
 
     const payload = {
+      ...(!isEmpty(selectedPaymentMethod) &&
+        !isEmpty(paymentMethods) && {
+          payment_method_id: selectedPaymentMethod?.id
+        }),
       datetime: bookingData?.bookingCheckout?.time,
       appointmentTypeID: appointmentType.id,
       success_url: `${APP_URL}${ROUTES.CONFIRM_BOOKING}`,
@@ -116,10 +129,6 @@ const ReviewAppointment = () => {
       fields: field,
       ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
     };
-    // console.log(
-    //   '\n 🚀 ~ file: ReviewAppointment.jsx:104 ~ handleInitialisePayment ~ payload:',
-    //   payload
-    // );
 
     mutate(payload, {
       onSuccess: (response) => {
@@ -128,7 +137,7 @@ const ReviewAppointment = () => {
             ...response?.data?.availability_time,
             appointment: response?.data?.appointment
           };
-
+          setSelectedPaymentMethod({});
           Mixpanel.track('Success - Appointment Booking ($0.00)');
           navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
             state: booking
@@ -136,6 +145,7 @@ const ReviewAppointment = () => {
         }
 
         function initiateCheckoutRedirect() {
+          setSelectedPaymentMethod({});
           setTimeout(() => {
             Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`);
           }, 500);
@@ -381,7 +391,9 @@ const ReviewAppointment = () => {
                   labelProps={{ className: 'py-0.5 rounded' }}
                   checked={reserveBooking}
                   className="p-1"
-                  onChange={() => setReserveBooking(!reserveBooking)}
+                  onChange={() => {
+                    setReserveBooking(!reserveBooking);
+                  }}
                 />
                 <span
                   className={[
@@ -397,9 +409,13 @@ const ReviewAppointment = () => {
                 {isLoading ? (
                   <Loader className="" />
                 ) : (
-                  <AppButton className="text-xs" onClick={handleInitialisePayment}>
-                    {reserveBooking ? 'Reserve' : ' Confirm Booking'}
-                  </AppButton>
+                  <>
+                    <PaymentMethods isReserved={reserveBooking} />
+
+                    <AppButton className="text-xs mt-4" onClick={handleInitialisePayment}>
+                      {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+                    </AppButton>
+                  </>
                 )}
               </ContentContainer>
             </>

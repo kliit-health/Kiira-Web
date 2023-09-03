@@ -62,9 +62,10 @@ const Api = {
     subscriptionHistory: () => ApiHandler.get(`/subscriptions/history`),
     confirmPayment: (id) => ApiHandler.get(`/appointments/book/confirmation/${id}`),
     viewSavedCards: () => ApiHandler.get(`/users/saved-card`),
-    deleteSavedCards: () => ApiHandler.delete(`/users/saved-card`),
+    deleteSavedCards: (id) => ApiHandler.delete(`/users/saved-card/${id}`),
     addSubscriptionCard: (data) => ApiHandler.put(`/users/saved-card`, data),
-    validateCoupon: (data) => ApiHandler.post(`/subscriptions/coupon`, data)
+    validateCoupon: (data) => ApiHandler.post(`/subscriptions/coupon`, data),
+    paymentMethods: () => ApiHandler.get(`/users/payment-methods`)
   }
 };
 

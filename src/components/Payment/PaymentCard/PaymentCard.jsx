@@ -10,8 +10,8 @@ import {
   Button
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import { AppTypography, ContentContainer, SelectWrapper } from '../shared/styledComponents';
-import { CloseIcon } from '../shared/AppIcons/AppIcons';
+import { AppTypography, ContentContainer, SelectWrapper } from '../../shared/styledComponents';
+import { CloseIcon } from '../../shared/AppIcons/AppIcons';
 import { bool, func } from 'prop-types';
 import {
   CardCvcElement,
@@ -25,7 +25,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { useAddSubscriptionCard, usePlanSubscription, useProfile } from 'src/queries/queryHooks';
-import { Loader } from '..';
 import { useLocalStore } from 'src/store';
 import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
@@ -35,6 +34,7 @@ import Auth from 'src/middleware/storage';
 import { STRIPE_PK } from 'src/utils/constants';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import countryCodes from 'country-codes-list';
+import { Loader } from 'src/components';
 
 const PaymentCard = (props) => {
   const [stripePromise] = useState(async () => {
