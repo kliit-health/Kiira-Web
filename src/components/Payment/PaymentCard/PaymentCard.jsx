@@ -12,7 +12,7 @@ import {
 import React, { useState } from 'react';
 import { AppTypography, ContentContainer, SelectWrapper } from '../../shared/styledComponents';
 import { CloseIcon } from '../../shared/AppIcons/AppIcons';
-import { bool, func } from 'prop-types';
+import { bool, func, object } from 'prop-types';
 import {
   CardCvcElement,
   CardExpiryElement,
@@ -74,18 +74,31 @@ const CARD_ELEMENT_OPTIONS = {
   }
 };
 
-const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
+const PaymentCardElement = ({
+  dismissHandler,
+  showCloseButton,
+  strictlyAddNewCard,
+  isStrictlyPaymentSubscription,
+  isStrictlyOtherPayment,
+  handleOtherPaymentGateway
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { pathname } = location;
-  const { data: userProfile, refetch: refetchProfileData } = useProfile();
-  const profile = userProfile?.data?.user;
-  const selectedPlan = useLocalStore((state) => state.storedData);
-  const couponCode = useLocalStore((state) => state.coupon);
-  const setCoupon = useLocalStore((state) => state.setCoupon);
   const queryClient = useQueryClient();
   const stripe = useStripe();
   const elements = useElements();
+
+  const { pathname } = location;
+
+  const { data: userProfile, refetch: refetchProfileData } = useProfile();
+  const profile = userProfile?.data?.user;
+
+  const selectedPlan = useLocalStore((state) => state.storedData);
+  const couponCode = useLocalStore((state) => state.coupon);
+  const setCoupon = useLocalStore((state) => state.setCoupon);
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
+  const setSelectedPaymentMethod = useLocalStore((state) => state.setSelectedPaymentMethod);
+
   const { mutate, isLoading } = usePlanSubscription();
   const { mutate: mutateAddCard, isLoading: addCardLoading } = useAddSubscriptionCard();
 
@@ -142,7 +155,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
     setLoading(true);
 
     try {
-      //create token method
+      // Create new Card Token element
       const result = await stripe.createToken(cardElement, {
         name: field?.name,
         address_country: field.country,
@@ -163,101 +176,34 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
           });
         }, 2500);
       } else {
-        const payload = {
-          card_token: result.token.id,
-          ...(!isEmpty(selectedPlan?.id) && { product_id: selectedPlan?.id }),
-          ...(!isEmpty(selectedPlan?.id) &&
-            !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
-        };
-
-        isEmpty(selectedPlan)
-          ? mutateAddCard(
-              {
-                card_token: result.token.id
-              },
-              {
-                onSuccess: (response) => {
-                  elements.getElement(CardNumberElement).clear();
-                  elements.getElement(CardExpiryElement).clear();
-                  elements.getElement(CardCvcElement).clear();
-                  setField({ name: '', country: '', postalCode: '' });
-                  Auth.fetchUser();
-
-                  Mixpanel.track('Success - New Payment card Added', {
-                    data: {
-                      email: profile?.email
-                    }
-                  });
-
-                  Toast.fire({
-                    icon: 'success',
-                    title: `Payment Card added successfully`
-                  });
-                  refetchProfileData();
-                  dismissHandler();
-                },
-                onError: (error) => {
-                  Mixpanel.track('Failed - Unable to add new payment card.', {
-                    data: {
-                      id: profile?.id,
-                      message: !isEmpty(error.response?.data?.message)
-                        ? error.response?.data?.message
-                        : error?.message,
-                      email: profile?.email,
-                      url: error?.response?.config?.url
-                    }
-                  });
-
-                  setError({
-                    e: true,
-                    message: !isEmpty(error.response?.data?.message)
-                      ? error.response?.data?.message
-                      : error?.message
-                  });
-                }
-              }
-            )
-          : mutate(payload, {
-              onSuccess: (response) => {
+        if (strictlyAddNewCard) {
+          mutateAddCard(
+            {
+              card_token: result.token.id
+            },
+            {
+              onSuccess: () => {
                 elements.getElement(CardNumberElement).clear();
                 elements.getElement(CardExpiryElement).clear();
                 elements.getElement(CardCvcElement).clear();
                 setField({ name: '', country: '', postalCode: '' });
                 Auth.fetchUser();
 
-                Mixpanel.track(
-                  `Success - New subscription plan activated ${
-                    !isEmpty(payload?.coupon_code) ? 'with Coupon' : null
-                  } !`,
-                  {
-                    id: profile?.id,
-                    data: {
-                      first_name: profile?.first_name,
-                      last_name: profile?.last_name,
-                      email: profile?.email,
-                      ...(!isEmpty(selectedPlan?.id) &&
-                        !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
-                    }
+                Mixpanel.track('Success - New Payment card Added', {
+                  data: {
+                    email: profile?.email
                   }
-                );
+                });
 
-                queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
                 Toast.fire({
                   icon: 'success',
-                  title: `Subscription successful`
+                  title: `Payment Card added successfully`
                 });
-                setCoupon({ coupon: '' });
                 refetchProfileData();
-                if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
-                  setTimeout(() => {
-                    navigate(ROUTES.INDEX);
-                  }, 1500);
-                  return;
-                }
                 dismissHandler();
               },
               onError: (error) => {
-                Mixpanel.track('Failed - Subscription activation error', {
+                Mixpanel.track('Failed - Unable to add new payment card.', {
                   data: {
                     id: profile?.id,
                     message: !isEmpty(error.response?.data?.message)
@@ -275,7 +221,93 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
                     : error?.message
                 });
               }
+            }
+          );
+          return;
+        }
+
+        if (isStrictlyPaymentSubscription) {
+          const subscriptionPayload = {
+            ...(!strictlyAddNewCard && !isEmpty(selectedPaymentMethod)
+              ? { payment_method_id: selectedPaymentMethod?.id }
+              : { card_token: result.token.id }),
+            ...(!isEmpty(selectedPlan?.id) && { product_id: selectedPlan?.id }),
+            ...(!isEmpty(selectedPlan?.id) &&
+              !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
+          };
+
+          mutate(subscriptionPayload, {
+            onSuccess: () => {
+              elements.getElement(CardNumberElement).clear();
+              elements.getElement(CardExpiryElement).clear();
+              elements.getElement(CardCvcElement).clear();
+              setField({ name: '', country: '', postalCode: '' });
+              Auth.fetchUser();
+
+              Mixpanel.track(
+                `Success - New subscription plan activated ${
+                  !isEmpty(subscriptionPayload?.coupon_code) ? 'with Coupon' : null
+                } !`,
+                {
+                  id: profile?.id,
+                  data: {
+                    first_name: profile?.first_name,
+                    last_name: profile?.last_name,
+                    email: profile?.email,
+                    ...(!isEmpty(selectedPlan?.id) &&
+                      !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
+                  }
+                }
+              );
+
+              queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
+              Toast.fire({
+                icon: 'success',
+                title: `Subscription successful`
+              });
+              setCoupon({ coupon: '' });
+              setSelectedPaymentMethod({});
+              refetchProfileData();
+              if (pathname === ROUTES?.SIGINUP_SUBSCRIPTION) {
+                setTimeout(() => {
+                  navigate(ROUTES.INDEX);
+                }, 1500);
+                return;
+              }
+              dismissHandler();
+            },
+            onError: (error) => {
+              Mixpanel.track('Failed - Subscription activation error', {
+                data: {
+                  message: !isEmpty(error.response?.data?.message)
+                    ? error.response?.data?.message
+                    : error?.message,
+                  url: error?.response?.config?.url
+                }
+              });
+
+              setError({
+                e: true,
+                message: !isEmpty(error.response?.data?.message)
+                  ? error.response?.data?.message
+                  : error?.message
+              });
+            }
+          });
+          return;
+        }
+
+        if (isStrictlyOtherPayment) {
+          try {
+            handleOtherPaymentGateway({ card_token: result.token.id });
+          } catch (error) {
+            setError({
+              e: true,
+              message: error.response ? error.response?.data?.title : error?.toString()
             });
+          }
+          return;
+        }
       }
     } catch (error) {
       setError({
@@ -288,7 +320,7 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
   };
 
   return (
-    <Card className="w-full h-auto 2xl:h-full shadow-none relative py-8">
+    <Card className="w-full h-auto 2xl:h-full shadow-none relative py-8" id="use-payment-card">
       <CardBody className="flex flex-col h-full gap-6 px-2 py-4  xl:px-8 xl:py-8">
         {showCloseButton ? (
           <IconButton
@@ -471,12 +503,20 @@ const PaymentCardElement = ({ dismissHandler, showCloseButton }) => {
 
 PaymentCard.propTypes = {
   dismissHandler: func,
-  showCloseButton: bool
+  showCloseButton: bool,
+  strictlyAddNewCard: bool,
+  isStrictlyPaymentSubscription: bool,
+  isStrictlyOtherPayment: bool,
+  handleOtherPaymentGateway: func
 };
 
 PaymentCard.defaultProps = {
   dismissHandler: () => {},
-  showCloseButton: true
+  showCloseButton: true,
+  strictlyAddNewCard: false,
+  isStrictlyPaymentSubscription: false,
+  isStrictlyOtherPayment: false,
+  handleOtherPaymentGateway: () => {}
 };
 
 export default PaymentCard;

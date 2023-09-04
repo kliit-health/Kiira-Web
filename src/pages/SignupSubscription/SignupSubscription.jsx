@@ -13,6 +13,7 @@ const SignupSubscription = () => {
   const { data, isLoading } = useProducts();
   const products = data?.data?.products;
   const [selected, setSelected] = useState({});
+  const selectedPlan = useLocalStore((state) => state.storedData);
 
   return (
     <AuthLayout hideScroll>
@@ -79,7 +80,11 @@ const SignupSubscription = () => {
                   <InfinitySpin width="100" color="#005eff" />
                 </ContentContainer>
               ) : (
-                <PaymentCard showCloseButton={false} />
+                <PaymentCard
+                  showCloseButton={false}
+                  isStrictlyPaymentSubscription={true}
+                  strictlyAddNewCard={isEmpty(selectedPlan)}
+                />
               )}
             </Card>
           </>

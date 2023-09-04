@@ -48,6 +48,7 @@ const Subscription = () => {
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
   );
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
 
   const handleCancelSubscription = () => {
     mutate(
@@ -281,10 +282,17 @@ const Subscription = () => {
             </ContentContainer>
           </Card>
 
-          <SavedCards manageCards={false}/>
+          {/* Payment and Saved Card details Component */}
+          <SavedCards
+            manageCards={false}
+            strictlyAddNewCard={isEmpty(selectedPlan)}
+            isStrictlyPaymentSubscription={true}
+            useExistingCard={!isEmpty(selectedPaymentMethod)}
+          />
         </ContentContainer>
       </ContentContainer>
 
+      {/* View subscription history invoice */}
       <Dialog
         open={open}
         handler={handleOpen}
@@ -301,10 +309,12 @@ const Subscription = () => {
               width="100%"
               height="100%"
               className="min-h-[75vh]"
-              aria-label="Talent CV"></object>
+              aria-label="Payment Invoice"></object>
           </ContentContainer>
         </DialogBody>
       </Dialog>
+
+      {/* Cancel aubscription loader dialog */}
       <Dialog open={cancelLoading} size="sm" className="bg-transparent">
         <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
           <ThreeDots

@@ -1,10 +1,10 @@
-import { Button, Card, Dialog, DialogBody } from '@material-tailwind/react';
+import { Card, Dialog, DialogBody } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import { ContentContainer } from '../../shared/styledComponents';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { AddButton, Loader, PaymentCard, PaymentMethods } from 'src/components';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
@@ -12,13 +12,25 @@ import Auth from 'src/middleware/storage';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePlanSubscription, useProfile } from 'src/queries/queryHooks';
 import KEYS from 'src/queries/queryKeys';
+import { bool, element, func, object } from 'prop-types';
 
-const SavedCards = ({ manageCards }) => {
+const SavedCards = ({
+  manageCards,
+  isReserved,
+  dismissHandler,
+  strictlyAddNewCard,
+  isStrictlyPaymentSubscription,
+  isStrictlyOtherPayment,
+  otherPaymentsPayload,
+  handleOtherPaymentGateway,
+  actionButton,
+  togglePaymentCard,
+  useExistingCard,
+  showPaymentCard
+}) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { pathname } = location;
   const [open, setOpen] = useState(false);
-
 
   const queryClient = useQueryClient();
   const { refetch: refetchProfileData } = useProfile();
@@ -31,10 +43,14 @@ const SavedCards = ({ manageCards }) => {
   const couponCode = useLocalStore((state) => state.coupon);
   const setCoupon = useLocalStore((state) => state.setCoupon);
 
-  const payWithExistingCard = async () => {
-if(isEmpty(selectedPaymentMethod)){
-  return
-}
+  const subscribeWithExistingCard = async () => {
+    if (isEmpty(selectedPaymentMethod)) {
+      Toast.fire({
+        icon: 'warning',
+        title: `Select a valid payment card to continue`
+      });
+      return;
+    }
 
     const payload = {
       product_id: selectedPlan?.id,
@@ -89,7 +105,11 @@ if(isEmpty(selectedPaymentMethod)){
   };
 
   const handleOpen = () => {
-    !isEmpty(selectedPaymentMethod) ? payWithExistingCard() : setOpen(!open);
+    isStrictlyPaymentSubscription && useExistingCard && !strictlyAddNewCard
+      ? subscribeWithExistingCard()
+      : isStrictlyOtherPayment && useExistingCard && !strictlyAddNewCard
+      ? handleOtherPaymentGateway()
+      : setOpen(!open);
   };
 
   const [windowSize, setWindowSize] = useState(getWindowSize());
@@ -113,19 +133,21 @@ if(isEmpty(selectedPaymentMethod)){
   return (
     <>
       <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none px-4 py-2 rounded-lg w-full">
-        {!isEmpty(selectedPlan) ? (
+        {!strictlyAddNewCard ? (
           <ContentContainer className="bg-white gap-2 rounded-md p-2" hideScroll>
-            <PaymentMethods manageCards={manageCards} />
+            <PaymentMethods manageCards={manageCards} isReserved={isReserved} />
           </ContentContainer>
         ) : null}
 
-        {isLoading ? (
+        {actionButton ? (
+          actionButton
+        ) : isLoading && !actionButton ? (
           <Loader label="Processing" />
         ) : (
           <AddButton
-            label={isEmpty(selectedPlan) ? 'Add a new card' : 'Subscribe to selected plan'}
+            label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
             onAddClick={() => {
-              isEmpty(selectedPlan) && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
+              strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
                 ? Toast.fire({
                     icon: 'warning',
                     title: 'Please select a subscription plan to proceed...'
@@ -137,7 +159,7 @@ if(isEmpty(selectedPaymentMethod)){
       </Card>
 
       <Dialog
-        open={open}
+        open={open || showPaymentCard}
         size={
           windowSize?.innerWidth < 346
             ? 'xxl'
@@ -152,10 +174,17 @@ if(isEmpty(selectedPaymentMethod)){
         }}>
         <DialogBody className="overflow-hidden overflow-y-auto min-w-full ">
           <PaymentCard
-            dismissHandler={() => {
-              handleOpen();
+            dismissHandler={(data) => {
+              setOpen(false);
+              togglePaymentCard(false);
               setSelectedPlan({});
+              dismissHandler(data);
             }}
+            isStrictlyPaymentSubscription={isStrictlyPaymentSubscription}
+            strictlyAddNewCard={strictlyAddNewCard}
+            isStrictlyOtherPayment={isStrictlyOtherPayment}
+            otherPaymentsPayload={otherPaymentsPayload}
+            handleOtherPaymentGateway={handleOtherPaymentGateway}
           />
         </DialogBody>
       </Dialog>
@@ -164,3 +193,30 @@ if(isEmpty(selectedPaymentMethod)){
 };
 
 export default SavedCards;
+
+SavedCards.propTypes = {
+  manageCards: bool,
+  dismissHandler: func,
+  strictlyAddNewCard: bool,
+  isStrictlyPaymentSubscription: bool,
+  isStrictlyOtherPayment: bool,
+  otherPaymentsPayload: object,
+  togglePaymentCard: func,
+  handleOtherPaymentGateway: func,
+  actionButton: element,
+  useExistingCard: bool,
+  isReserved: bool
+};
+
+SavedCards.defaultProps = {
+  manageCards: false,
+  dismissHandler: () => {},
+  strictlyAddNewCard: false,
+  isStrictlyPaymentSubscription: false,
+  isStrictlyOtherPayment: false,
+  otherPaymentsPayload: {},
+  togglePaymentCard: () => {},
+  handleOtherPaymentGateway: () => {},
+  useExistingCard: false,
+  isReserved: false
+};

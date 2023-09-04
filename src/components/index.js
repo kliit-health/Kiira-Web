@@ -29,6 +29,7 @@ import SaveBooking from './SaveBooking/SaveBooking';
 import PageNotFound from './PageNotFound/PageNotFound';
 import PaymentCardDetails from './Payment/PaymentCardDetails.jsx/PaymentCardDetails';
 import PaymentMethods from './Payment/PaymentMethods/PaymentMethods';
+import Discount from './Discount/Discount';
 
 export {
   AppNavBar,
@@ -59,5 +60,6 @@ export {
   SaveBooking,
   PageNotFound,
   PaymentCardDetails,
-  PaymentMethods
+  PaymentMethods,
+  Discount
 };
