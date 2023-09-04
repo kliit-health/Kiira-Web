@@ -286,8 +286,7 @@ const Subscription = () => {
           <SavedCards
             manageCards={false}
             strictlyAddNewCard={isEmpty(selectedPlan)}
-            isStrictlyPaymentSubscription={true}
-            useExistingCard={!isEmpty(selectedPaymentMethod)}
+            isStrictlyPaymentSubscription={!isEmpty(selectedPlan)}
           />
         </ContentContainer>
       </ContentContainer>

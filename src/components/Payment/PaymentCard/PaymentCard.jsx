@@ -78,9 +78,7 @@ const PaymentCardElement = ({
   dismissHandler,
   showCloseButton,
   strictlyAddNewCard,
-  isStrictlyPaymentSubscription,
-  isStrictlyOtherPayment,
-  handleOtherPaymentGateway
+  isStrictlyPaymentSubscription
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -96,7 +94,6 @@ const PaymentCardElement = ({
   const selectedPlan = useLocalStore((state) => state.storedData);
   const couponCode = useLocalStore((state) => state.coupon);
   const setCoupon = useLocalStore((state) => state.setCoupon);
-  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
   const setSelectedPaymentMethod = useLocalStore((state) => state.setSelectedPaymentMethod);
 
   const { mutate, isLoading } = usePlanSubscription();
@@ -228,9 +225,7 @@ const PaymentCardElement = ({
 
         if (isStrictlyPaymentSubscription) {
           const subscriptionPayload = {
-            ...(!strictlyAddNewCard && !isEmpty(selectedPaymentMethod)
-              ? { payment_method_id: selectedPaymentMethod?.id }
-              : { card_token: result.token.id }),
+            card_token: result.token.id,
             ...(!isEmpty(selectedPlan?.id) && { product_id: selectedPlan?.id }),
             ...(!isEmpty(selectedPlan?.id) &&
               !isEmpty(couponCode?.coupon) && { coupon_code: couponCode?.coupon })
@@ -294,18 +289,6 @@ const PaymentCardElement = ({
               });
             }
           });
-          return;
-        }
-
-        if (isStrictlyOtherPayment) {
-          try {
-            handleOtherPaymentGateway({ card_token: result.token.id });
-          } catch (error) {
-            setError({
-              e: true,
-              message: error.response ? error.response?.data?.title : error?.toString()
-            });
-          }
           return;
         }
       }
@@ -505,18 +488,14 @@ PaymentCard.propTypes = {
   dismissHandler: func,
   showCloseButton: bool,
   strictlyAddNewCard: bool,
-  isStrictlyPaymentSubscription: bool,
-  isStrictlyOtherPayment: bool,
-  handleOtherPaymentGateway: func
+  isStrictlyPaymentSubscription: bool
 };
 
 PaymentCard.defaultProps = {
   dismissHandler: () => {},
   showCloseButton: true,
   strictlyAddNewCard: false,
-  isStrictlyPaymentSubscription: false,
-  isStrictlyOtherPayment: false,
-  handleOtherPaymentGateway: () => {}
+  isStrictlyPaymentSubscription: false
 };
 
 export default PaymentCard;

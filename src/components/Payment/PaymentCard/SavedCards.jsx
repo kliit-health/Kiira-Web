@@ -3,16 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { ContentContainer } from '../../shared/styledComponents';
 import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
-import isEmpty from 'src/utils/isEmpty';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { AddButton, Loader, PaymentCard, PaymentMethods } from 'src/components';
-import { Mixpanel } from 'src/utils/mixpanelUtil';
-import Auth from 'src/middleware/storage';
+import { bool, func, string } from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePlanSubscription, useProfile } from 'src/queries/queryHooks';
-import KEYS from 'src/queries/queryKeys';
-import { bool, element, func, object } from 'prop-types';
 
 const SavedCards = ({
   manageCards,
@@ -20,13 +16,8 @@ const SavedCards = ({
   dismissHandler,
   strictlyAddNewCard,
   isStrictlyPaymentSubscription,
-  isStrictlyOtherPayment,
-  otherPaymentsPayload,
-  handleOtherPaymentGateway,
-  actionButton,
-  togglePaymentCard,
-  useExistingCard,
-  showPaymentCard
+  addNewCardLabel,
+  showActionButton
 }) => {
   const location = useLocation();
   const { pathname } = location;
@@ -105,10 +96,8 @@ const SavedCards = ({
   };
 
   const handleOpen = () => {
-    isStrictlyPaymentSubscription && useExistingCard && !strictlyAddNewCard
+    isStrictlyPaymentSubscription && !strictlyAddNewCard
       ? subscribeWithExistingCard()
-      : isStrictlyOtherPayment && useExistingCard && !strictlyAddNewCard
-      ? handleOtherPaymentGateway()
       : setOpen(!open);
   };
 
@@ -135,31 +124,35 @@ const SavedCards = ({
       <Card className="flex flex-col gap-2 bg-kiiraBg2 shadow-none px-4 py-2 rounded-lg w-full">
         {!strictlyAddNewCard ? (
           <ContentContainer className="bg-white gap-2 rounded-md p-2" hideScroll>
-            <PaymentMethods manageCards={manageCards} isReserved={isReserved} />
+            <PaymentMethods
+              manageCards={manageCards}
+              isReserved={isReserved}
+              addNewCardLabel={addNewCardLabel}
+            />
           </ContentContainer>
         ) : null}
 
-        {actionButton ? (
-          actionButton
-        ) : isLoading && !actionButton ? (
-          <Loader label="Processing" />
-        ) : (
-          <AddButton
-            label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
-            onAddClick={() => {
-              strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
-                ? Toast.fire({
-                    icon: 'warning',
-                    title: 'Please select a subscription plan to proceed...'
-                  })
-                : handleOpen();
-            }}
-          />
-        )}
+        {showActionButton ? (
+          isLoading ? (
+            <Loader label="Processing" />
+          ) : (
+            <AddButton
+              label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
+              onAddClick={() => {
+                strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
+                  ? Toast.fire({
+                      icon: 'warning',
+                      title: 'Please select a subscription plan to proceed...'
+                    })
+                  : handleOpen();
+              }}
+            />
+          )
+        ) : null}
       </Card>
 
       <Dialog
-        open={open || showPaymentCard}
+        open={open}
         size={
           windowSize?.innerWidth < 346
             ? 'xxl'
@@ -176,15 +169,11 @@ const SavedCards = ({
           <PaymentCard
             dismissHandler={(data) => {
               setOpen(false);
-              togglePaymentCard(false);
               setSelectedPlan({});
               dismissHandler(data);
             }}
             isStrictlyPaymentSubscription={isStrictlyPaymentSubscription}
             strictlyAddNewCard={strictlyAddNewCard}
-            isStrictlyOtherPayment={isStrictlyOtherPayment}
-            otherPaymentsPayload={otherPaymentsPayload}
-            handleOtherPaymentGateway={handleOtherPaymentGateway}
           />
         </DialogBody>
       </Dialog>
@@ -199,13 +188,9 @@ SavedCards.propTypes = {
   dismissHandler: func,
   strictlyAddNewCard: bool,
   isStrictlyPaymentSubscription: bool,
-  isStrictlyOtherPayment: bool,
-  otherPaymentsPayload: object,
-  togglePaymentCard: func,
-  handleOtherPaymentGateway: func,
-  actionButton: element,
-  useExistingCard: bool,
-  isReserved: bool
+  isReserved: bool,
+  showActionButton: bool,
+  addNewCardLabel: string
 };
 
 SavedCards.defaultProps = {
@@ -213,10 +198,7 @@ SavedCards.defaultProps = {
   dismissHandler: () => {},
   strictlyAddNewCard: false,
   isStrictlyPaymentSubscription: false,
-  isStrictlyOtherPayment: false,
-  otherPaymentsPayload: {},
-  togglePaymentCard: () => {},
-  handleOtherPaymentGateway: () => {},
-  useExistingCard: false,
-  isReserved: false
+  isReserved: false,
+  addNewCardLabel: '',
+  showActionButton: true
 };

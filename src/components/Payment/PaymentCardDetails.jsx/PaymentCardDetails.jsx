@@ -25,7 +25,8 @@ const PaymentCardDetails = ({
   isLoading,
   manageCards,
   defaultChecked,
-  disabled
+  disabled,
+  radioName
 }) => {
   const PaymentCardWrapperClass =
     'flex-nowrap rounded-xl bg-kiiraBlue p-1.5 flex flex-row items-center justify-between gap-1 hover:opacity-95 hover:cursor-pointer max-w-sm my-1';
@@ -143,7 +144,7 @@ const PaymentCardDetails = ({
           ) : (
             <Radio
               disabled={isLoading || disabled}
-              name="payment_methods"
+              name={radioName || 'payment_methods'}
               onChange={() => handleChange(cardDetails)}
               color="amber"
               defaultChecked={defaultChecked}
@@ -184,7 +185,8 @@ PaymentCardDetails.propTypes = {
   manageCards: bool,
   label: string,
   defaultChecked: bool,
-  disabled: bool
+  disabled: bool,
+  radioName: string
 };
 
 PaymentCardDetails.defaultProps = {
@@ -193,5 +195,6 @@ PaymentCardDetails.defaultProps = {
   manageCards: false,
   label: '',
   defaultChecked: false,
-  disabled: false
+  disabled: false,
+  radioName: string
 };

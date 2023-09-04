@@ -87,11 +87,7 @@ const ReviewAppointment = () => {
     }
   }, [bookingData]);
 
-  const handleInitialisePayment = (data) => {
-    console.log(
-      '\n 🚀 ~ file: ReviewAppointment.jsx:91 ~ handleInitialisePayment ~ card token data:',
-      data
-    );
+  const handleInitialisePayment = () => {
     const keys = Object.keys(formResult);
 
     const isRequired = keys.filter((key) => {
@@ -146,8 +142,7 @@ const ReviewAppointment = () => {
       ...(!isEmpty(selectedPaymentMethod) &&
         !isEmpty(paymentMethods) && {
           payment_method_id: selectedPaymentMethod?.id
-        }),
-      ...data
+        })
     };
     console.log(
       '\n 🚀 ~ file: ReviewAppointment.jsx:152 ~ handleInitialisePayment ~ payload:',
@@ -181,8 +176,7 @@ const ReviewAppointment = () => {
           icon: 'success',
           title: isEmpty(response?.data?.checkout_session)
             ? `<div className='text-xs capitalize'>${response?.data?.message}</div>`
-            : `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
-          width: '70vw'
+            : `<div className='text-xs'>You are now been redirected to payment checkout</div>`
         });
 
         isEmpty(response?.data?.checkout_session)
@@ -400,22 +394,13 @@ const ReviewAppointment = () => {
                       isReserved={reserveBooking}
                       isStrictlyPaymentSubscription={false}
                       isStrictlyOtherPayment={true}
-                      togglePaymentCard={(data) => togglePaymentCard(data)}
-                      showPaymentCard={showPaymentCard}
-                      handleOtherPaymentGateway={handleInitialisePayment}
-                      useExistingCard={!isEmpty(selectedPaymentMethod)}
-                      actionButton={
-                        <AppButton
-                          className="text-xs mt-4"
-                          onClick={() => {
-                            !isEmpty(selectedPaymentMethod)
-                              ? handleInitialisePayment()
-                              : togglePaymentCard(!showPaymentCard);
-                          }}>
-                          {reserveBooking ? 'Reserve' : ' Confirm Booking'}
-                        </AppButton>
-                      }
+                      addNewCardLabel="Use a new payment card"
+                      showActionButton={false}
                     />
+
+                    <AppButton className="text-xs mt-4" onClick={handleInitialisePayment}>
+                      {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+                    </AppButton>
                   </>
                 )}
               </ContentContainer>

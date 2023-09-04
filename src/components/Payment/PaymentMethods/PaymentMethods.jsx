@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ContentContainer, SelectWrapper } from '../../shared/styledComponents';
-import {
-  Button,
-  Card,
-  Collapse,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
-  Option,
-  Select
-} from '@material-tailwind/react';
+import { AppTypography, ContentContainer } from '../../shared/styledComponents';
+import { Button, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
 import isEmpty from 'src/utils/isEmpty';
-import { bool, func } from 'prop-types';
+import { bool, string } from 'prop-types';
 import { usePaymentMethods } from 'src/queries/queryHooks';
 import { PaymentCardDetails } from '../..';
 import { useLocalStore } from 'src/store';
-import { ThreeDots } from 'react-loader-spinner';
+import { Bars } from 'react-loader-spinner';
 
-const PaymentMethods = ({ manageCards, isReserved }) => {
+const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen(!open);
 
@@ -36,26 +26,6 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
 
   return (
     <ContentContainer className="w-full my-2 max-w-sm">
-      {/* <Collapse open={open} className="my-2">
-        <Card className="mx-auto w-full p-0">
-          <ContentContainer
-            className="overflow-y-auto min-h-[8vh] max-h-[50vh] p-2 rounded-md max-w-sm"
-            hideScroll>
-            {intentsloading ? (
-              <ContentContainer className="w-full justify-center items-center">
-                <ThreeDots
-                  height="60"
-                  width="60"
-                  radius="9"
-                  color="#005eff"
-                  ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClassName=""
-                  visible={true}
-                />
-              </ContentContainer>
-            ) : null} */}
-
       <Menu
         allowHover={false}
         open={open}
@@ -63,7 +33,7 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
         dismiss={{
           itemPress: false
         }}>
-        <MenuHandler>
+        <MenuHandler className="flex flex-row items-center justify-between bg-teal-500 w-full max-w-sm">
           <Button
             size="lg"
             variant="filled"
@@ -76,7 +46,19 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
               }`}></i>
           </Button>
         </MenuHandler>
-        <MenuList>
+
+        {intentsloading ? (
+          <Bars
+            height="80"
+            width="80"
+            color="#3F84FF"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        ) : null}
+        <MenuList className="max-h-[45vh]">
           {paymentMethods?.map((data, i) => {
             return (
               <MenuItem key={i}>
@@ -85,7 +67,7 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
                   key={i}
                   isLoading={intentsloading}
                   manageCards={manageCards}
-                  defaultChecked={i === 0}
+                  defaultChecked={selectedPaymentMethod === data}
                 />
               </MenuItem>
             );
@@ -95,7 +77,7 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
               disabled={isReserved}
               cardDetails={{}}
               defaultChecked={isEmpty(selectedPaymentMethod) && isEmpty(paymentMethods)}
-              label="Add new payment card"
+              label={!isEmpty(addNewCardLabel) ? addNewCardLabel : 'Add new payment card'}
               isLoading={intentsloading}
               manageCards={manageCards}
             />
@@ -103,9 +85,24 @@ const PaymentMethods = ({ manageCards, isReserved }) => {
         </MenuList>
       </Menu>
 
-      {/* </ContentContainer>
-        </Card>
-      </Collapse> */}
+      {!isEmpty(selectedPaymentMethod) ? (
+        <>
+          <AppTypography
+            variant="small"
+            className="text-sm text-center mt-6 font-medium text-amber-900 font-montserrat">
+            <i className="fa-solid fa-shield pr-4"></i> Your payment transaction will be completed
+            using{' '}
+          </AppTypography>
+
+          <Button variant="text" size="sm" onclick={toggleOpen}>
+            <PaymentCardDetails
+              cardDetails={selectedPaymentMethod}
+              defaultChecked={true}
+              radioName="default"
+            />
+          </Button>
+        </>
+      ) : null}
     </ContentContainer>
   );
 };
@@ -114,9 +111,11 @@ export default PaymentMethods;
 
 PaymentMethods.propTypes = {
   manageCards: bool,
-  isReserved: bool
+  isReserved: bool,
+  addNewCardLabel: string
 };
 PaymentMethods.defaultProps = {
   manageCards: false,
-  isReserved: false
+  isReserved: false,
+  addNewCardLabel: ''
 };
