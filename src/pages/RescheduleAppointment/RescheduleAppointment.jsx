@@ -93,7 +93,6 @@ const RescheduleAppointment = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed - Reschedule Appointment', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
@@ -200,7 +199,7 @@ const RescheduleAppointment = () => {
             </ContentContainer>
           ) : null}
 
-          <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
+          {/* <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
             <ContentContainer className="flex flex-row items-center justify-center rounded-2xl gap-4 bg-[#FFE9BA] p-4 w-full md:w-full lg:w-2/6 shadow-sm">
               <IconButton variant="text" ripple={false}>
                 <IMAGES.KiiraBirdieBlack />
@@ -233,7 +232,7 @@ const RescheduleAppointment = () => {
 
               <ApplyPromoCode disabled />
             </ContentContainer>
-          </ContentContainer>
+          </ContentContainer> */}
 
           {!isEmpty(doctorState) ? (
             <>

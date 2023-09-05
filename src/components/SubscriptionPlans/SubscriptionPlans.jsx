@@ -62,7 +62,9 @@ const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
             size="sm"
             fullWidth
             onClick={() => {
-              setSelected(subscription);
+              isEmpty(selected) || selected !== subscription
+                ? setSelected(subscription)
+                : setSelected({});
             }}
             className={
               ('px-4 py-2 text-white capitalize text-[10px] shadow-transparent',

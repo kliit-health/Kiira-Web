@@ -1,18 +1,28 @@
-import { Breadcrumbs, Checkbox, IconButton } from '@material-tailwind/react';
-import moment from 'moment-timezone';
+import { Breadcrumbs, Checkbox } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ApplyPromoCode, BookingCard, DynamicForms, Loader, SavedCards } from 'src/components';
+import {
+  BookingCard,
+  Discount,
+  DynamicForms,
+  Loader,
+  PaymentCard,
+  PaymentMethods,
+  SavedCards
+} from 'src/components';
 import {
   AppButton,
-  AppLink,
-  AppLinkExternal,
   AppNavLink,
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
-import { useBookingForms, useInitialisePayment, useProfile } from 'src/queries/queryHooks';
+import {
+  useBookingForms,
+  useInitialisePayment,
+  usePaymentMethods,
+  useProfile
+} from 'src/queries/queryHooks';
 import { ROUTES } from 'src/routes/Paths';
 import { useLocalStore } from 'src/store';
 import { ScrollToTop, Toast } from 'src/utils';
@@ -24,6 +34,9 @@ import { truncate } from 'src/utils/truncate';
 const ReviewAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { data: paymentMethodData } = usePaymentMethods();
+  const paymentMethods = paymentMethodData?.data?.payment_methods;
+
   const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
   const formsData = fData?.data.forms;
 
@@ -31,7 +44,12 @@ const ReviewAppointment = () => {
   const profile = profileData?.data?.user;
 
   const [reserveBooking, setReserveBooking] = useState(false);
+
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
+  const setSelectedPaymentMethod = useLocalStore((state) => state.setSelectedPaymentMethod);
+
   const [formResult, setFormResult] = useState({});
+  const [showPaymentCard, togglePaymentCard] = useState(false);
 
   const bookingParams = location.state?.data;
   const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
@@ -70,14 +88,6 @@ const ReviewAppointment = () => {
   }, [bookingData]);
 
   const handleInitialisePayment = () => {
-    // if (moment().isAfter(profile?.subscription_expiry_date, 'day')) {
-    //   Toast.fire({
-    //     icon: 'error',
-    //     title: 'Your current subscription has expired. Please renew your subscription'
-    //   });
-    //   return;
-    // }
-
     const keys = Object.keys(formResult);
 
     const isRequired = keys.filter((key) => {
@@ -95,7 +105,21 @@ const ReviewAppointment = () => {
           requiredValidator[validateData]?.name,
           50
         )}" is required`,
-        width: '70vw'
+        width: '70vw',
+        ...(isEmpty(selectedPaymentMethod) && {
+          target: document.getElementById('use-payment-card')
+        })
+      });
+      return;
+    }
+
+    if (reserveBooking && (isEmpty(selectedPaymentMethod) || isEmpty(paymentMethods))) {
+      Toast.fire({
+        icon: 'error',
+        title: `An existing payment card is required to reserve your appointment booking`,
+        ...(isEmpty(selectedPaymentMethod) && {
+          target: document.getElementById('use-payment-card')
+        })
       });
       return;
     }
@@ -114,12 +138,16 @@ const ReviewAppointment = () => {
       cancel_url: `${APP_URL}${ROUTES.CONFIRM_BOOKING}`,
       book_on_hold: reserveBooking,
       fields: field,
-      ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id })
+      ...(!isEmpty(bookingData?.doctor) && { calendarID: bookingData?.doctor.id }),
+      ...(!isEmpty(selectedPaymentMethod) &&
+        !isEmpty(paymentMethods) && {
+          payment_method_id: selectedPaymentMethod?.id
+        })
     };
-    // console.log(
-    //   '\n 🚀 ~ file: ReviewAppointment.jsx:104 ~ handleInitialisePayment ~ payload:',
-    //   payload
-    // );
+    console.log(
+      '\n 🚀 ~ file: ReviewAppointment.jsx:152 ~ handleInitialisePayment ~ payload:',
+      payload
+    );
 
     mutate(payload, {
       onSuccess: (response) => {
@@ -128,7 +156,7 @@ const ReviewAppointment = () => {
             ...response?.data?.availability_time,
             appointment: response?.data?.appointment
           };
-
+          setSelectedPaymentMethod({});
           Mixpanel.track('Success - Appointment Booking ($0.00)');
           navigate(`${ROUTES.VIEW_BOOKING}/${response?.data?.booking_id}`, {
             state: booking
@@ -136,9 +164,10 @@ const ReviewAppointment = () => {
         }
 
         function initiateCheckoutRedirect() {
+          setSelectedPaymentMethod({});
           setTimeout(() => {
             Mixpanel.track(`Success - Appointment Booking ($${appointmentType?.price})`);
-          }, 250);
+          }, 500);
 
           window.open(response?.data?.checkout_session?.url, '_self');
         }
@@ -147,8 +176,7 @@ const ReviewAppointment = () => {
           icon: 'success',
           title: isEmpty(response?.data?.checkout_session)
             ? `<div className='text-xs capitalize'>${response?.data?.message}</div>`
-            : `<div className='text-xs'>You are now been redirected to payment checkout</div>`,
-          width: '70vw'
+            : `<div className='text-xs'>You are now been redirected to payment checkout</div>`
         });
 
         isEmpty(response?.data?.checkout_session)
@@ -159,7 +187,6 @@ const ReviewAppointment = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed - Appointment Booking Failed!', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
@@ -221,8 +248,88 @@ const ReviewAppointment = () => {
         </Breadcrumbs>
       </ContentContainer>
 
-      <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse  ">
-        <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4 ">
+      <ContentContainer className="w-full h-full flex md:grid grid-flow-col  md:grid-flow-row-dense grid-cols-1 xl:grid-cols-5 gap-4 flex-wrap-reverse">
+        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg p-4 visible xl:hidden">
+          <BookingCard review bookingData={bookingData} />
+
+          <AppTypography
+            variant="lead"
+            className="py-4 border-t border-b border-[#E7E7E7] text-xs md:text-sm font-montserrat w-full text-center flex flex-row flex-nowrap items-center justify-center">
+            Secure payment by {/*<b>Stripe</b>*/}
+            <img loading="lazy" src={IMAGES.Stripe} alt="Stripe" className="h-7 w-16" />
+          </AppTypography>
+
+          <ContentContainer className="flex-col gap-4">
+            <AppTypography variant="lead" className="text-xs md:text-sm  w-full">
+              Price Details
+            </AppTypography>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Base Fare
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.price}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Discount
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.discount || 0}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Taxes
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.taxes || 0}
+              </AppTypography>
+            </ContentContainer>
+            <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+                Service Fee
+              </AppTypography>
+              <AppTypography
+                variant="h6"
+                className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+                ${appointmentType?.serviceFee || 0}
+              </AppTypography>
+            </ContentContainer>
+          </ContentContainer>
+
+          <hr />
+
+          <ContentContainer className="flex-row items-center justify-between m-0 p-0">
+            <AppTypography
+              variant="h6"
+              className="text-xs md:text-sm w-full text-kiiraBlackishGreen font-medium">
+              Total
+            </AppTypography>
+            <AppTypography
+              variant="h6"
+              className="text-xs md:text-sm w-full text-kiiraBlackishGreen text-right font-semibold">
+              ${appointmentType?.price}
+            </AppTypography>
+          </ContentContainer>
+        </ContentContainer>
+
+        <ContentContainer className="w-full gap-4 col-span-3 bg-kiiraBg2 rounded-lg  p-4">
           <ContentContainer row className="flex justify-between flex-wrap md:flex-nowrap gap-4">
             <ContentContainer className="flex flex-col gap-3">
               <AppTypography
@@ -242,47 +349,7 @@ const ReviewAppointment = () => {
             </ContentContainer>
           </ContentContainer>
 
-          <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
-            <ContentContainer className="flex flex-row items-center justify-center rounded-2xl gap-4 bg-[#FFE9BA] p-4 w-full md:w-1/2 lg:w-1/2 shadow-sm">
-              <IconButton variant="text" ripple={false}>
-                <IMAGES.KiiraBirdieBlack />
-              </IconButton>
-              <ContentContainer col className="gap-1 justify-center">
-                <AppTypography
-                  variant="h6"
-                  className="text-kiiraBlackishGreen font-semibold text-2xl">
-                  $0.00
-                </AppTypography>
-                <AppTypography
-                  variant="small"
-                  className="capitalise text-kiiraBlackishGreen/60 text-[11px] md:text-sm font-semibold font-montserrat">
-                  Members Discount
-                </AppTypography>
-              </ContentContainer>
-            </ContentContainer>
-
-            <ContentContainer className="flex flex-row gap-1 rounded-xl items-center w-full md:w-auto justify-center md:justify-end  p-4">
-              <ApplyPromoCode disabled />
-            </ContentContainer>
-          </ContentContainer>
-
-          <ContentContainer className="flex flex-row gap-1 w-full bg-white rounded-xl items-center justify-between p-4 flex-wrap">
-            <AppTypography
-              variant="lead"
-              className="text-sm text-justify md:text-base text-kiiraText w-full ">
-              Coupon codes can be applied at checkout for a discount. If you do not have your
-              "unique code", you may email us at{' '}
-              <AppLinkExternal
-                href="mailto:appointments@kiira.io"
-                className="underline text-sm md:text-base ">
-                appointments@kiira.io
-              </AppLinkExternal>{' '}
-              for retrieval.
-            </AppTypography>
-          </ContentContainer>
-
-          {/* Card Options */}
-          {/* <SavedCards /> */}
+          {/* <Discount /> */}
 
           <DynamicForms
             formsData={formsData}
@@ -302,7 +369,9 @@ const ReviewAppointment = () => {
                   labelProps={{ className: 'py-0.5 rounded' }}
                   checked={reserveBooking}
                   className="p-1"
-                  onChange={() => setReserveBooking(!reserveBooking)}
+                  onChange={() => {
+                    setReserveBooking(!reserveBooking);
+                  }}
                 />
                 <span
                   className={[
@@ -318,9 +387,24 @@ const ReviewAppointment = () => {
                 {isLoading ? (
                   <Loader className="" />
                 ) : (
-                  <AppButton className="text-xs" onClick={handleInitialisePayment}>
-                    {reserveBooking ? 'Reserve' : ' Confirm Booking'}
-                  </AppButton>
+                  <>
+                    {/* Card Options */}
+                    <SavedCards
+                      manageCards={false}
+                      isReserved={reserveBooking}
+                      isStrictlyPaymentSubscription={false}
+                      isStrictlyOtherPayment={true}
+                      addNewCardLabel="Use new payment card"
+                      showActionButton={false}
+                    />
+
+                    <AppButton
+                      disabled={reserveBooking && isEmpty(selectedPaymentMethod)}
+                      className="text-xs mt-4"
+                      onClick={handleInitialisePayment}>
+                      {reserveBooking ? 'Reserve' : ' Confirm Booking'}
+                    </AppButton>
+                  </>
                 )}
               </ContentContainer>
             </>
@@ -328,7 +412,7 @@ const ReviewAppointment = () => {
         </ContentContainer>
 
         {/* Booking Cart review */}
-        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 ">
+        <ContentContainer className="relative w-full gap-4 col-span-2 bg-kiiraBg2 rounded-lg  p-4 hidden xl:flex xl:max-h-[65vh]">
           <BookingCard review bookingData={bookingData} />
 
           <AppTypography

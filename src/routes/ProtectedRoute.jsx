@@ -2,17 +2,14 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from './Paths';
 import { useEffect } from 'react';
 import Auth from 'src/middleware/storage';
-import { useProfile } from 'src/queries/queryHooks';
-import moment from 'moment-timezone';
-import isEmpty from 'src/utils/isEmpty';
 import { Toast } from 'src/utils';
-import { ContentContainer } from 'src/components/shared/styledComponents';
 
 export const ProtectedRoute = () => {
   const location = useLocation();
   const isAuthenticated = Auth.isAuthenticated();
   const isSubscribed = Auth.isSubscribed();
   const inactiveSubscription = Auth.isInactiveSubscription();
+  const isEmpired = Auth.isExpiredSubscription();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -22,7 +19,7 @@ export const ProtectedRoute = () => {
       });
       return;
     }
-  }, [isAuthenticated, isSubscribed, inactiveSubscription]);
+  }, [isAuthenticated, isSubscribed, inactiveSubscription, isEmpired]);
 
   return isAuthenticated &&
     !isSubscribed &&

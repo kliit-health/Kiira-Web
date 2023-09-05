@@ -13,6 +13,12 @@ const BookingContainer = styled(ContentContainer)(({ disabled }) => [
 
 const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
   const doctor = bookingData?.calendar;
+
+  const isViewableAppointment =
+    bookingData?.status === 'payment_ticketed' ||
+    bookingData?.status === 'external_appointment' ||
+    bookingData?.status === 'book_on_hold';
+
   return (
     <BookingContainer
       className={
@@ -66,7 +72,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
             }>
             {!review ? bookingData?.appointment_type?.name : bookingData?.appointmentType?.name}
           </AppTypography>
-          {!review ? (
+          {/* {!review ? (
             <ContentContainer col className="-mt-1">
               <AppTypography
                 variant="h4"
@@ -84,7 +90,7 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 excl. discount
               </AppTypography>
             </ContentContainer>
-          ) : null}
+          ) : null} */}
         </ContentContainer>
 
         <ContentContainer className={!review ? 'flex-col' : 'flex-row items-center gap-1'}>
@@ -216,13 +222,19 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
         {!review ? (
           <>
             <ContentContainer row className="items-center justify-between gap-4 flex-wrap">
-              <AppTypography
-                variant="small"
-                className="text-sm md:text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
-                <IMAGES.LocationIcon />{' '}
-                <span>{!review ? bookingData?.appointment_type?.category : 'Virtual'}</span>
-              </AppTypography>
-
+              <ContentContainer>
+                <AppTypography
+                  variant="small"
+                  className="text-sm md:text-sm text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
+                  <IMAGES.LocationIcon />{' '}
+                  <span>{!review ? bookingData?.appointment_type?.category : 'Virtual'}</span>
+                </AppTypography>
+                <AppTypography variant="lead" className="text-sm text-kiiraText">
+                  <i className="fa-solid fa-calendar-plus text-black text-xs pr-1"></i>{' '}
+                  <b className="font-semibold text-xs">Created:</b>{' '}
+                  <span className='text-xs '>{moment(bookingData?.created_at).format('MMM DD, YYYY HH:MMa')}</span>{' '}
+                </AppTypography>
+              </ContentContainer>
               <AppTypography
                 variant="small"
                 className="text-xs text-kiiraText font-normal font-montserrat flex flex-row flex-nowrap gap-2 items-center mt-auto">
@@ -239,6 +251,15 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 {bookingData?.status === 'payment_successful' ? (
                   <i className="fa-solid fa-circle-check text-kiiraBlue  font-semibold"></i>
                 ) : null}
+
+                {bookingData?.status === 'external_appointment' ? (
+                  <i className="fa-solid fa-arrows-turn-to-dots text-purple-600 font-semibold"></i>
+                ) : null}
+
+                {bookingData?.status === 'book_on_hold' ? (
+                  <i className="fa-solid fa-calendar-day text-blue-900 font-semibold"></i>
+                ) : null}
+
                 {bookingData?.status === 'payment_ticketed' &&
                 bookingData?.appointment?.canceled ? (
                   <i className="fa-solid fa-calendar-xmark text-orange-500   font-semibold"></i>
@@ -251,25 +272,29 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     : bookingData?.status === 'pending'
                     ? 'Pending'
                     : bookingData?.status === 'payment_successful'
-                    ? 'Success'
+                    ? 'Requires attention'
+                    : bookingData?.status === 'external_appointment'
+                    ? 'External appointment'
+                    : bookingData?.status === 'book_on_hold'
+                    ? 'Reserved'
                     : bookingData?.status === 'payment_ticketed' &&
                       !bookingData?.appointment?.canceled
-                    ? 'Appointment Confirmed'
+                    ? 'Confirmed'
                     : bookingData?.appointment?.canceled
-                    ? 'Appointment Canceled'
+                    ? 'Canceled'
                     : null}
                 </span>
               </AppTypography>
             </ContentContainer>
 
-            {bookingData?.status === 'payment_ticketed' ? (
+            {isViewableAppointment ? (
               <>
                 <hr className="bg-kiiraText" />
 
                 <AppButton
                   size="md"
                   fullWidth
-                  disabled={disabled || bookingData?.status !== 'payment_ticketed'}
+                  disabled={disabled || !isViewableAppointment}
                   onClick={() => bookingAction(bookingData)}>
                   View Booking
                 </AppButton>

@@ -1,7 +1,11 @@
-import {  Carousel } from '@material-tailwind/react';
+import { Carousel } from '@material-tailwind/react';
 import { bool, element } from 'prop-types';
 import { AppNavBar } from 'src/components';
-import { AppTypography, ContentContainer, LayoutWrapper } from 'src/components/shared/styledComponents';
+import {
+  AppTypography,
+  ContentContainer,
+  LayoutWrapper
+} from 'src/components/shared/styledComponents';
 import { IMAGES } from 'src/data';
 
 const carouselContent = [

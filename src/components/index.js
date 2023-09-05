@@ -15,8 +15,8 @@ import {
   RadioCheckedIcon,
   CloseIcon
 } from './shared/AppIcons/AppIcons';
-import SavedCards from './PaymentCard/SavedCards';
-import PaymentCard from './PaymentCard/PaymentCard';
+import SavedCards from './Payment/PaymentCard/SavedCards';
+import PaymentCard from './Payment/PaymentCard/PaymentCard';
 import BookingCalendar from './BookingCalendar/BookingCalendar';
 import Loader from './shared/Loader/Loader';
 import Empty from './shared/Empty/Empty';
@@ -27,6 +27,9 @@ import EmailForm from './EmailForm/EmailForm';
 import ApplyPromoCode from './ApplyPromoCode/ApplyPromoCode';
 import SaveBooking from './SaveBooking/SaveBooking';
 import PageNotFound from './PageNotFound/PageNotFound';
+import PaymentCardDetails from './Payment/PaymentCardDetails.jsx/PaymentCardDetails';
+import PaymentMethods from './Payment/PaymentMethods/PaymentMethods';
+import Discount from './Discount/Discount';
 
 export {
   AppNavBar,
@@ -55,5 +58,8 @@ export {
   EmailForm,
   ApplyPromoCode,
   SaveBooking,
-  PageNotFound
+  PageNotFound,
+  PaymentCardDetails,
+  PaymentMethods,
+  Discount
 };

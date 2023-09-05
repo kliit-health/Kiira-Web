@@ -61,7 +61,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
   // }, []);
 
   const datePayload = {
-    month: monthDate,
+    month: monthDate === 'Invalid date' ? moment(new Date()).format('YYYY-MM') : monthDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
     ...(!isEmpty(doctor) && { calendarID: doctor.id })
@@ -76,7 +76,10 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
   const availableDates = dateData?.data?.dates;
 
   const timePayload = {
-    date: timeDate,
+    date:
+      timeDate === 'Invalid date'
+        ? moment(new Date()).add(1, 'day').format('YYYY-MM-DD')
+        : timeDate,
     appointmentTypeID: appointmentType?.appointment_type_id || appointmentType?.id,
     timezone: moment.tz.guess(true),
     ...(!isEmpty(doctor) && { calendarID: doctor.id })
@@ -89,6 +92,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
     refetch: refetchTimeData,
     isFetching
   } = useAvailableTimes(timePayload);
+
   const timesDates = timeData?.data?.times;
 
   useEffect(() => {
@@ -108,6 +112,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
       return;
     }
     const newMonth = `${selectedDay?.year}-${selectedDay?.month}-${selectedDay?.day}`;
+
     setMonthDate(moment(newMonth).format('YYYY-MM'));
     setTimeDate(moment(newMonth).format('YYYY-MM-DD'));
   }, [selectedDay]);
@@ -224,6 +229,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                 label={
                   <Alert color="pink" className="text-white bg-opacity-85">
                     {errorMsg || ' No time slot available for selected date:'}
+                    <br />{' '}
                     <b>
                       {' '}
                       {
@@ -235,7 +241,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                         //   `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
                         //   'D-MM-YYY'
                         // ).format('MMMM DD,')
-                      }
+                      }{' '}
                       {moment(
                         `${selectedDay?.day}-${selectedDay?.month}-${selectedDay?.year}`,
                         'D-MM-YYY'
@@ -246,7 +252,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
               />
             ) : null}
 
-            {!timesDatesLoading && !isFetching ? (
+            {!timesDatesLoading && !isFetching && !availableDatesLoading ? (
               <div className="grid grid-flow-row md:grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {timesDates?.map((time, index) => {
                   const timeSlots = moment(time?.time).format();
@@ -259,11 +265,11 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
                           onTimeSelect({ appointmentType, doctor, bookingCheckout: time });
                         }, 250);
                       }}
-                      className={[
+                      className={
                         moment(timeSlots).format('hh:mm') == moment(selectedDate).format('hh:mm')
                           ? 'col bg-kiiraBg3 rounded-2xl flex items-center justify-center h-20 shadow-md cursor-pointer p-2 border-kiiraBlue'
                           : 'col bg-kiiraBg2 rounded-2xl flex items-center justify-center h-20 hover:shadow-md cursor-pointer p-2'
-                      ]}
+                      }
                       key={index.toString()}>
                       <AppTypography variant="small" className="font-medium text-sm text-center">
                         {moment(timeSlots).format('LT')}

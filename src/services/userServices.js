@@ -24,8 +24,8 @@ export const viewSavedCards = async () => {
   const res = await Api.payment.viewSavedCards();
   return res;
 };
-export const deleteSavedCards = async () => {
-  const res = await Api.payment.deleteSavedCards();
+export const deleteSavedCards = async (data) => {
+  const res = await Api.payment.deleteSavedCards(data);
   return res;
 };
 
@@ -39,3 +39,7 @@ export const contactDoctor = async (data) => {
   return res;
 };
 
+export const getPaymentMethods = async () => {
+  const res = await Api.payment.paymentMethods();
+  return res;
+};

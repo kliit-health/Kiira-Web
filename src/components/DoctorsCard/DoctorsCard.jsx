@@ -46,7 +46,8 @@ const DoctorsCard = ({
       disabled={disabled || !selected}
       whiteBackground={whiteBackground}
       style={style}>
-      <ContentContainer className="absolute right-3 top-3 flex flex-row flex-nowrap items-center gap-1 justify-end">
+
+      {/* <ContentContainer className="absolute right-3 top-3 flex flex-row flex-nowrap items-center gap-1 justify-end">
         <AppTypography variant="small" className="text-[10px] capitalize">
           {doctor?.status || 'available'}
         </AppTypography>{' '}
@@ -57,7 +58,8 @@ const DoctorsCard = ({
         ) : (
           <IMAGES.TimeIcon />
         )}
-      </ContentContainer>
+      </ContentContainer> */}
+
       <Badge
         containerRef={docRef}
         overlap="circular"
@@ -114,12 +116,12 @@ const DoctorsCard = ({
       </ContentContainer>
       <hr className="bg-kiiraText w-full " />
       <ContentContainer className="flex flex-row items-center gap-2 justify-center flex-wrap xl:flex-nowrap">
-        <Button
+        {/* <Button
           disabled={disabled || loading}
           size="sm"
           className="max-w-[120px] rounded-full text-[8px] text-kiiraText bg-transparent shadow-none border border-kiiraText/20">
           Profile
-        </Button>
+        </Button> */}
         {hideBookingButton ? (
           <Button
             disabled={disabled || loading}

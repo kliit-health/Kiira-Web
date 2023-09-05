@@ -14,7 +14,9 @@ const useStore = create(
       googleAuthScriptLoaded: false,
       setGoogleAuthScriptLoaded: (data) => set(() => ({ googleAuthScriptLoaded: data })),
       coupon: '',
-      setCoupon: (data) => set(() => ({ coupon: data }))
+      setCoupon: (data) => set(() => ({ coupon: data })),
+      selectedPaymentMethod: {},
+      setSelectedPaymentMethod: (data) => set(() => ({ selectedPaymentMethod: data }))
     }),
     {
       name: 'local-store',

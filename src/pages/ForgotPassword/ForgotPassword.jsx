@@ -14,6 +14,7 @@ import { Toast } from 'src/utils';
 import { useForm } from 'react-hook-form';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
+import { Mixpanel } from 'src/utils/mixpanelUtil';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -39,7 +40,19 @@ const ForgotPassword = () => {
         console.log('\n🚀 ~ file: ForgotPassword.jsx:54 ~ onSubmit ~ error:', error);
         Toast.fire({
           icon: 'error',
-          title: !isEmpty(error.response?.data?.message) ? error.response?.data?.message : error?.message
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
+        });
+
+        Mixpanel.track('Error: Forgot password error: ->', {
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error?.response?.data?.message
+              : error?.message,
+            email: data?.email,
+            url: error?.response?.config?.url
+          }
         });
         if (error.response?.status === 426) {
           setStoredEmail({ email: data?.email });

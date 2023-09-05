@@ -8,14 +8,7 @@ import {
   PopoverHandler
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import {
-  ApplyPromoCode,
-  DownloadIcon,
-  Empty,
-  PdfIcon,
-  SavedCards,
-  SubscriptionPlans
-} from 'src/components';
+import { DownloadIcon, Empty, PdfIcon, SavedCards, SubscriptionPlans } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import {
@@ -55,6 +48,7 @@ const Subscription = () => {
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
   );
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
 
   const handleCancelSubscription = () => {
     mutate(
@@ -80,7 +74,6 @@ const Subscription = () => {
         },
         onError: (error) => {
           Mixpanel.track('Failed - Cancel subscription failed', {
-            // error: error,
             data: {
               message: !isEmpty(error.response?.data?.message)
                 ? error.response?.data?.message
@@ -289,10 +282,17 @@ const Subscription = () => {
             </ContentContainer>
           </Card>
 
-          <SavedCards />
+          {/* Payment and Saved Card details Component */}
+          <SavedCards
+            manageCards={false}
+            useNewCard={isEmpty(selectedPaymentMethod)}
+            strictlyAddNewCard={isEmpty(selectedPlan)}
+            isStrictlyPaymentSubscription={!isEmpty(selectedPlan)}
+          />
         </ContentContainer>
       </ContentContainer>
 
+      {/* View subscription history invoice */}
       <Dialog
         open={open}
         handler={handleOpen}
@@ -309,10 +309,12 @@ const Subscription = () => {
               width="100%"
               height="100%"
               className="min-h-[75vh]"
-              aria-label="Talent CV"></object>
+              aria-label="Payment Invoice"></object>
           </ContentContainer>
         </DialogBody>
       </Dialog>
+
+      {/* Cancel aubscription loader dialog */}
       <Dialog open={cancelLoading} size="sm" className="bg-transparent">
         <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
           <ThreeDots

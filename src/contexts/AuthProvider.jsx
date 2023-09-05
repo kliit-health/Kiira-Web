@@ -13,11 +13,12 @@ export const AuthContext = createContext();
 
 // create the auth provider component
 export const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
+
   const userData = Auth?.getUser();
+
   const [user, setUser] = useState({});
 
   const logout = () => {
@@ -34,11 +35,11 @@ export const AuthProvider = ({ children }) => {
     googleLogout();
     setUser({});
     queryClient.clear();
-    navigate(ROUTES.LOGIN);
   };
 
   useEffect(() => {
-    const getAuth = () => {
+    const getAuth = async () => {
+      await Auth.fetchUser();
       setUser(userData);
     };
 

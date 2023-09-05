@@ -97,7 +97,6 @@ const Login = () => {
         });
 
         Mixpanel.track('Login Failed ->', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error?.response?.data?.message
@@ -119,14 +118,16 @@ const Login = () => {
   return (
     <AuthLayout showSlider hideScroll>
       <Card className="w-full h-full shadow-none">
-        <CardBody className="flex flex-col h-full gap-4 lg:gap-6 p-4 lg:p-8 overflow-y-auto">
-          <AppTypography variant="h2" className="text-[#252539] font-medium">
-            Welcome 👋🏽,
-          </AppTypography>
+        <CardBody className="flex flex-col h-full gap-4 lg:gap-8 p-4 lg:p-8 overflow-y-auto">
+          <ContentContainer className="w-full gap-4 lg:gap-6">
+            <AppTypography variant="h2" className="text-[#252539] font-medium">
+              Welcome 👋🏽,
+            </AppTypography>
 
-          <AppTypography variant="small" className="text-kiiraText">
-            Login to access your Kiira account
-          </AppTypography>
+            <AppTypography variant="small" className="text-kiiraText">
+              Login to access your Kiira account
+            </AppTypography>
+          </ContentContainer>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-5 mt-5 ">
@@ -134,7 +135,7 @@ const Login = () => {
                 autoFocus
                 label="Email"
                 size="lg"
-                className="ring-transparent ring-0"
+                className="ring-transparent ring-0 lowercase"
                 name="email"
                 {...register('email', {
                   required: 'Email is required.',
@@ -213,7 +214,7 @@ const Login = () => {
               </AppButton>
             )}
           </form>
-          <ContentContainer column className="items-center justify-center gap-2">
+          <ContentContainer column className="items-center justify-center gap-2 my-4">
             <AppTypography variant="small" className="flex justify-center -mt-1">
               Don't have an account?
               <Link to={ROUTES.SIGINUP} className="ml-1 font-semibold text-kiiraBlue">
@@ -232,6 +233,7 @@ const Login = () => {
           </ContentContainer>
 
           <SocialAuth
+            dividerClassName="mb-4"
             onGoogleAuthSuccess={(credential) => {
               const data = { accessToken: credential };
 

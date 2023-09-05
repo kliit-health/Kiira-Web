@@ -56,7 +56,6 @@ const ResetPassword = () => {
       },
       onError: (error) => {
         Mixpanel.track('Failed: Password reset failed! ->', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message

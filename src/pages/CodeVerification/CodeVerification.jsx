@@ -22,9 +22,6 @@ const CodeVerification = () => {
   const { mutate, isLoading } = useVerifyEmail();
   const [loading, setLoading] = useState(false);
   const getStoredEmail = useLocalStore((state) => state.email);
-  const isSubscribed = Auth.isSubscribed();
-
-  useEffect(() => {}, [isSubscribed]);
 
   const {
     register,
@@ -39,6 +36,8 @@ const CodeVerification = () => {
     };
     mutate(payload, {
       onSuccess: (response) => {
+        Auth.fetchUser();
+        const isSubscribed = Auth.isSubscribed();
         Mixpanel.track('Success - Account Verification Successful!', {
           data: {
             email: payload?.email
@@ -58,7 +57,6 @@ const CodeVerification = () => {
       onError: (error) => {
         console.log(' \n 🚀 ~ file: CodeVerification.jsx:45 ~ onSubmit ~ error:', error);
         Mixpanel.track('Failed - Account verification failed!', {
-          // error: error,
           data: {
             message: !isEmpty(error.response?.data?.message)
               ? error.response?.data?.message
