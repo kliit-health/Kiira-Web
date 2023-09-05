@@ -39,7 +39,7 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
             variant="filled"
             className=" flex flex-row items-center justify-between border-2 opacity-100 relative">
             <i className="fa-solid fa-hand-holding-dollar font-bold pr-1"></i>{' '}
-            <span className="text-xs">Choose a payment method</span>
+            <span className="text-xs">Choose a different payment method</span>
             <i
               className={`fa-solid fa-angle-down transition-transform ${
                 open ? 'rotate-180' : ''
@@ -47,24 +47,27 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
           </Button>
         </MenuHandler>
 
-        {intentsloading ? (
-          <Bars
-            height="80"
-            width="80"
-            color="#3F84FF"
-            ariaLabel="bars-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        ) : null}
         <MenuList className="max-h-[45vh]">
+          {intentsloading ? (
+            <ContentContainer row className="w-full items-center justify-center min-w-[40vw]">
+              <Bars
+                height="20"
+                width="40"
+                color="#3F84FF"
+                ariaLabel="bars-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            </ContentContainer>
+          ) : null}
           {paymentMethods?.map((data, i) => {
             return (
               <MenuItem key={i}>
                 <PaymentCardDetails
                   cardDetails={data}
                   key={i}
+                  radioName="payment-intent"
                   isLoading={intentsloading}
                   manageCards={manageCards}
                   defaultChecked={selectedPaymentMethod === data}
@@ -72,35 +75,50 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
               </MenuItem>
             );
           })}
-          <MenuItem>
-            <PaymentCardDetails
-              disabled={isReserved}
-              cardDetails={{}}
-              defaultChecked={isEmpty(selectedPaymentMethod) && isEmpty(paymentMethods)}
-              label={!isEmpty(addNewCardLabel) ? addNewCardLabel : 'Add new payment card'}
-              isLoading={intentsloading}
-              manageCards={manageCards}
-            />
-          </MenuItem>
+          {!intentsloading ? (
+            <MenuItem>
+              <PaymentCardDetails
+                disabled={isReserved}
+                cardDetails={{}}
+                defaultChecked={isEmpty(selectedPaymentMethod) && isEmpty(paymentMethods)}
+                label={!isEmpty(addNewCardLabel) ? addNewCardLabel : 'Use new payment card'}
+                isLoading={intentsloading}
+                manageCards={manageCards}
+                radioName="payment-intent"
+              />
+            </MenuItem>
+          ) : null}
         </MenuList>
       </Menu>
 
-      {!isEmpty(selectedPaymentMethod) ? (
+      {!intentsloading ? (
         <>
-          <AppTypography
-            variant="small"
-            className="text-sm text-center mt-6 font-medium text-amber-900 font-montserrat">
-            <i className="fa-solid fa-shield pr-4"></i> Your payment transaction will be completed
-            using{' '}
-          </AppTypography>
+          {!isEmpty(selectedPaymentMethod) ? (
+            <>
+              <AppTypography
+                variant="small"
+                className="text-sm text-center mt-6 font-medium text-amber-900 font-montserrat">
+                <i className="fa-solid fa-shield pr-4"></i> Your payment will be completed using{' '}
+              </AppTypography>
 
-          <Button variant="text" size="sm" onclick={toggleOpen}>
-            <PaymentCardDetails
-              cardDetails={selectedPaymentMethod}
-              defaultChecked={true}
-              radioName="default"
-            />
-          </Button>
+              <Button variant="text" size="sm" onClick={toggleOpen}>
+                <PaymentCardDetails
+                  cardDetails={selectedPaymentMethod}
+                  defaultChecked={true}
+                  radioName="default"
+                />
+              </Button>
+            </>
+          ) : (
+            <AppTypography
+              variant="small"
+              className="text-sm mt-6 font-medium text-amber-900 font-montserrat">
+              <i className="fa-solid fa-circle-exclamation pr-4"></i>{' '}
+              {isReserved && isEmpty(selectedPaymentMethod)
+                ? 'Kindly select an existing payment card to reserve your appointment booking'
+                : 'Make one-time payment using new card'}
+            </AppTypography>
+          )}
         </>
       ) : null}
     </ContentContainer>

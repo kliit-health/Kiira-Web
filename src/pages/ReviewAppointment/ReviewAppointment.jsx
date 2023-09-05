@@ -394,11 +394,14 @@ const ReviewAppointment = () => {
                       isReserved={reserveBooking}
                       isStrictlyPaymentSubscription={false}
                       isStrictlyOtherPayment={true}
-                      addNewCardLabel="Use a new payment card"
+                      addNewCardLabel="Use new payment card"
                       showActionButton={false}
                     />
 
-                    <AppButton className="text-xs mt-4" onClick={handleInitialisePayment}>
+                    <AppButton
+                      disabled={reserveBooking && isEmpty(selectedPaymentMethod)}
+                      className="text-xs mt-4"
+                      onClick={handleInitialisePayment}>
                       {reserveBooking ? 'Reserve' : ' Confirm Booking'}
                     </AppButton>
                   </>
