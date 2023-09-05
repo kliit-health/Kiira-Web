@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { AppLinkExternal, AppTypography, ContentContainer } from '../shared/styledComponents';
+import {
+  AppButton,
+  AppLinkExternal,
+  AppTypography,
+  ContentContainer
+} from '../shared/styledComponents';
 import { Alert, Button, Dialog, DialogBody, Input } from '@material-tailwind/react';
 import { useLocalStore } from 'src/store';
 import isEmpty from 'src/utils/isEmpty';
@@ -121,6 +126,7 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
             className="xl:max-w-screen-2xl lg:relative h-full">
             <ContentContainer className="w-full h-full p-2 text-center font-poppins flex-row justify-end gap-2 flex-wrap">
               <Button
+                title="close"
                 size="md"
                 variant="text"
                 className="text-orange-900 font-bold font-montserrat rounded-full border h-8 w-8 p-0 border-orange-900 hover:border-yellow-600 hover:border hover:bg-orange-900 hover:text-white capitalize gap-1 inline-flex items-center justify-center"
@@ -176,12 +182,12 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
                           className="!absolute right-1.5 top-1 rounded w-16 md:w-20 h-9"
                         />
                       ) : (
-                        <Button
+                        <AppButton
                           size="sm"
                           type="submit"
                           className="!absolute right-1 top-1.5 rounded">
                           Apply
-                        </Button>
+                        </AppButton>
                       )}
                     </div>
                   </form>
