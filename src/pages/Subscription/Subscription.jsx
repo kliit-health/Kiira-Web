@@ -34,6 +34,7 @@ const Subscription = () => {
   const { data, isLoading } = useProducts();
   const { data: userProfile, refetch: refetchProfile } = useProfile();
   const profile = userProfile?.data?.user;
+  const isCanceledSubscription = Auth.isCanceledSubscription();
   const { mutate, isLoading: cancelLoading } = useCancelSubscription();
   const {
     data: subscriptionData,
@@ -146,9 +147,7 @@ const Subscription = () => {
             ) : null}
           </ContentContainer>
         ) : null}
-        {isEmpty(profile?.subscription_expiry_date) &&
-        isEmpty(profile?.subscription_id) &&
-        !isEmpty(profile?.stripe_customer_id) ? (
+        {isCanceledSubscription ? (
           <ContentContainer>
             <AppTypography variant="h6" className="text-kiiraDark">
               Subscription Cancelled{' '}

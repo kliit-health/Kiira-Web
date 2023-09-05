@@ -53,31 +53,30 @@ const Auth = {
     const userl = localStorage.getItem('user');
     const user = JSON.parse(userl);
 
-    if (
-      !isEmpty(user?.subscription_expiry_date) &&
-      !isEmpty(user?.subscription_id) &&
-      !isEmpty(user?.stripe_customer_id)
-    )
-      return true;
+    if (!isEmpty(user?.subscription_expiry_date) && !isEmpty(user?.subscription_id)) return true;
     return false;
   },
-  isInactiveSubscription: () => {
+  isNoSubscription: () => {
     const userl = localStorage.getItem('user');
     const user = JSON.parse(userl);
 
-    if (
-      isEmpty(user?.subscription_expiry_date) &&
-      isEmpty(user?.subscription_id) &&
-      !isEmpty(user?.stripe_customer_id)
-    )
-      return true;
+    if (isEmpty(user?.subscription_expiry_date) && isEmpty(user?.subscription_id)) return true;
     return false;
   },
   isExpiredSubscription: () => {
     const userl = localStorage.getItem('user');
     const user = JSON.parse(userl);
-
-    if (moment().isAfter(user?.subscription_expiry_date, 'day')) return true;
+    if (
+      moment().isAfter(user?.subscription_expiry_date, 'day') &&
+      !isEmpty(user?.subscription_expiry_date)
+    )
+      return true;
+    return false;
+  },
+  isCanceledSubscription: () => {
+    const userl = localStorage.getItem('user');
+    const user = JSON.parse(userl);
+    if (!isEmpty(user?.subscription_expiry_date) && isEmpty(user?.subscription_id)) return true;
     return false;
   }
 };

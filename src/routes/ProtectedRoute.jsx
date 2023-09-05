@@ -7,9 +7,8 @@ import { Toast } from 'src/utils';
 export const ProtectedRoute = () => {
   const location = useLocation();
   const isAuthenticated = Auth.isAuthenticated();
-  const isSubscribed = Auth.isSubscribed();
-  const inactiveSubscription = Auth.isInactiveSubscription();
-  const isEmpired = Auth.isExpiredSubscription();
+  const isNoSubscription = Auth.isNoSubscription();
+  const isExpired = Auth.isExpiredSubscription();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -19,11 +18,10 @@ export const ProtectedRoute = () => {
       });
       return;
     }
-  }, [isAuthenticated, isSubscribed, inactiveSubscription, isEmpired]);
+  }, [isAuthenticated, isNoSubscription, isExpired]);
 
   return isAuthenticated &&
-    !isSubscribed &&
-    !inactiveSubscription &&
+    isNoSubscription &&
     location.pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
     <Navigate to={ROUTES.SIGINUP_SUBSCRIPTION} state={{ from: location }} />
   ) : isAuthenticated ? (
