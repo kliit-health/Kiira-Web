@@ -9,6 +9,7 @@ import { AddButton, Loader, PaymentCard, PaymentMethods } from 'src/components';
 import { bool, func, string } from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePlanSubscription, useProfile } from 'src/queries/queryHooks';
+import isEmpty from 'src/utils/isEmpty';
 
 const SavedCards = ({
   manageCards,
@@ -17,7 +18,8 @@ const SavedCards = ({
   strictlyAddNewCard,
   isStrictlyPaymentSubscription,
   addNewCardLabel,
-  showActionButton
+  showActionButton,
+  useNewCard
 }) => {
   const location = useLocation();
   const { pathname } = location;
@@ -96,7 +98,7 @@ const SavedCards = ({
   };
 
   const handleOpen = () => {
-    isStrictlyPaymentSubscription && !strictlyAddNewCard
+    isStrictlyPaymentSubscription && !useNewCard
       ? subscribeWithExistingCard()
       : setOpen(!open);
   };
@@ -190,7 +192,8 @@ SavedCards.propTypes = {
   isStrictlyPaymentSubscription: bool,
   isReserved: bool,
   showActionButton: bool,
-  addNewCardLabel: string
+  addNewCardLabel: string,
+  useNewCard: bool
 };
 
 SavedCards.defaultProps = {
@@ -200,5 +203,6 @@ SavedCards.defaultProps = {
   isStrictlyPaymentSubscription: false,
   isReserved: false,
   addNewCardLabel: '',
-  showActionButton: true
+  showActionButton: true,
+  useNewCard: false
 };

@@ -2,6 +2,7 @@ import Axios from 'axios';
 import Api from './api';
 import { useLocalStore } from 'src/store';
 import isEmpty from 'src/utils/isEmpty';
+import moment from 'moment-timezone';
 
 const Auth = {
   setToken: (token, refreshToken) => {
@@ -70,6 +71,13 @@ const Auth = {
       !isEmpty(user?.stripe_customer_id)
     )
       return true;
+    return false;
+  },
+  isExpiredSubscription: () => {
+    const userl = localStorage.getItem('user');
+    const user = JSON.parse(userl);
+
+    if (moment().isAfter(user?.subscription_expiry_date, 'day')) return true;
     return false;
   }
 };

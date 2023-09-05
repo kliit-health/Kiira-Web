@@ -13,7 +13,6 @@ const SignupSubscription = () => {
   const { data, isLoading } = useProducts();
   const products = data?.data?.products;
   const [selected, setSelected] = useState({});
-  const selectedPlan = useLocalStore((state) => state.storedData);
 
   return (
     <AuthLayout hideScroll>

@@ -285,6 +285,7 @@ const Subscription = () => {
           {/* Payment and Saved Card details Component */}
           <SavedCards
             manageCards={false}
+            useNewCard={isEmpty(selectedPaymentMethod)}
             strictlyAddNewCard={isEmpty(selectedPlan)}
             isStrictlyPaymentSubscription={!isEmpty(selectedPlan)}
           />

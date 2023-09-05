@@ -16,7 +16,9 @@ export const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
+
   const userData = Auth?.getUser();
+
   const [user, setUser] = useState({});
 
   const logout = () => {
@@ -36,7 +38,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const getAuth = () => {
+    const getAuth = async () => {
+      await Auth.fetchUser();
       setUser(userData);
     };
 
