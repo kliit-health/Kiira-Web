@@ -29,11 +29,6 @@ const Auth = {
   fetchUser: async () => {
     try {
       const res = await Api.user.getProfile();
-      console.log('\n 🚀 ~ file: storage.js:32 ~ fetchUser: ~ res:', res);
-      if (isEmpty(res)) {
-        localStorage.removeItem('user');
-        return;
-      }
       localStorage.setItem('user', JSON.stringify(res.data?.user));
       return;
     } catch (error) {
