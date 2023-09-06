@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ApplyPromoCode, BookingCalendar, DoctorsCard, Loader } from 'src/components';
+import {  BookingCalendar, DoctorsCard } from 'src/components';
 import {
   AppButton,
   AppLinkExternal,
@@ -199,40 +199,7 @@ const RescheduleAppointment = () => {
             </ContentContainer>
           ) : null}
 
-          {/* <ContentContainer className="flex flex-row gap-4 items-center w-full justify-between flex-wrap lg:flex-nowrap">
-            <ContentContainer className="flex flex-row items-center justify-center rounded-2xl gap-4 bg-[#FFE9BA] p-4 w-full md:w-full lg:w-2/6 shadow-sm">
-              <IconButton variant="text" ripple={false}>
-                <IMAGES.KiiraBirdieBlack />
-              </IconButton>
-              <ContentContainer col className="gap-1 justify-center">
-                <AppTypography
-                  variant="h6"
-                  className="text-kiiraBlackishGreen font-semibold text-2xl">
-                  $0.00
-                </AppTypography>
-                <AppTypography
-                  variant="small"
-                  className="capitalise text-kiiraBlackishGreen/60 text-[11px] md:text-sm font-semibold font-montserrat">
-                  Members Discount
-                </AppTypography>
-              </ContentContainer>
-            </ContentContainer>
-
-            <ContentContainer className="flex flex-row gap-1 w-full bg-white rounded-xl items-center justify-between p-4 flex-wrap">
-              <AppTypography
-                variant="lead"
-                className="text-sm text-justify md:text-sm text-kiiraText w-full lg:w-3/4">
-                Coupon codes can be applied at checkout for a discount. If you do not have your
-                "unique code", you may email us at{' '}
-                <AppLinkExternal href="mailto:appointments@kiira.io" className="underline">
-                  appointments@kiira.io
-                </AppLinkExternal>{' '}
-                for retrieval.
-              </AppTypography>
-
-              <ApplyPromoCode disabled />
-            </ContentContainer>
-          </ContentContainer> */}
+          {/* <Discount /> */}
 
           {!isEmpty(doctorState) ? (
             <>

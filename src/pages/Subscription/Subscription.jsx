@@ -35,6 +35,7 @@ const Subscription = () => {
   const { data: userProfile, refetch: refetchProfile } = useProfile();
   const profile = userProfile?.data?.user;
   const isCanceledSubscription = Auth.isCanceledSubscription();
+  const isExpiredSubscription = Auth.isExpiredSubscription();
   const { mutate, isLoading: cancelLoading } = useCancelSubscription();
   const {
     data: subscriptionData,
@@ -105,7 +106,7 @@ const Subscription = () => {
               </AppTypography>
               <AppTypography variant="small" className="text-kiiraText text-sm">
                 Next payment on{' '}
-                <span className="text-kiiraDark">
+                <span className={`text-kiiraDark ${isExpiredSubscription ? 'text-amber-900' : ''}`}>
                   {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
                 </span>
               </AppTypography>
