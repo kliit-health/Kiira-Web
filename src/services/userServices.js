@@ -43,3 +43,8 @@ export const getPaymentMethods = async () => {
   const res = await Api.payment.paymentMethods();
   return res;
 };
+
+export const uploadMediaFile = async (data) => {
+  const res = await Api.user.uploadMediaFile(data);
+  return res;
+};

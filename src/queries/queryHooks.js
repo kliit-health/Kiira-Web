@@ -21,6 +21,7 @@ import {
   fetchUserProfile,
   getPaymentMethods,
   planSubscription,
+  uploadMediaFile,
   viewSavedCards
 } from 'src/services/userServices';
 import {
@@ -523,6 +524,15 @@ export const usePaymentMethods = () => {
           url: error?.response?.config?.url
         }
       });
+    }
+  });
+  return data;
+};
+
+export const useUploadMediaFile = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return uploadMediaFile(data);
     }
   });
   return data;
