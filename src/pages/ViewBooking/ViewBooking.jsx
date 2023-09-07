@@ -85,7 +85,9 @@ const ViewBooking = () => {
   };
 
   const viewableAppointment =
-    booking?.status === 'payment_ticketed' || booking?.status === 'external_appointment';
+    booking?.status === 'payment_ticketed' ||
+    booking?.status === 'external_appointment' ||
+    booking?.status === 'book_on_hold';
 
   return (
     <ContentContainer
@@ -166,7 +168,9 @@ const ViewBooking = () => {
                       className="text-sm text-red-500 font-poppins font-medium bg-transparent hover:shadow-none shadow-none ring-transparent capitalize p-0.5 ">
                       Appointment Cancelled
                     </Button>
-                  ) : booking?.status === 'payment_ticketed' && !booking?.appointment?.canceled ? (
+                  ) : (booking?.status === 'payment_ticketed' ||
+                      booking?.status === 'book_on_hold') &&
+                    !booking?.appointment?.canceled ? (
                     <ContentContainer row className={'gap-2 items-center flex-wrap md:justify-end'}>
                       <Button
                         disabled={!booking?.appointment?.canClientReschedule}
@@ -320,10 +324,10 @@ const ViewBooking = () => {
                       <span className="">{booking?.appointment?.id}</span>
                     </p>
 
-                    {!isEmpty(booking?.checkout_session) ? (
+                    {!isEmpty(booking?.payment_intent_id) ? (
                       <p className="text-sm md:text-base overflow-auto break-words">
                         <b className="font-bold">Payment Ref:</b>{' '}
-                        <span className="">{booking?.checkout_session?.payment_intent}</span>
+                        <span className="">{booking?.payment_intent_id}</span>
                       </p>
                     ) : null}
                   </ContentContainer>

@@ -4,7 +4,7 @@ import { AppTypography, ContentContainer } from 'src/components/shared/styledCom
 import { AuthLayout } from 'src/layouts';
 import { PaymentCard, SubscriptionPlans } from 'src/components';
 import { useProducts } from 'src/queries/queryHooks';
-import { InfinitySpin, LineWave, ThreeDots } from 'react-loader-spinner';
+import { InfinitySpin, ThreeDots } from 'react-loader-spinner';
 import { useLocalStore } from 'src/store';
 import isEmpty from 'src/utils/isEmpty';
 
@@ -70,7 +70,7 @@ const SignupSubscription = () => {
         {/* Payment Form */}
         {!isLoading ? (
           <>
-            <Card className="w-full h-auto 2xl:h-full shadow-none px-4">
+            <Card className="w-full h-auto xl:h-full shadow-none px-4">
               {isEmpty(selected) ? (
                 <ContentContainer className="flex h-full w-full min-h-[240px] items-center justify-center">
                   <AppTypography variant="h6" className="w-full text-center">
@@ -79,7 +79,11 @@ const SignupSubscription = () => {
                   <InfinitySpin width="100" color="#005eff" />
                 </ContentContainer>
               ) : (
-                <PaymentCard showCloseButton={false} />
+                <PaymentCard
+                  showCloseButton={false}
+                  isStrictlyPaymentSubscription={true}
+                  strictlyAddNewCard={false}
+                />
               )}
             </Card>
           </>

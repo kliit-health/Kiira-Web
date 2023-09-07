@@ -8,14 +8,7 @@ import {
   PopoverHandler
 } from '@material-tailwind/react';
 import React, { useState } from 'react';
-import {
-  ApplyPromoCode,
-  DownloadIcon,
-  Empty,
-  PdfIcon,
-  SavedCards,
-  SubscriptionPlans
-} from 'src/components';
+import { DownloadIcon, Empty, PdfIcon, SavedCards, SubscriptionPlans } from 'src/components';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { MainLayout } from 'src/layouts';
 import {
@@ -41,6 +34,8 @@ const Subscription = () => {
   const { data, isLoading } = useProducts();
   const { data: userProfile, refetch: refetchProfile } = useProfile();
   const profile = userProfile?.data?.user;
+  const isCanceledSubscription = Auth.isCanceledSubscription();
+  const isExpiredSubscription = Auth.isExpiredSubscription();
   const { mutate, isLoading: cancelLoading } = useCancelSubscription();
   const {
     data: subscriptionData,
@@ -55,6 +50,7 @@ const Subscription = () => {
   const currentSubscriptionDetails = products?.find(
     (product) => profile?.subscription_id == product?.id
   );
+  const selectedPaymentMethod = useLocalStore((state) => state.selectedPaymentMethod);
 
   const handleCancelSubscription = () => {
     mutate(
@@ -110,7 +106,7 @@ const Subscription = () => {
               </AppTypography>
               <AppTypography variant="small" className="text-kiiraText text-sm">
                 Next payment on{' '}
-                <span className="text-kiiraDark">
+                <span className={`text-kiiraDark ${isExpiredSubscription ? 'text-amber-900' : ''}`}>
                   {moment(profile?.subscription_expiry_date).format('MMM DD, YYYY')}
                 </span>
               </AppTypography>
@@ -152,9 +148,7 @@ const Subscription = () => {
             ) : null}
           </ContentContainer>
         ) : null}
-        {isEmpty(profile?.subscription_expiry_date) &&
-        isEmpty(profile?.subscription_id) &&
-        !isEmpty(profile?.stripe_customer_id) ? (
+        {isCanceledSubscription ? (
           <ContentContainer>
             <AppTypography variant="h6" className="text-kiiraDark">
               Subscription Cancelled{' '}
@@ -288,10 +282,17 @@ const Subscription = () => {
             </ContentContainer>
           </Card>
 
-          <SavedCards />
+          {/* Payment and Saved Card details Component */}
+          <SavedCards
+            manageCards={false}
+            useNewCard={isEmpty(selectedPaymentMethod)}
+            strictlyAddNewCard={isEmpty(selectedPlan)}
+            isStrictlyPaymentSubscription={!isEmpty(selectedPlan)}
+          />
         </ContentContainer>
       </ContentContainer>
 
+      {/* View subscription history invoice */}
       <Dialog
         open={open}
         handler={handleOpen}
@@ -308,10 +309,12 @@ const Subscription = () => {
               width="100%"
               height="100%"
               className="min-h-[75vh]"
-              aria-label="Talent CV"></object>
+              aria-label="Payment Invoice"></object>
           </ContentContainer>
         </DialogBody>
       </Dialog>
+
+      {/* Cancel aubscription loader dialog */}
       <Dialog open={cancelLoading} size="sm" className="bg-transparent">
         <ContentContainer className="flex h-full w-full bg-white rounded-md  items-center justify-center">
           <ThreeDots

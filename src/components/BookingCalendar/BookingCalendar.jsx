@@ -252,7 +252,7 @@ const BookingCalendar = ({ dateLabel, onTimeSelect, appointmentType, doctor, sel
               />
             ) : null}
 
-            {!timesDatesLoading && !isFetching ? (
+            {!timesDatesLoading && !isFetching && !availableDatesLoading ? (
               <div className="grid grid-flow-row md:grid-flow-row-dense grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {timesDates?.map((time, index) => {
                   const timeSlots = moment(time?.time).format();

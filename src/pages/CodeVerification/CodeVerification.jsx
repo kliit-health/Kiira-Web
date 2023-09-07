@@ -22,9 +22,6 @@ const CodeVerification = () => {
   const { mutate, isLoading } = useVerifyEmail();
   const [loading, setLoading] = useState(false);
   const getStoredEmail = useLocalStore((state) => state.email);
-  const isSubscribed = Auth.isSubscribed();
-
-  useEffect(() => {}, [isSubscribed]);
 
   const {
     register,
@@ -39,6 +36,8 @@ const CodeVerification = () => {
     };
     mutate(payload, {
       onSuccess: (response) => {
+        Auth.fetchUser();
+        const isSubscribed = Auth.isSubscribed();
         Mixpanel.track('Success - Account Verification Successful!', {
           data: {
             email: payload?.email

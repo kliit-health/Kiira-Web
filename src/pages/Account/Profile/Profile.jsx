@@ -9,10 +9,14 @@ import { IMAGES } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
 import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
 import { useProfile } from 'src/queries/queryHooks';
+import { FileUpload } from 'src/components';
+import { useState } from 'react';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { data: data, isLoading } = useProfile();
+  const { fileData, setFileData } = useState({});
+  console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ fileData:', fileData);
   const profile = data?.data?.user;
 
   return (
@@ -41,7 +45,13 @@ const Profile = () => {
       <ContentContainer className="w-full h-full flex flex-col gap-4">
         <ContentContainer className="w-full gap-4">
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
-            <ContentContainer className="relative hover:opacity-80">
+            <FileUpload
+              setFileData={setFileData}
+              canUpload={true}
+              usePhotoPicker={true}
+              label="Select file"
+            />
+            {/* <ContentContainer className="relative hover:opacity-80">
               <Avatar
                 src={profile?.photo || IMAGES.dummyProfilePhoto}
                 alt={profile?.last_name}
@@ -50,7 +60,7 @@ const Profile = () => {
                 className="rounded-full bg-kiiraText/50 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40"
               />
               <PenIcon className="z-10 absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
-            </ContentContainer>
+            </ContentContainer> */}
             {isLoading ? (
               <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
                 <div className="w-3/4 bg-gray-300 h-3 rounded"></div>

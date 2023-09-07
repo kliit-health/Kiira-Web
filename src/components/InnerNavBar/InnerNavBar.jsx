@@ -3,7 +3,6 @@ import {
   IconButton,
   List,
   Navbar,
-  Badge,
   Avatar,
   Collapse,
   Menu,
