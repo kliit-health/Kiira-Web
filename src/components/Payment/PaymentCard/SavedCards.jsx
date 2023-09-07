@@ -78,13 +78,11 @@ const SavedCards = ({
         }
       },
       onError: (error) => {
-        Mixpanel.track('Failed - Subscription activation error', {
-          data: {
-            message: !isEmpty(error.response?.data?.message)
-              ? error.response?.data?.message
-              : error?.message,
-            url: error?.response?.config?.url
-          }
+        Toast.fire({
+          icon: 'error',
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
         });
 
         setError({
@@ -93,14 +91,14 @@ const SavedCards = ({
             ? error.response?.data?.message
             : error?.message
         });
+
+        return;
       }
     });
   };
 
   const handleOpen = () => {
-    isStrictlyPaymentSubscription && !useNewCard
-      ? subscribeWithExistingCard()
-      : setOpen(!open);
+    isStrictlyPaymentSubscription && !useNewCard ? subscribeWithExistingCard() : setOpen(!open);
   };
 
   const [windowSize, setWindowSize] = useState(getWindowSize());
@@ -138,17 +136,35 @@ const SavedCards = ({
           isLoading ? (
             <Loader label="Processing" />
           ) : (
-            <AddButton
-              label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
-              onAddClick={() => {
-                strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
-                  ? Toast.fire({
-                      icon: 'warning',
-                      title: 'Please select a subscription plan to proceed...'
-                    })
-                  : handleOpen();
-              }}
-            />
+            <>
+              {!strictlyAddNewCard && !isEmpty(selectedPlan) ? (
+                <AddButton
+                  label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
+                  onAddClick={() => {
+                    strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
+                      ? Toast.fire({
+                          icon: 'warning',
+                          title: 'Please select a subscription plan to proceed...'
+                        })
+                      : handleOpen();
+                  }}
+                />
+              ) : null}
+
+              {strictlyAddNewCard ? (
+                <AddButton
+                  label={strictlyAddNewCard ? 'Add a new card' : 'Subscribe to selected plan'}
+                  onAddClick={() => {
+                    strictlyAddNewCard && pathname === ROUTES?.SIGINUP_SUBSCRIPTION
+                      ? Toast.fire({
+                          icon: 'warning',
+                          title: 'Please select a subscription plan to proceed...'
+                        })
+                      : handleOpen();
+                  }}
+                />
+              ) : null}
+            </>
           )
         ) : null}
       </Card>

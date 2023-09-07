@@ -30,6 +30,7 @@ import PageNotFound from './PageNotFound/PageNotFound';
 import PaymentCardDetails from './Payment/PaymentCardDetails.jsx/PaymentCardDetails';
 import PaymentMethods from './Payment/PaymentMethods/PaymentMethods';
 import Discount from './Discount/Discount';
+import FileUpload from './FileUpload/FileUpload';
 
 export {
   AppNavBar,
@@ -61,5 +62,6 @@ export {
   PageNotFound,
   PaymentCardDetails,
   PaymentMethods,
-  Discount
+  Discount,
+  FileUpload
 };

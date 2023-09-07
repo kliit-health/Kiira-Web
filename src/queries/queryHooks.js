@@ -21,6 +21,7 @@ import {
   fetchUserProfile,
   getPaymentMethods,
   planSubscription,
+  uploadMediaFile,
   viewSavedCards
 } from 'src/services/userServices';
 import {
@@ -385,6 +386,16 @@ export const usePlanSubscription = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [KEYS.SUBSCRIPTION_HISTORY] });
+    },
+    onError: (error) => {
+      Mixpanel.track('Failed - Subscription activation error', {
+        data: {
+          message: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message,
+          url: error?.response?.config?.url
+        }
+      });
     }
   });
   return data;
@@ -513,6 +524,15 @@ export const usePaymentMethods = () => {
           url: error?.response?.config?.url
         }
       });
+    }
+  });
+  return data;
+};
+
+export const useUploadMediaFile = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return uploadMediaFile(data);
     }
   });
   return data;

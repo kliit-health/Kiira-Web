@@ -21,7 +21,7 @@ const Auth = {
   },
   getUser: () => {
     const user = localStorage.getItem('user');
-    return user !== null ? JSON.parse(user) : null;
+    return user !== null && user !== 'undefined' ? JSON.parse(user) : null;
   },
   setUser: (user) => {
     localStorage.setItem('user', JSON.stringify(user));
@@ -29,6 +29,7 @@ const Auth = {
   fetchUser: async () => {
     try {
       const res = await Api.user.getProfile();
+      if (res === undefined) return;
       localStorage.setItem('user', JSON.stringify(res.data?.user));
       return;
     } catch (error) {

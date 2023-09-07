@@ -226,3 +226,24 @@ export const SelectWrapper = styled(ContentContainer)`
 export const CustomPhoneInput = styled.input`
   ${tw`border-none !p-0 bg-transparent ring-0 focus-visible:outline-none placeholder:text-sm`}
 `;
+
+export const CustomInput = styled.input`
+  ${tw`block w-full px-4 py-2.5 min-w-[75px] focus:outline-0 text-xs text-kiiraText border border-gray-400/70 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-kiiraText dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+`;
+
+export const CustomSelectInput = styled.select`
+  ${tw`block w-full px-4 py-2.5 min-w-[75px] focus:outline-0 text-xs text-kiiraText border border-gray-400/70 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-kiiraText dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+`;
+
+export const selectClassName =
+  'peer h-full w-full rounded-[7px] border border-[#E4E7F3] bg-kiiraBg2 px-2 py-2 font-sans text-[0.65rem] font-medium text-kiiraText outline outline-0 transition-all  placeholder-shown:border-kiiraText empty:!bg-red-500 focus:border focus:border-kiiraBlue focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50';
+
+export const FileInput = styled(CustomInput)`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  width: 100%;
+`;
