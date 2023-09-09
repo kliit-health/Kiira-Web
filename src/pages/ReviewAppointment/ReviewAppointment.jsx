@@ -81,7 +81,7 @@ const ReviewAppointment = () => {
       // });
 
       setTimeout(() => {
-        navigate(-1, { replace: true });
+        navigate(ROUTES.INDEX, { replace: true });
       }, 1000);
     }
   }, [bookingData]);
@@ -98,6 +98,11 @@ const ReviewAppointment = () => {
 
     if (!isEmpty(isRequired)) {
       const validateData = isRequired[0];
+      import.meta.env.DEV &&
+        console.log(
+          '\n 🚀 ~ file: ReviewAppointment.jsx:101 ~ handleInitialisePayment ~ validateData:',
+          validateData
+        );
       Toast.fire({
         icon: 'error',
         title: `Kindly complete all required forms to proceed...\n"${truncate(
@@ -143,10 +148,11 @@ const ReviewAppointment = () => {
           payment_method_id: selectedPaymentMethod?.id
         })
     };
-    console.log(
-      '\n 🚀 ~ file: ReviewAppointment.jsx:152 ~ handleInitialisePayment ~ payload:',
-      payload
-    );
+    import.meta.env.DEV &&
+      console.log(
+        '\n 🚀 ~ file: ReviewAppointment.jsx:152 ~ handleInitialisePayment ~ payload:',
+        payload
+      );
 
     mutate(payload, {
       onSuccess: (response) => {

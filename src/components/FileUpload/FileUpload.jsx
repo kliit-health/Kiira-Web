@@ -21,15 +21,7 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
 
   const [file, setFile] = useState({});
   const [fileUrl, setFileUrl] = useState('');
-  useEffect(() => {
-    console.log('\n 🚀 ~ file: FileUpload.jsx:23 ~ FileUpload ~ file:', file);
-    console.log('\n 🚀 ~ file: FileUpload.jsx:24 ~ FileUpload ~ fileUrl:', fileUrl);
-    console.log(
-      '\n 🚀 ~ file: FileUpload.jsx:108 ~ FileUpload ~ !isEmpty(file):',
-      file,
-      !isEmpty(file?.type)
-    );
-  }, [file, fileUrl]);
+  useEffect(() => {}, [file, fileUrl]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -47,16 +39,15 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
     const formData = new FormData();
     formData.append('name', file?.name);
     formData.append('media', file);
-    console.log('\n 🚀 ~ file: FileUpload.jsx:41 ~ handleUpload ~ formData:', formData);
 
     mutate(formData, {
       onSuccess: (response) => {
-        console.log('\n 🚀 ~ file: FileUpload.jsx:43 ~ handleUpload ~ response:', response);
         setFileUrl(response?.data?.media?.url);
         setFileData(response?.data?.media);
       },
       onError: (error) => {
-        console.log('\n 🚀 ~ file: FileUpload.jsx:57 ~ handleUpload ~ error:', error);
+        import.meta.env.DEV &&
+          console.log('\n 🚀 ~ file: FileUpload.jsx:57 ~ handleUpload ~ error:', error);
         Toast.fire({
           icon: 'error',
           title: error

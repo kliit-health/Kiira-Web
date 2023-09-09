@@ -382,7 +382,8 @@ const Signup = () => {
                 },
                 onError: (error) => {
                   console.log(
-                    '\n 🚀 ~ file: Signup.jsx:307 ~ Signup ~ SocialAuth error:',
+                    import.meta.env.DEV &&
+                        '\n 🚀 ~ file: Signup.jsx:307 ~ Signup ~ SocialAuth error:',
                     error,
                     error?.response
                   );

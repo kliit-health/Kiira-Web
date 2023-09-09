@@ -16,7 +16,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const { data: data, isLoading } = useProfile();
   const { fileData, setFileData } = useState({});
-  console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ fileData:', fileData);
+  import.meta.env.DEV &&
+    console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ fileData:', fileData);
   const profile = data?.data?.user;
 
   return (

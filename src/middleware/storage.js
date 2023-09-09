@@ -21,6 +21,10 @@ const Auth = {
   },
   getUser: () => {
     const user = localStorage.getItem('user');
+    if (user === null || user === 'undefined') {
+      Auth.destroyToken();
+      return null;
+    }
     return user !== null && user !== 'undefined' ? JSON.parse(user) : null;
   },
   setUser: (user) => {
@@ -29,7 +33,10 @@ const Auth = {
   fetchUser: async () => {
     try {
       const res = await Api.user.getProfile();
-      if (res === undefined) return;
+      if (res === undefined || res === 'undefined') {
+        Auth.destroyToken();
+        return;
+      }
       localStorage.setItem('user', JSON.stringify(res.data?.user));
       return;
     } catch (error) {

@@ -33,7 +33,8 @@ const History = () => {
       const filteer = appointments?.filter(
         (booking) => !booking?.appointment?.canceled && booking?.status === 'payment_ticketed'
       );
-      console.log('\n 🚀 ~ file: History.jsx:36 ~ useEffect ~ filteer:', filteer);
+      import.meta.env.DEV &&
+        console.log('\n 🚀 ~ file: History.jsx:36 ~ useEffect ~ filteer:', filteer);
       setFilteredAppointments(filteer);
       return;
     }

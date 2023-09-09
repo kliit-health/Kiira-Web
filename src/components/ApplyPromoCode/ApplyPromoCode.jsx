@@ -49,11 +49,12 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
         handleOpen();
       },
       onError: (error) => {
-        console.log(
-          '\n 🚀 ~ file: ApplyPromoCode.jsx:35 ~ handleSubmit ~ error:',
-          error,
-          error?.response
-        );
+        import.meta.env.DEV &&
+          console.log(
+            '\n 🚀 ~ file: ApplyPromoCode.jsx:35 ~ handleSubmit ~ error:',
+            error,
+            error?.response
+          );
         Mixpanel.track('Error: Validate coupon code: ->', {
           data: {
             message: !isEmpty(error.response?.data?.message)
