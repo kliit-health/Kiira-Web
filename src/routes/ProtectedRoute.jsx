@@ -12,10 +12,10 @@ export const ProtectedRoute = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      Toast.fire({
-        icon: 'info',
-        html: `<ContentContainer className="text-kiiraBg2 text-xs">Unauthorised<br/>Kindly login to continue...</ContentContainer>`
-      });
+      // Toast.fire({
+      //   icon: 'info',
+      //   html: `<ContentContainer className="text-kiiraBg2 text-xs">Unauthorised<br/>Kindly login to continue...</ContentContainer>`
+      // });
       return;
     }
   }, [isAuthenticated, isNoSubscription, isExpired]);

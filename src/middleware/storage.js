@@ -34,7 +34,6 @@ const Auth = {
       return;
     } catch (error) {
       console.error('🚀 ~ file: storage.js:24 ~ fetchUser: ~ error:', error);
-      throw error;
     }
   },
   isAuthenticated: () => {

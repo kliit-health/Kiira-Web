@@ -89,12 +89,13 @@ const Login = () => {
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error, error?.response);
-        Toast.fire({
-          icon: 'error',
-          title: !isEmpty(error.response?.data?.message)
-            ? error.response?.data?.message
-            : error?.message
-        });
+        error.response?.status !== 426 &&
+          Toast.fire({
+            icon: 'error',
+            title: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          });
 
         Mixpanel.track('Login Failed ->', {
           data: {
@@ -293,12 +294,19 @@ const Login = () => {
                     }
                   });
 
-                  Toast.fire({
-                    icon: 'error',
-                    title: !isEmpty(error.response?.data?.message)
-                      ? error.response?.data?.message
-                      : error?.message
-                  });
+                  error.response?.status !== 426 &&
+                    Toast.fire({
+                      icon: 'error',
+                      title: !isEmpty(error.response?.data?.message)
+                        ? error.response?.data?.message
+                        : error?.message
+                    });
+
+                  if (error.response?.status === 426) {
+                    setStoredEmail({ email: data?.email });
+                    navigate(ROUTES.GET_ACTIVATION_CODE);
+                    return;
+                  }
                 }
               });
             }}

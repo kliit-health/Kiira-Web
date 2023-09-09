@@ -232,7 +232,9 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                 <AppTypography variant="lead" className="text-sm text-kiiraText">
                   <i className="fa-solid fa-calendar-plus text-black text-xs pr-1"></i>{' '}
                   <b className="font-semibold text-xs">Created:</b>{' '}
-                  <span className='text-xs '>{moment(bookingData?.created_at).format('MMM DD, YYYY HH:MMa')}</span>{' '}
+                  <span className="text-xs ">
+                    {moment(bookingData?.created_at).format('MMM DD, YYYY HH:MMa')}
+                  </span>{' '}
                 </AppTypography>
               </ContentContainer>
               <AppTypography
@@ -271,11 +273,13 @@ const BookingCard = ({ disabled, review, bookingAction, bookingData }) => {
                     ? 'Failed'
                     : bookingData?.status === 'pending'
                     ? 'Pending'
-                    : bookingData?.status === 'payment_successful'
+                    : bookingData?.status === 'payment_successful' &&
+                      !bookingData?.appointment?.canceled
                     ? 'Requires attention'
-                    : bookingData?.status === 'external_appointment'
+                    : bookingData?.status === 'external_appointment' &&
+                      !bookingData?.appointment?.canceled
                     ? 'External appointment'
-                    : bookingData?.status === 'book_on_hold'
+                    : bookingData?.status === 'book_on_hold' && !bookingData?.appointment?.canceled
                     ? 'Reserved'
                     : bookingData?.status === 'payment_ticketed' &&
                       !bookingData?.appointment?.canceled

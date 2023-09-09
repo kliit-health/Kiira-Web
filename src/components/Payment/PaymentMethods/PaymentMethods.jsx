@@ -54,7 +54,7 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
   };
 
   return (
-    <ContentContainer className="w-full my-2 max-w-sm gap-2">
+    <ContentContainer className="w-full max-w-sm gap-2">
       {/* 
       Dropdown  Disabled / hidden payment card details */}
       <ContentContainer className="hidden">
@@ -124,12 +124,13 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
         </Menu>
       </ContentContainer>
 
-      <Button
-        disabled
-        variant="filled"
-        className=" flex flex-row items-center justify-between border-2 opacity-100 relative">
-        <span className="text-xs w-full text-center">Select a payment method</span>
-      </Button>
+      <AppTypography
+        variant="h6"
+        className="flex rounded-lg bg-kiiraBlue/10 py-2 w-full h-auto text-xs font-semibold my-auto">
+        <span className="text-xs w-full text-semibold p-0 mx-2">
+          Select a payment method:
+        </span>
+      </AppTypography>
 
       {intentsloading ? (
         <ContentContainer row className="w-full items-center justify-center min-w-min">
@@ -145,7 +146,7 @@ const PaymentMethods = ({ manageCards, isReserved, addNewCardLabel }) => {
         </ContentContainer>
       ) : null}
 
-      {!isEmpty(paymentMethods) && !intentsloading ? (
+      {!intentsloading ? (
         <SelectWrapper>
           <CustomSelectInput
             placeholder={`Select payment method`}

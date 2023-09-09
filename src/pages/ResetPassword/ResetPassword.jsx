@@ -92,7 +92,7 @@ const ResetPassword = () => {
             Set Password
           </AppTypography>
           <AppTypography variant="small" className="text-kiiraText text-base">
-            Your previous password has been reseted. Please set a new password for your account.
+            Please set a new password for your account.
           </AppTypography>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Input

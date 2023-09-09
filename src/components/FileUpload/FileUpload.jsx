@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Auth from 'src/middleware/storage';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { bool, func, string } from 'prop-types';
@@ -19,12 +19,20 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
   const { mutate, isLoading } = useUploadMediaFile();
   const user = Auth.getUser();
 
-  const [file, setFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState(null);
+  const [file, setFile] = useState({});
+  const [fileUrl, setFileUrl] = useState('');
+  useEffect(() => {
+    console.log('\n 🚀 ~ file: FileUpload.jsx:23 ~ FileUpload ~ file:', file);
+    console.log('\n 🚀 ~ file: FileUpload.jsx:24 ~ FileUpload ~ fileUrl:', fileUrl);
+    console.log(
+      '\n 🚀 ~ file: FileUpload.jsx:108 ~ FileUpload ~ !isEmpty(file):',
+      file,
+      !isEmpty(file?.type)
+    );
+  }, [file, fileUrl]);
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+    setFile(e.target.files[0]);
   };
 
   const handleUpload = () => {
@@ -37,7 +45,9 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
     }
 
     const formData = new FormData();
+    formData.append('name', file?.name);
     formData.append('media', file);
+    console.log('\n 🚀 ~ file: FileUpload.jsx:41 ~ handleUpload ~ formData:', formData);
 
     mutate(formData, {
       onSuccess: (response) => {
@@ -68,22 +78,24 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
       {usePhotoPicker ? (
         <>
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4 ">
-            <ContentContainer className="relative hover:opacity-80">
+            <ContentContainer className={`relative hover:opacity-80`}>
               <Avatar
                 src={fileUrl || IMAGES?.dummyProfilePhoto}
                 alt={user?.last_name}
                 variant="circular"
                 size="xxl"
-                className="rounded-full bg-kiiraBg3/80 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40 flex items-center justify-center"
+                className={`${
+                  isLoading ? 'animate-pulse' : ''
+                } rounded-full bg-kiiraBg3/80 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40 flex items-center justify-center`}
               />
               <FileInput
                 type="file"
                 onChange={handleFileChange}
                 placeholder={label}
                 accept={acceptedFormat}
-                disabled={disabled}
+                disabled={disabled || isLoading}
+                className="z-10"
               />
-
               <PenIcon className=" absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
             </ContentContainer>
           </ContentContainer>
@@ -94,31 +106,27 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
           onChange={handleFileChange}
           placeholder={label}
           accept={acceptedFormat}
-          disabled={disabled}
+          disabled={disabled || isLoading}
         />
       )}
 
-      {!isEmpty(file) ? (
+      {!isEmpty(file?.type) ? (
         <>
           <AppTypography variant="small" className="text-center text-xs">
             {file?.name}
           </AppTypography>
           {/* {percent > 0 ? (
-        <Progress
-          value={percent}
-          color="blue"
-          size="sm"
-          label={percent < 99 ? 'uploading' : 'uploading'}
-          className="max-w-xs"
-        />
-      ) : null} */}
+                <Progress
+                  value={percent}
+                  color="blue"
+                  size="sm"
+                  label={percent < 99 ? 'uploading' : 'uploading'}
+                  className="max-w-xs"
+                />
+              ) : null} */}
 
-          <Button
-            size="sm"
-            disabled={disabled}
-            onClick={handleUpload}
-            color="blue">
-            Update
+          <Button size="sm" disabled={disabled || isLoading} onClick={handleUpload} color="blue">
+            {isLoading ? 'Uploading' : 'Update'}
           </Button>
         </>
       ) : null}

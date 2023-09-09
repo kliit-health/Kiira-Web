@@ -49,7 +49,6 @@ const ReviewAppointment = () => {
   const setSelectedPaymentMethod = useLocalStore((state) => state.setSelectedPaymentMethod);
 
   const [formResult, setFormResult] = useState({});
-  const [showPaymentCard, togglePaymentCard] = useState(false);
 
   const bookingParams = location.state?.data;
   const getStoredBookingCheckout = useLocalStore((state) => state.bookingData);
@@ -76,10 +75,10 @@ const ReviewAppointment = () => {
 
   useEffect(() => {
     if (isEmpty(bookingData)) {
-      Toast.fire({
-        icon: 'error',
-        title: 'No booking data found'
-      });
+      // Toast.fire({
+      //   icon: 'error',
+      //   title: 'No booking data found'
+      // });
 
       setTimeout(() => {
         navigate(-1, { replace: true });
@@ -361,27 +360,29 @@ const ReviewAppointment = () => {
 
           {!loadingForms && isEmpty(bookingFormError) ? (
             <>
-              <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
-                <Checkbox
-                  name="booking"
-                  color="orange"
-                  iconProps={{ size: 'xs' }}
-                  labelProps={{ className: 'py-0.5 rounded' }}
-                  checked={reserveBooking}
-                  className="p-1"
-                  onChange={() => {
-                    setReserveBooking(!reserveBooking);
-                  }}
-                />
-                <span
-                  className={[
-                    reserveBooking
-                      ? 'text-xs text-orange-400  font-bold uppercase'
-                      : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
-                  ]}>
-                  Reserve this Appointment booking
-                </span>
-              </ContentContainer>
+              {!isEmpty(paymentMethods) ? (
+                <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5 -mt-2.5">
+                  <Checkbox
+                    name="booking"
+                    color="orange"
+                    iconProps={{ size: 'xs' }}
+                    labelProps={{ className: 'py-0.5 rounded' }}
+                    checked={reserveBooking}
+                    className="p-1"
+                    onChange={() => {
+                      setReserveBooking(!reserveBooking);
+                    }}
+                  />
+                  <span
+                    className={[
+                      reserveBooking
+                        ? 'text-xs text-orange-400  font-bold uppercase'
+                        : 'text-xs font-bold uppercase text-kiiraBlue bg-[#E2EDFF]  px-4 py-2 rounded-lg'
+                    ]}>
+                    Pay later
+                  </span>
+                </ContentContainer>
+              ) : null}
 
               <ContentContainer className="sticky top-10">
                 {isLoading ? (

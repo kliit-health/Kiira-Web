@@ -96,12 +96,13 @@ const Signup = () => {
       },
       onError: (error) => {
         console.log(' \n 🚀 ~ file: Signup.jsx:74 ~ onSubmit ~ error:', error);
-        Toast.fire({
-          icon: 'error',
-          title: !isEmpty(error.response?.data?.message)
-            ? error.response?.data?.message
-            : error?.message
-        });
+        error.response?.status !== 426 &&
+          Toast.fire({
+            icon: 'error',
+            title: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          });
 
         Mixpanel.track('Error: User Registration Failed', {
           data: {
