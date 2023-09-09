@@ -23,7 +23,11 @@ const RequestAcuityMigration = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+    mutate(payload, {
       onSuccess: () => {
         setStoredEmail({ email: data.email });
 
@@ -91,6 +95,7 @@ const RequestAcuityMigration = () => {
               className="ring-transparent ring-0 lowercase"
               name="email"
               {...register('email', {
+                trim: true,
                 required: 'Email is required.',
                 pattern: {
                   value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,

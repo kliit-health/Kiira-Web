@@ -66,7 +66,13 @@ const Signup = () => {
       });
       return;
     }
-    mutate(data, {
+
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: (response) => {
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
@@ -184,6 +190,7 @@ const Signup = () => {
                     className="ring-transparent ring-0 w-full lowercase"
                     name="email"
                     {...register('email', {
+                      trim: true,
                       required: 'Email is required.',
                       pattern: {
                         value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,

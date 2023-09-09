@@ -27,7 +27,12 @@ const ForgotPassword = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: () => {
         setStoredEmail({ email: data.email });
         Toast.fire({
@@ -38,7 +43,7 @@ const ForgotPassword = () => {
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: ForgotPassword.jsx:54 ~ onSubmit ~ error:', error);
-        
+
         error.response?.status !== 426 &&
           Toast.fire({
             icon: 'error',

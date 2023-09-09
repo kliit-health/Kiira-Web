@@ -46,7 +46,12 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: (response) => {
         queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
         queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
@@ -139,6 +144,7 @@ const Login = () => {
                 className="ring-transparent ring-0 lowercase"
                 name="email"
                 {...register('email', {
+                  trim: true,
                   required: 'Email is required.',
                   pattern: {
                     value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
