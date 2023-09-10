@@ -22,7 +22,10 @@ const Api = {
     getProfile: () => ApiHandler.get(`/users/profile`),
     editProfile: () => ApiHandler.patch(`/users/profile`),
     contactDoctor: (data) => ApiHandler.post(`/calendars/contact`, data),
-    uploadMediaFile: (data) => ApiHandler.post(`/media/upload-one`, data)
+    uploadMediaFile: (data) =>
+      ApiHandler.post(`/media/upload-one`, data, {
+        headers: { 'content-type': 'multipart/form-data' }
+      })
   },
   bookings: {
     getProducts: () => ApiHandler.get(`/products`),

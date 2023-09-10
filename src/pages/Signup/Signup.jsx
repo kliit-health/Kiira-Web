@@ -66,7 +66,13 @@ const Signup = () => {
       });
       return;
     }
-    mutate(data, {
+
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: (response) => {
         Auth.setUser(response.data?.user);
         Auth.setToken(response.data?.token);
@@ -96,12 +102,13 @@ const Signup = () => {
       },
       onError: (error) => {
         console.log(' \n 🚀 ~ file: Signup.jsx:74 ~ onSubmit ~ error:', error);
-        Toast.fire({
-          icon: 'error',
-          title: !isEmpty(error.response?.data?.message)
-            ? error.response?.data?.message
-            : error?.message
-        });
+        error.response?.status !== 426 &&
+          Toast.fire({
+            icon: 'error',
+            title: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          });
 
         Mixpanel.track('Error: User Registration Failed', {
           data: {
@@ -183,6 +190,7 @@ const Signup = () => {
                     className="ring-transparent ring-0 w-full lowercase"
                     name="email"
                     {...register('email', {
+                      trim: true,
                       required: 'Email is required.',
                       pattern: {
                         value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
@@ -374,7 +382,8 @@ const Signup = () => {
                 },
                 onError: (error) => {
                   console.log(
-                    '\n 🚀 ~ file: Signup.jsx:307 ~ Signup ~ SocialAuth error:',
+                    import.meta.env.DEV &&
+                        '\n 🚀 ~ file: Signup.jsx:307 ~ Signup ~ SocialAuth error:',
                     error,
                     error?.response
                   );

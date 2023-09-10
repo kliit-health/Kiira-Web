@@ -106,7 +106,7 @@ const ChangePassword = () => {
           </AppNavLink>
           <AppNavLink
             to="#"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(ROUTES.PROFILE)}
             className="opacity-75 text-xs font-semibold text-kiiraBlue hover:text-kiiraBlue">
             Profile
           </AppNavLink>

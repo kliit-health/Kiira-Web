@@ -18,7 +18,7 @@ const SocialAuth = ({
   const googleAuthScriptLoaded = useLocalStore((state) => state.googleAuthScriptLoaded);
 
   return (
-    <ContentContainer className='w-full gap-6'>
+    <ContentContainer className="w-full gap-6">
       {showDivder && googleAuthScriptLoaded ? (
         <Divider
           className={
@@ -51,7 +51,8 @@ const SocialAuth = ({
             onGoogleAuthSuccess(credentialResponse?.credential);
           }}
           onError={(err) => {
-            console.log('\n 🚀 ~ file: SocialAuth.jsx:26 ~ SocialAuth ~ err:', err);
+            import.meta.env.DEV &&
+              console.log('\n 🚀 ~ file: SocialAuth.jsx:26 ~ SocialAuth ~ err:', err);
             onGoogleAuthFailed(err);
           }}
         />

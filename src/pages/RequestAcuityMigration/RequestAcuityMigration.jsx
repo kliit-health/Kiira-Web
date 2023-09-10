@@ -23,7 +23,11 @@ const RequestAcuityMigration = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+    mutate(payload, {
       onSuccess: () => {
         setStoredEmail({ email: data.email });
 
@@ -75,7 +79,7 @@ const RequestAcuityMigration = () => {
             </Button>
           </ContentContainer>
           <AppTypography variant="h2" className="text-[#252539] font-medium -mt-5">
-            Activate Acuity Account?
+            Activate Kiira Account?
           </AppTypography>
           <AppTypography variant="small" className="text-kiiraText text-lg">
             A link will be sent to your email address
@@ -88,9 +92,10 @@ const RequestAcuityMigration = () => {
               label="Email"
               defaultValue={storedEmail?.email}
               size="lg"
-              className="ring-transparent ring-0 "
+              className="ring-transparent ring-0 lowercase"
               name="email"
               {...register('email', {
+                trim: true,
                 required: 'Email is required.',
                 pattern: {
                   value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,

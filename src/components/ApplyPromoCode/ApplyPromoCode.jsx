@@ -24,8 +24,8 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
   const [responseMessage, setResponseMessage] = useState({ isOpen: false, e: false, message: '' });
 
   const handleCloseDialog = () => {
+    setCoupon({ coupon: '' });
     if (responseMessage.e) {
-      setCoupon({ coupon: '' });
       setResponseMessage({ e: false, message: '', isOpen: false });
     }
     handleOpen();
@@ -49,11 +49,12 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
         handleOpen();
       },
       onError: (error) => {
-        console.log(
-          '\n 🚀 ~ file: ApplyPromoCode.jsx:35 ~ handleSubmit ~ error:',
-          error,
-          error?.response
-        );
+        import.meta.env.DEV &&
+          console.log(
+            '\n 🚀 ~ file: ApplyPromoCode.jsx:35 ~ handleSubmit ~ error:',
+            error,
+            error?.response
+          );
         Mixpanel.track('Error: Validate coupon code: ->', {
           data: {
             message: !isEmpty(error.response?.data?.message)
@@ -84,7 +85,7 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
         onClick={() => {
           handleOpen();
         }}
-        className="font-semibold text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75 hover:bg-transparent capitalize">
+        className="font-semibold text-kiiraBlue text-center text-sm cursor-pointer hover:opacity-75 hover:bg-transparent lowercase">
         {' '}
         {!isEmpty(coupon?.coupon) && !disabled ? (
           <>
@@ -156,7 +157,8 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
                         label="Coupon Code"
                         value={coupon?.coupon || ''}
                         onChange={(e) => {
-                          setCoupon({ coupon: e.target.value });
+                          const value = e.target.value;
+                          setCoupon({ coupon: value?.trim() });
                           setResponseMessage({ e: false, message: '', isOpen: false });
                         }}
                         className="pr-20"
@@ -196,7 +198,7 @@ const ApplyPromoCode = ({ label, placeholderText, disabled }) => {
 
               <Alert
                 open={responseMessage.isOpen}
-                className="text-white flex items-center font-semibold text-sm uppercase"
+                className="text-white flex items-center font-semibold text-sm uppercase max-w-xl mb-4"
                 color="red"
                 icon={<i className="fa-solid fa-triangle-exclamation text-xl text-white"></i>}
                 action={

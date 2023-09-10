@@ -27,7 +27,12 @@ const ForgotPassword = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: () => {
         setStoredEmail({ email: data.email });
         Toast.fire({
@@ -38,12 +43,14 @@ const ForgotPassword = () => {
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: ForgotPassword.jsx:54 ~ onSubmit ~ error:', error);
-        Toast.fire({
-          icon: 'error',
-          title: !isEmpty(error.response?.data?.message)
-            ? error.response?.data?.message
-            : error?.message
-        });
+
+        error.response?.status !== 426 &&
+          Toast.fire({
+            icon: 'error',
+            title: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          });
 
         Mixpanel.track('Error: Forgot password error: ->', {
           data: {
@@ -88,7 +95,7 @@ const ForgotPassword = () => {
               autoFocus
               label="Email"
               size="lg"
-              className="ring-transparent ring-0 "
+              className="ring-transparent ring-0 lowercase"
               name="email"
               {...register('email', {
                 required: 'Email is required.',

@@ -9,6 +9,7 @@ import isEmpty from 'src/utils/isEmpty';
 import { useLocation } from 'react-router-dom';
 import { ROUTES } from 'src/routes/Paths';
 import { ApplyPromoCode } from '..';
+import { useLocalStore } from 'src/store';
 
 const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
   const location = useLocation();
@@ -16,6 +17,17 @@ const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
   const Icon = subscription?.planIcon || IMAGES.subscriptionOval1;
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
+  const setCoupon = useLocalStore((state) => state.setCoupon);
+
+  const handleSelectPlan = (data) => {
+    setSelected(data);
+    setCoupon({ coupon: '' });
+  };
+
+  const handleRemoveSelectPlan = () => {
+    setSelected({});
+    setCoupon({ coupon: '' });
+  };
 
   return (
     <ContentContainer className="flex flex-col w-full h-auto min-h-[459px] max-w-max min-w-[285px] max-h-max overflow-hidden">
@@ -63,8 +75,8 @@ const SubscriptionPlans = ({ subscription, selected, setSelected }) => {
             fullWidth
             onClick={() => {
               isEmpty(selected) || selected !== subscription
-                ? setSelected(subscription)
-                : setSelected({});
+                ? handleSelectPlan(subscription)
+                : handleRemoveSelectPlan();
             }}
             className={
               ('px-4 py-2 text-white capitalize text-[10px] shadow-transparent',

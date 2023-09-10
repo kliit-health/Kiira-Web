@@ -50,7 +50,11 @@ const PaymentCardDetails = ({
         });
       },
       onError: (error) => {
-        console.log('\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:', error);
+        import.meta.env.DEV &&
+          console.log(
+            '\n 🚀 ~ file: Subscription.jsx:69 ~ handleCancelSubscription ~ error:',
+            error
+          );
         Mixpanel.track('Error: Delete Saved Cards: ->', {
           data: {
             message: !isEmpty(error.response?.data?.message)

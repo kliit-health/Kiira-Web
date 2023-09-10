@@ -6,21 +6,23 @@ import { Toast } from 'src/utils';
 
 export const ProtectedRoute = () => {
   const location = useLocation();
-  const isAuthenticated = Auth.isAuthenticated();
-  const isNoSubscription = Auth.isNoSubscription();
-  const isExpired = Auth.isExpiredSubscription();
+  const user = Auth.getUser();
+  const isAuthenticated = user ? Auth.isAuthenticated() : false;
+  const isNoSubscription = user ? Auth.isNoSubscription() : false;
+  const isExpired = user ? Auth.isExpiredSubscription() : false;
 
   useEffect(() => {
     if (!isAuthenticated) {
-      Toast.fire({
-        icon: 'info',
-        html: `<ContentContainer className="text-kiiraBg2 text-xs">Unauthorised<br/>Kindly login to continue...</ContentContainer>`
-      });
+      // Toast.fire({
+      //   icon: 'info',
+      //   html: `<ContentContainer className="text-kiiraBg2 text-xs">Unauthorised<br/>Kindly login to continue...</ContentContainer>`
+      // });
       return;
     }
-  }, [isAuthenticated, isNoSubscription, isExpired]);
+  }, [isAuthenticated, isNoSubscription, isExpired, user]);
 
-  return isAuthenticated &&
+  return user &&
+    isAuthenticated &&
     isNoSubscription &&
     location.pathname !== ROUTES.SIGINUP_SUBSCRIPTION ? (
     <Navigate to={ROUTES.SIGINUP_SUBSCRIPTION} state={{ from: location }} />

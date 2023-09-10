@@ -46,7 +46,12 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    mutate(data, {
+    const payload = {
+      ...data,
+      email: data?.email?.toLowerCase()?.trim()
+    };
+
+    mutate(payload, {
       onSuccess: (response) => {
         queryClient.setQueryData([[KEYS.PROFILE]], response.data?.user);
         queryClient.invalidateQueries({ queryKey: [KEYS.HISTORY] });
@@ -89,12 +94,13 @@ const Login = () => {
       },
       onError: (error) => {
         console.log('\n🚀 ~ file: Login.jsx:48 ~ onSubmit ~ error:', error, error?.response);
-        Toast.fire({
-          icon: 'error',
-          title: !isEmpty(error.response?.data?.message)
-            ? error.response?.data?.message
-            : error?.message
-        });
+        error.response?.status !== 426 &&
+          Toast.fire({
+            icon: 'error',
+            title: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message
+          });
 
         Mixpanel.track('Login Failed ->', {
           data: {
@@ -138,6 +144,7 @@ const Login = () => {
                 className="ring-transparent ring-0 lowercase"
                 name="email"
                 {...register('email', {
+                  trim: true,
                   required: 'Email is required.',
                   pattern: {
                     value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
@@ -293,12 +300,19 @@ const Login = () => {
                     }
                   });
 
-                  Toast.fire({
-                    icon: 'error',
-                    title: !isEmpty(error.response?.data?.message)
-                      ? error.response?.data?.message
-                      : error?.message
-                  });
+                  error.response?.status !== 426 &&
+                    Toast.fire({
+                      icon: 'error',
+                      title: !isEmpty(error.response?.data?.message)
+                        ? error.response?.data?.message
+                        : error?.message
+                    });
+
+                  if (error.response?.status === 426) {
+                    setStoredEmail({ email: data?.email });
+                    navigate(ROUTES.GET_ACTIVATION_CODE);
+                    return;
+                  }
                 }
               });
             }}
