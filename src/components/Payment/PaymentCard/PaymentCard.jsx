@@ -184,7 +184,7 @@ const PaymentCardElement = ({
                 elements.getElement(CardExpiryElement).clear();
                 elements.getElement(CardCvcElement).clear();
                 setField({ name: '', country: '', postalCode: '' });
-                Auth.fetchUser();
+                Auth?.fetchUser();
 
                 Mixpanel.track('Success - New Payment card Added', {
                   data: {

@@ -34,8 +34,8 @@ const Subscription = () => {
   const { data, isLoading } = useProducts();
   const { data: userProfile, refetch: refetchProfile } = useProfile();
   const profile = userProfile?.data?.user;
-  const isCanceledSubscription = Auth.isCanceledSubscription();
-  const isExpiredSubscription = Auth.isExpiredSubscription();
+  const isCanceledSubscription = Auth?.isCanceledSubscription();
+  const isExpiredSubscription = Auth?.isExpiredSubscription();
   const { mutate, isLoading: cancelLoading } = useCancelSubscription();
   const {
     data: subscriptionData,
@@ -72,7 +72,7 @@ const Subscription = () => {
           });
           refetchProfile();
           refetchHistory();
-          Auth.setUser(profile);
+          Auth?.setUser(profile);
         },
         onError: (error) => {
           Mixpanel.track('Failed - Cancel subscription failed', {

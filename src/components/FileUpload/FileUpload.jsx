@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Auth from 'src/middleware/storage';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { bool, func, string } from 'prop-types';
@@ -8,26 +8,53 @@ import {
   CustomInput,
   FileInput
 } from '../shared/styledComponents';
-import { Avatar, Button, Progress } from '@material-tailwind/react';
-import { IMAGES } from 'src/data';
+import { Avatar, Button, IconButton } from '@material-tailwind/react';
 import { PenIcon } from '../shared/AppIcons/AppIcons';
 import { useUploadMediaFile } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { ProfilePicture } from '..';
+import { useLocalStore } from 'src/store';
 
-export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, acceptedFormat }) => {
+export const FileUpload = ({
+  defaultUrl,
+  setFileUrl,
+  disabled,
+  onUploadSuccess,
+  usePhotoPicker,
+  label,
+  acceptedFormat,
+  required,
+  className,
+  loading
+}) => {
+  const inputRef = useRef(null);
   const { mutate, isLoading } = useUploadMediaFile();
-  const user = Auth.getUser();
+  const setUploading = useLocalStore((state) => state.setIsLoading);
 
   const [file, setFile] = useState({});
-  const [fileUrl, setFileUrl] = useState('');
-  useEffect(() => {}, [file, fileUrl]);
+  const [url, setUrl] = useState('');
+  const [isUploaded, setIsUploaded] = useState(false);
+
+  const resetFileInput = () => {
+    if (!inputRef.current) return;
+    // 👇️ reset input value
+    inputRef.current.value = null;
+    setUrl('');
+    setFileUrl && setFileUrl('');
+    setFile({});
+    setIsUploaded(false);
+    setUploading({ isLoading: false });
+  };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+
+    if (usePhotoPicker) return;
+    handleUpload(e.target.files[0]);
   };
 
-  const handleUpload = () => {
+  const handleUpload = (data) => {
     if (!file) {
       Toast.fire({
         icon: 'warning',
@@ -35,15 +62,22 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
       });
       return;
     }
-
+    setUploading({ isLoading: true });
     const formData = new FormData();
-    formData.append('name', file?.name);
-    formData.append('media', file);
+    formData.append('name', usePhotoPicker ? file?.name : data?.name);
+    formData.append('media', usePhotoPicker ? file : data);
 
     mutate(formData, {
       onSuccess: (response) => {
-        setFileUrl(response?.data?.media?.url);
-        setFileData(response?.data?.media);
+        import.meta.env.DEV &&
+          console.log('\n 🚀 ~ file: FileUpload.jsx:45 ~ handleUpload ~ response:', response);
+
+        setUrl(response?.data?.media?.url);
+        setFileUrl && setFileUrl(response?.data?.media?.url);
+        setFile({});
+        setIsUploaded(true);
+        onUploadSuccess && onUploadSuccess(response?.data?.media?.url);
+        setUploading({ isLoading: false });
       },
       onError: (error) => {
         import.meta.env.DEV &&
@@ -52,6 +86,7 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
           icon: 'error',
           title: error
         });
+        setIsUploaded(false);
         Mixpanel.track('Error: FileUpload ~ handleUpload ~ error: ->', {
           data: {
             message: !isEmpty(error.response?.data?.message)
@@ -60,6 +95,7 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
             url: error?.response?.config?.url
           }
         });
+        setUploading({ isLoading: false });
       }
     });
   };
@@ -68,45 +104,40 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
     <ContentContainer className="gap-2 overflow-hidden">
       {usePhotoPicker ? (
         <>
-          <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4 ">
-            <ContentContainer className={`relative hover:opacity-80`}>
-              <Avatar
-                src={fileUrl || IMAGES?.dummyProfilePhoto}
-                alt={user?.last_name}
-                variant="circular"
+          <ContentContainer col className="items-center gap-2 mt-4 ">
+            <ContentContainer className={`relative`}>
+              <ProfilePicture
+                imgSrc={url || defaultUrl}
                 size="xxl"
                 className={`${
-                  isLoading ? 'animate-pulse' : ''
+                  isLoading || loading ? 'animate-pulse' : ''
                 } rounded-full bg-kiiraBg3/80 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40 flex items-center justify-center`}
               />
-              <FileInput
-                type="file"
-                onChange={handleFileChange}
-                placeholder={label}
-                accept={acceptedFormat}
-                disabled={disabled || isLoading}
-                className="z-10"
-              />
-              <PenIcon className=" absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
+              <ContentContainer
+                cursor="pointer"
+                className="absolute right-1.5 md:right-4  bottom-1.5 md:bottom-2 bg-kiiraBlue h-7 w-7 flex items-center justify-center rounded-full">
+                <FileInput
+                  title="Upload picture"
+                  type="file"
+                  onChange={handleFileChange}
+                  placeholder={label}
+                  accept={acceptedFormat}
+                  disabled={disabled || isLoading || loading}
+                  className={`z-10 min-w-[20px] cursor-pointer ${className}}`}
+                  required={required}
+                />
+                <IconButton variant="text">
+                  <PenIcon className="text-white p-1.5  w-7 h-7" />
+                </IconButton>
+              </ContentContainer>
             </ContentContainer>
           </ContentContainer>
-        </>
-      ) : (
-        <CustomInput
-          type="file"
-          onChange={handleFileChange}
-          placeholder={label}
-          accept={acceptedFormat}
-          disabled={disabled || isLoading}
-        />
-      )}
-
-      {!isEmpty(file?.type) ? (
-        <>
-          <AppTypography variant="small" className="text-center text-xs">
-            {file?.name}
-          </AppTypography>
-          {/* {percent > 0 ? (
+          {!isEmpty(file?.type) ? (
+            <>
+              <AppTypography variant="small" className="text-center text-xs">
+                {file?.name}
+              </AppTypography>
+              {/* {percent > 0 ? (
                 <Progress
                   value={percent}
                   color="blue"
@@ -116,11 +147,71 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
                 />
               ) : null} */}
 
-          <Button size="sm" disabled={disabled || isLoading} onClick={handleUpload} color="blue">
-            {isLoading ? 'Uploading' : 'Update'}
-          </Button>
+              <Button
+                size="sm"
+                disabled={disabled || isLoading || loading}
+                onClick={handleUpload}
+                color="blue">
+                {isLoading || loading ? 'Processing' : 'Update'}
+              </Button>
+            </>
+          ) : null}
         </>
-      ) : null}
+      ) : (
+        <ContentContainer row className="gap-1 items-center">
+          <CustomInput
+            ref={inputRef}
+            type="file"
+            onChange={handleFileChange}
+            placeholder={label}
+            accept={acceptedFormat}
+            disabled={
+              disabled
+              // || isLoading
+            }
+            className={`border-none ${className}}`}
+            required={required}
+          />
+          {!isEmpty(file?.type) && isLoading ? (
+            <>
+              <IconButton variant="text" size="sm" className="hover:bg-transparent opacity-100">
+                <i className="fa-solid fa-spinner fa-spin text-blue-700 text-xl"></i>
+              </IconButton>
+            </>
+          ) : null}
+
+          {!isEmpty(url) || !isEmpty(file?.type) ? (
+            // && isUploaded
+            <ContentContainer row className="gap-1">
+              <IconButton
+                variant="text"
+                size="sm"
+                className="hover:bg-transparent opacity-100"
+                onClick={resetFileInput}>
+                <i title="remove" class="fa-solid fa-xmark text-red-900 text-sm"></i>
+              </IconButton>
+            </ContentContainer>
+          ) : null}
+
+          {isLoading && !isEmpty(file) ? (
+            <ContentContainer row className="gap-1">
+              <Button
+                variant="text"
+                size="sm"
+                className="flex flex-row items-center gap-1 hover:bg-transparent opacity-100 text-xs"
+                onClick={resetFileInput}>
+                Cancel <i title="remove" class="fa-solid fa-xmark text-red-900 text-sm"></i>
+              </Button>{' '}
+            </ContentContainer>
+          ) : null}
+
+          {!isEmpty(file?.type) && !isLoading && !isUploaded ? (
+            <IconButton variant="text" size="sm" className="hover:bg-transparent opacity-100">
+              <i class="fa-solid fa-file-circle-exclamation text-red-600 text-lg"></i>
+            </IconButton>
+          ) : null}
+        </ContentContainer>
+      )}
     </ContentContainer>
   );
 };
@@ -128,17 +219,27 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
 export default FileUpload;
 
 FileUpload.propTypes = {
-  setFileData: func,
+  setFileUrl: func,
   usePhotoPicker: bool,
   label: string,
   acceptedFormat: string,
-  disabled: bool
+  disabled: bool,
+  defaultUrl: string,
+  required: bool,
+  className: string,
+  onUploadSuccess: func,
+  loading: bool
 };
 
 FileUpload.defaultPropTypes = {
-  setFileData: () => {},
+  setFileUrl: () => {},
   usePhotoPicker: true,
   label: 'No file chosen',
   acceptedFormat: '/image/*',
-  disabled: false
+  disabled: false,
+  defaultUrl: '',
+  required: false,
+  className: '',
+  onUploadSuccess: () => {},
+  loading: false
 };

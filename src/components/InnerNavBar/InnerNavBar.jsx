@@ -28,6 +28,7 @@ import {
 import useAuth from 'src/hooks/useAuth';
 import { IMAGES } from 'src/data';
 import Auth from 'src/middleware/storage';
+import { ProfilePicture } from '..';
 
 export default function InnerNavBar() {
   const navigate = useNavigate();
@@ -102,13 +103,7 @@ export default function InnerNavBar() {
                       cursor="pointer"
                       className="items-center gap-1 hover:opacity-80">
                       <ContentContainer className="relative">
-                        <Avatar
-                          src={user?.photo || IMAGES.dummyProfilePhoto}
-                          alt={user?.last_name}
-                          variant="circular"
-                          size="md"
-                          className="rounded-full bg-kiiraText/50"
-                        />
+                        <ProfilePicture size="md" />
                         <i
                           className="fa fa-angle-down text-[0.55rem] absolute bottom-0 right-1 p-1.5 bg-kiiraBlue w-2 h-2 flex items-center justify-center rounded-full"
                           aria-hidden="true"></i>
@@ -125,13 +120,7 @@ export default function InnerNavBar() {
                       className="bg-transparent flex items-center gap-1 flex-nowrap"
                       onClick={() => navigate(ROUTES.PROFILE)}>
                       <ListItemPrefix className="mr-2">
-                        <Avatar
-                          src={IMAGES.dummyProfilePhoto || IMAGES.dummyProfilePhoto}
-                          alt={user?.lastName}
-                          variant="circular"
-                          size="sm"
-                          className="rounded-full bg-kiiraText/50"
-                        />
+                        <ProfilePicture />
                       </ListItemPrefix>
 
                       <AppTypography variant="lead" className="text-kiiraText text-sm font-medium">

@@ -5,6 +5,11 @@ export const fetchUserProfile = async () => {
   return res;
 };
 
+export const editUserProfile = async (data) => {
+  const res = await Api.user.editProfile(data);
+  return res;
+};
+
 export const planSubscription = async (data) => {
   const res = await Api.payment.subscribe(data);
   return res;
