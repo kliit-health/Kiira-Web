@@ -1,9 +1,8 @@
-import { Alert, Avatar, Button, Dialog, DialogBody, IconButton } from '@material-tailwind/react';
+import { Avatar, Button, Dialog, DialogBody } from '@material-tailwind/react';
 import { useRef, useState } from 'react';
 import { AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
-import { IMAGES } from 'src/data';
 import isEmpty from 'src/utils/isEmpty';
-import { CloseIcon, DividerIcon } from 'src/components/shared/AppIcons/AppIcons';
+import { DividerIcon } from 'src/components/shared/AppIcons/AppIcons';
 import { ReactComponent as KiiraLogoSvg } from 'src/assets/images/KiiraLogo.svg';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -13,8 +12,10 @@ import QRCode from 'react-qr-code';
 import { object } from 'prop-types';
 import { ThreeDots } from 'react-loader-spinner';
 import { APP_URL } from 'src/utils/constants';
+import useAuth from 'src/hooks/useAuth';
 
 const SaveBooking = ({ booking }) => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const downloadRef = useRef(null);
@@ -144,7 +145,7 @@ const SaveBooking = ({ booking }) => {
                       className="flex flex-row 1tems-center gap-1"
                       alignItems="center">
                       <Avatar
-                        src={IMAGES?.dummyProfilePhoto}
+                        src={user?.profile_pic_url || IMAGES.dummyProfilePhoto}
                         alt=""
                         loading="lazy"
                         variant="circular"

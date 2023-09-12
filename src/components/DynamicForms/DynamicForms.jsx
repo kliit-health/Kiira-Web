@@ -311,7 +311,7 @@ const DynamicForms = ({
                                 label={fname}
                                 setFileUrl={handleInputChange}
                                 required={required}
-                                acceptedFormat="image/*"
+                                acceptedFormat="application/pdf, image/*"
                               />
                             </ContentContainer>
                           </ContentContainer>

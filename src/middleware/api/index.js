@@ -20,7 +20,7 @@ const Api = {
   },
   user: {
     getProfile: () => ApiHandler.get(`/users/profile`),
-    editProfile: () => ApiHandler.patch(`/users/profile`),
+    editProfile: (data) => ApiHandler.patch(`/users/profile`, data),
     contactDoctor: (data) => ApiHandler.post(`/calendars/contact`, data),
     uploadMediaFile: (data) =>
       ApiHandler.post(`/media/upload-one`, data, {

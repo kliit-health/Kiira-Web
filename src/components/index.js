@@ -31,6 +31,7 @@ import PaymentCardDetails from './Payment/PaymentCardDetails.jsx/PaymentCardDeta
 import PaymentMethods from './Payment/PaymentMethods/PaymentMethods';
 import Discount from './Discount/Discount';
 import FileUpload from './FileUpload/FileUpload';
+import ProfilePicture from './ProfilePicture/ProfilePicture';
 
 export {
   AppNavBar,
@@ -63,5 +64,6 @@ export {
   PaymentCardDetails,
   PaymentMethods,
   Discount,
-  FileUpload
+  FileUpload,
+  ProfilePicture
 };

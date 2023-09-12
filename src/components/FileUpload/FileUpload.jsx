@@ -9,28 +9,30 @@ import {
   FileInput
 } from '../shared/styledComponents';
 import { Avatar, Button, IconButton } from '@material-tailwind/react';
-import { IMAGES } from 'src/data';
 import { PenIcon } from '../shared/AppIcons/AppIcons';
 import { useUploadMediaFile } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
+import { ProfilePicture } from '..';
 
 export const FileUpload = ({
   defaultUrl,
   setFileUrl,
   disabled,
+  onUploadSuccess,
   usePhotoPicker,
   label,
   acceptedFormat,
   required,
-  className
+  className,
+  loading
 }) => {
   const inputRef = useRef(null);
   const { mutate, isLoading } = useUploadMediaFile();
   const user = Auth.getUser();
 
   const [file, setFile] = useState({});
-  const [url, setUrl] = useState(defaultUrl);
+  const [url, setUrl] = useState('');
   const [isUploaded, setIsUploaded] = useState(false);
 
   const resetFileInput = () => {
@@ -72,6 +74,7 @@ export const FileUpload = ({
         setFileUrl(response?.data?.media?.url);
         setFile({});
         setIsUploaded(true);
+        onUploadSuccess(response?.data?.media?.url);
       },
       onError: (error) => {
         import.meta.env.DEV &&
@@ -97,27 +100,32 @@ export const FileUpload = ({
     <ContentContainer className="gap-2 overflow-hidden">
       {usePhotoPicker ? (
         <>
-          <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4 ">
-            <ContentContainer className={`relative hover:opacity-80`}>
-              <Avatar
-                src={url || IMAGES?.dummyProfilePhoto}
-                alt={user?.last_name}
-                variant="circular"
+          <ContentContainer col className="items-center gap-2 mt-4 ">
+            <ContentContainer className={`relative`}>
+              <ProfilePicture
+                imgSrc={url || defaultUrl}
                 size="xxl"
                 className={`${
-                  isLoading ? 'animate-pulse' : ''
+                  isLoading || loading ? 'animate-pulse' : ''
                 } rounded-full bg-kiiraBg3/80 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40 flex items-center justify-center`}
               />
-              <FileInput
-                type="file"
-                onChange={handleFileChange}
-                placeholder={label}
-                accept={acceptedFormat}
-                disabled={disabled || isLoading}
-                className={`z-10 ${className}}`}
-                required={required}
-              />
-              <PenIcon className=" absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
+              <ContentContainer
+                cursor="pointer"
+                className="absolute right-1.5 md:right-4  bottom-1.5 md:bottom-2 bg-kiiraBlue h-7 w-7 flex items-center justify-center rounded-full">
+                <FileInput
+                  title="Upload picture"
+                  type="file"
+                  onChange={handleFileChange}
+                  placeholder={label}
+                  accept={acceptedFormat}
+                  disabled={disabled || isLoading || loading}
+                  className={`z-10 min-w-[20px] cursor-pointer ${className}}`}
+                  required={required}
+                />
+                <IconButton variant="text">
+                  <PenIcon className="text-white p-1.5  w-7 h-7" />
+                </IconButton>
+              </ContentContainer>
             </ContentContainer>
           </ContentContainer>
           {!isEmpty(file?.type) ? (
@@ -137,10 +145,10 @@ export const FileUpload = ({
 
               <Button
                 size="sm"
-                disabled={disabled || isLoading}
+                disabled={disabled || isLoading || loading}
                 onClick={handleUpload}
                 color="blue">
-                {isLoading ? 'Uploading' : 'Update'}
+                {isLoading || loading ? 'Processing' : 'Update'}
               </Button>
             </>
           ) : null}
@@ -199,7 +207,9 @@ FileUpload.propTypes = {
   disabled: bool,
   defaultUrl: string,
   required: bool,
-  className: string
+  className: string,
+  onUploadSuccess: func,
+  loading: bool
 };
 
 FileUpload.defaultPropTypes = {
@@ -210,5 +220,7 @@ FileUpload.defaultPropTypes = {
   disabled: false,
   defaultUrl: '',
   required: false,
-  className: ''
+  className: '',
+  onUploadSuccess: () => {},
+  loading: false
 };
