@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Auth from 'src/middleware/storage';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { bool, func, string } from 'prop-types';
@@ -8,26 +8,49 @@ import {
   CustomInput,
   FileInput
 } from '../shared/styledComponents';
-import { Avatar, Button, Progress } from '@material-tailwind/react';
+import { Avatar, Button, IconButton } from '@material-tailwind/react';
 import { IMAGES } from 'src/data';
 import { PenIcon } from '../shared/AppIcons/AppIcons';
 import { useUploadMediaFile } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 
-export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, acceptedFormat }) => {
+export const FileUpload = ({
+  defaultUrl,
+  setFileUrl,
+  disabled,
+  usePhotoPicker,
+  label,
+  acceptedFormat,
+  required,
+  className
+}) => {
+  const inputRef = useRef(null);
   const { mutate, isLoading } = useUploadMediaFile();
   const user = Auth.getUser();
 
   const [file, setFile] = useState({});
-  const [fileUrl, setFileUrl] = useState('');
-  useEffect(() => {}, [file, fileUrl]);
+  const [url, setUrl] = useState(defaultUrl);
+  const [isUploaded, setIsUploaded] = useState(false);
+
+  const resetFileInput = () => {
+    if (!inputRef.current) return;
+    // 👇️ reset input value
+    inputRef.current.value = null;
+    setUrl('');
+    setFileUrl('');
+    setFile({});
+    setIsUploaded(false);
+  };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+
+    if (usePhotoPicker) return;
+    handleUpload(e.target.files[0]);
   };
 
-  const handleUpload = () => {
+  const handleUpload = (data) => {
     if (!file) {
       Toast.fire({
         icon: 'warning',
@@ -37,13 +60,18 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
     }
 
     const formData = new FormData();
-    formData.append('name', file?.name);
-    formData.append('media', file);
+    formData.append('name', usePhotoPicker ? file?.name : data?.name);
+    formData.append('media', usePhotoPicker ? file : data);
 
     mutate(formData, {
       onSuccess: (response) => {
+        import.meta.env.DEV &&
+          console.log('\n 🚀 ~ file: FileUpload.jsx:45 ~ handleUpload ~ response:', response);
+
+        setUrl(response?.data?.media?.url);
         setFileUrl(response?.data?.media?.url);
-        setFileData(response?.data?.media);
+        setFile({});
+        setIsUploaded(true);
       },
       onError: (error) => {
         import.meta.env.DEV &&
@@ -52,6 +80,7 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
           icon: 'error',
           title: error
         });
+        setIsUploaded(false);
         Mixpanel.track('Error: FileUpload ~ handleUpload ~ error: ->', {
           data: {
             message: !isEmpty(error.response?.data?.message)
@@ -71,7 +100,7 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4 ">
             <ContentContainer className={`relative hover:opacity-80`}>
               <Avatar
-                src={fileUrl || IMAGES?.dummyProfilePhoto}
+                src={url || IMAGES?.dummyProfilePhoto}
                 alt={user?.last_name}
                 variant="circular"
                 size="xxl"
@@ -85,28 +114,18 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
                 placeholder={label}
                 accept={acceptedFormat}
                 disabled={disabled || isLoading}
-                className="z-10"
+                className={`z-10 ${className}}`}
+                required={required}
               />
               <PenIcon className=" absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
             </ContentContainer>
           </ContentContainer>
-        </>
-      ) : (
-        <CustomInput
-          type="file"
-          onChange={handleFileChange}
-          placeholder={label}
-          accept={acceptedFormat}
-          disabled={disabled || isLoading}
-        />
-      )}
-
-      {!isEmpty(file?.type) ? (
-        <>
-          <AppTypography variant="small" className="text-center text-xs">
-            {file?.name}
-          </AppTypography>
-          {/* {percent > 0 ? (
+          {!isEmpty(file?.type) ? (
+            <>
+              <AppTypography variant="small" className="text-center text-xs">
+                {file?.name}
+              </AppTypography>
+              {/* {percent > 0 ? (
                 <Progress
                   value={percent}
                   color="blue"
@@ -116,11 +135,56 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
                 />
               ) : null} */}
 
-          <Button size="sm" disabled={disabled || isLoading} onClick={handleUpload} color="blue">
-            {isLoading ? 'Uploading' : 'Update'}
-          </Button>
+              <Button
+                size="sm"
+                disabled={disabled || isLoading}
+                onClick={handleUpload}
+                color="blue">
+                {isLoading ? 'Uploading' : 'Update'}
+              </Button>
+            </>
+          ) : null}
         </>
-      ) : null}
+      ) : (
+        <ContentContainer row className="gap-1 items-center">
+          <CustomInput
+            ref={inputRef}
+            type="file"
+            onChange={handleFileChange}
+            placeholder={label}
+            accept={acceptedFormat}
+            disabled={disabled || isLoading}
+            className={`border-none ${className}}`}
+            required={required}
+          />
+          {!isEmpty(file?.type) && isLoading ? (
+            <>
+              <IconButton variant="text" size="sm" className="hover:bg-transparent opacity-100">
+                <i className="fa-solid fa-spinner fa-spin text-blue-700 text-xl"></i>
+              </IconButton>
+            </>
+          ) : null}
+
+          {!isEmpty(url) && isUploaded ? (
+            <ContentContainer row className="gap-1">
+              <Avatar size="md" src={url} alt={label} variant="rounded" />{' '}
+              <IconButton
+                variant="text"
+                size="sm"
+                className="hover:bg-transparent opacity-100"
+                onClick={resetFileInput}>
+                <i title="remove" class="fa-solid fa-xmark text-red-900 text-sm"></i>
+              </IconButton>
+            </ContentContainer>
+          ) : null}
+
+          {!isEmpty(file?.type) && !isLoading && !isUploaded ? (
+            <IconButton variant="text" size="sm" className="hover:bg-transparent opacity-100">
+              <i class="fa-solid fa-file-circle-exclamation text-red-600 text-lg"></i>
+            </IconButton>
+          ) : null}
+        </ContentContainer>
+      )}
     </ContentContainer>
   );
 };
@@ -128,17 +192,23 @@ export const FileUpload = ({ setFileData, disabled, usePhotoPicker, label, accep
 export default FileUpload;
 
 FileUpload.propTypes = {
-  setFileData: func,
+  setFileUrl: func,
   usePhotoPicker: bool,
   label: string,
   acceptedFormat: string,
-  disabled: bool
+  disabled: bool,
+  defaultUrl: string,
+  required: bool,
+  className: string
 };
 
 FileUpload.defaultPropTypes = {
-  setFileData: () => {},
+  setFileUrl: () => {},
   usePhotoPicker: true,
   label: 'No file chosen',
   acceptedFormat: '/image/*',
-  disabled: false
+  disabled: false,
+  defaultUrl: '',
+  required: false,
+  className: ''
 };

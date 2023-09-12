@@ -40,7 +40,7 @@ const Auth = {
       localStorage.setItem('user', JSON.stringify(res.data?.user));
       return;
     } catch (error) {
-      console.error('🚀 ~ file: storage.js:24 ~ fetchUser: ~ error:', error);
+      // console.error('🚀 ~ file: storage.js:24 ~ fetchUser: ~ error:', error);
     }
   },
   isAuthenticated: () => {

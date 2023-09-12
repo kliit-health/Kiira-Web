@@ -9,10 +9,10 @@ import { Mixpanel } from 'src/utils/mixpanelUtil';
 import mixpanel from 'mixpanel-browser';
 
 // create a context for the auth provider
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 // create the auth provider component
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const queryClient = useQueryClient();
   // state for storing the authenticated user
   const isAuthenticated = Auth?.isAuthenticated();
@@ -56,6 +56,10 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+const AuthConsumer = AuthContext.Consumer;
+
+export { AuthContext, AuthProvider, AuthConsumer };
 
 AuthProvider.propTypes = {
   children: propTypes.element.isRequired

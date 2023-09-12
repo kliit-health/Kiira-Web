@@ -17,7 +17,7 @@ import {
 } from '@material-tailwind/react';
 import { truncate } from 'src/utils/truncate';
 import { INPUT_NAMES, INPUT_TYPES } from 'src/data';
-import { Empty } from '..';
+import { Empty, FileUpload } from '..';
 import { array, bool, func, object } from 'prop-types';
 
 const DynamicForms = ({
@@ -29,7 +29,6 @@ const DynamicForms = ({
 }) => {
   const { data: userProfile } = useProfile();
   const profile = userProfile?.data?.user;
-  const [field, setField] = useState([]);
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
@@ -39,10 +38,6 @@ const DynamicForms = ({
     formdata.fields?.forEach((form) => {
       form.type === INPUT_TYPES.CHECKBOX
         ? (acc[form.id] = '')
-        : // : form.type === INPUT_TYPES.YESNO
-        // ? (acc[form.id] = false)
-        form.type === INPUT_TYPES.FILE
-        ? (acc[form.id] = [])
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.email
         ? (acc[form.id] = profile?.email)
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.full_name
@@ -54,6 +49,7 @@ const DynamicForms = ({
   }, {});
 
   const [fieldValues, setFieldValues] = useState(formValues);
+  console.log('\n 🚀 ~ file: DynamicForms.jsx:56 ~ fieldValues:', fieldValues);
 
   useEffect(() => {
     if (isEmpty(fieldValues) && !isEmpty(formValues)) {
@@ -73,12 +69,15 @@ const DynamicForms = ({
       return;
     }
 
+    if (selectedInput?.type === INPUT_TYPES.FILE) {
+      setFieldValues({ ...fieldValues, [selectedInput?.id]: event });
+      return;
+    }
+
     event?.preventDefault();
 
     if (selectedInput?.type === INPUT_TYPES.CHECKBOX) {
       setFieldValues({ ...fieldValues, [event.target.name]: event.target.checked });
-    } else if (selectedInput?.type === INPUT_TYPES.FILE) {
-      setFieldValues({ ...fieldValues, [event.target.name]: event.target.files[0] });
     } else if (selectedInput?.type === INPUT_TYPES.DROPDOWN) {
       setFieldValues({ ...fieldValues, [event.target.name]: event.target.selected });
     } else {
@@ -300,20 +299,19 @@ const DynamicForms = ({
                         return (
                           <ContentContainer
                             key={index?.toString()}
-                            className="flex flex-col gap-1"
+                            className="flex flex-col gap-0"
                             onClick={() => setSelectedInput(inputs)}>
+                            <ContentContainer className="flex-row gap-0">
+                              {fname}{' '}
+                              {required ? <span className="text-red-500 text-xs">*</span> : null}{' '}
+                            </ContentContainer>
                             <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
-                              <Input
-                                variant="static"
-                                type="file"
-                                name={fid}
-                                required={required}
+                              <FileUpload
+                                usePhotoPicker={false}
                                 label={fname}
-                                labelProps={{
-                                  className: 'overflow-hidden truncate text-xs md:text-base'
-                                }}
-                                className="p-4 border-b-0"
-                                onChange={handleInputChange}
+                                setFileUrl={handleInputChange}
+                                required={required}
+                                acceptedFormat="image/*"
                               />
                             </ContentContainer>
                           </ContentContainer>

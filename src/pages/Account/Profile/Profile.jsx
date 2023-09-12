@@ -15,9 +15,9 @@ import { useState } from 'react';
 const Profile = () => {
   const navigate = useNavigate();
   const { data: data, isLoading } = useProfile();
-  const { fileData, setFileData } = useState({});
+  const [imageUrl, setImageUrl] = useState('');
   import.meta.env.DEV &&
-    console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ fileData:', fileData);
+    console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ imageUrl:', imageUrl);
   const profile = data?.data?.user;
 
   return (
@@ -47,7 +47,7 @@ const Profile = () => {
         <ContentContainer className="w-full gap-4">
           <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
             <FileUpload
-              setFileData={setFileData}
+              setFileUrl={setImageUrl}
               canUpload={true}
               usePhotoPicker={true}
               label="Select file"
