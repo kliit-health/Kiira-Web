@@ -1,24 +1,62 @@
-import { Avatar, Breadcrumbs, Button } from '@material-tailwind/react';
+import { Breadcrumbs, Button } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 import {
   AppNavLink,
   AppTypography,
   ContentContainer
 } from 'src/components/shared/styledComponents';
-import { IMAGES } from 'src/data';
 import { ROUTES } from 'src/routes/Paths';
-import { EditIcon, PenIcon } from 'src/components/shared/AppIcons/AppIcons';
-import { useProfile } from 'src/queries/queryHooks';
+import { EditIcon } from 'src/components/shared/AppIcons/AppIcons';
+import { useEditProfile, useProfile } from 'src/queries/queryHooks';
 import { FileUpload } from 'src/components';
-import { useState } from 'react';
+import { Toast } from 'src/utils';
+import Auth from 'src/middleware/storage';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { data: data, isLoading } = useProfile();
-  const { fileData, setFileData } = useState({});
-  import.meta.env.DEV &&
-    console.log('\n 🚀 ~ file: Profile.jsx:19 ~ Profile ~ fileData:', fileData);
+  const { data: data, isLoading, refetch } = useProfile();
   const profile = data?.data?.user;
+
+  const { mutate, isLoading: editProfileLoading } = useEditProfile();
+
+  const handleEditProfile = (data) => {
+    console.log('\n 🚀 ~ file: Profile.jsx:27 ~ handleEditProfile ~ data:', data);
+    const payload = {
+      profile_pic_url: data
+    };
+
+    mutate(payload, {
+      onSuccess: (response) => {
+        import.meta.env.DEV &&
+          console.log('\n 🚀 ~ file: Profile.jsx:32 ~ handleEditProfile ~ response:', response);
+        Toast.fire({
+          icon: 'success',
+          title: `${response?.data?.message}\nProfile updated successfully`
+        });
+        refetch();
+        Auth.fetchUser();
+      },
+      onError: (error) => {
+        import.meta.env.DEV &&
+          console.log('\n 🚀 ~ file: Profile.jsx:41 ~ handleEditProfile ~ error:', error);
+        Toast.fire({
+          icon: 'error',
+          title: !isEmpty(error.response?.data?.message)
+            ? error.response?.data?.message
+            : error?.message
+        });
+        setIsUploaded(false);
+        Mixpanel.track('Error: Profile.jsx:41 ~ handleEditProfile ~ error: ->', {
+          data: {
+            message: !isEmpty(error.response?.data?.message)
+              ? error.response?.data?.message
+              : error?.message,
+            url: error?.response?.config?.url
+          }
+        });
+      }
+    });
+  };
 
   return (
     <ContentContainer
@@ -45,23 +83,17 @@ const Profile = () => {
 
       <ContentContainer className="w-full h-full flex flex-col gap-4">
         <ContentContainer className="w-full gap-4">
-          <ContentContainer col cursor="pointer" className="items-center gap-2 mt-4">
+          <ContentContainer col className="items-center gap-2 mt-4">
             <FileUpload
-              setFileData={setFileData}
+              loading={editProfileLoading}
+              defaultUrl={profile?.profile_pic_url}
               canUpload={true}
               usePhotoPicker={true}
               label="Select file"
+              setFileUrl={() => {}}
+              onUploadSuccess={(data) => handleEditProfile(data)}
             />
-            {/* <ContentContainer className="relative hover:opacity-80">
-              <Avatar
-                src={profile?.photo || IMAGES.dummyProfilePhoto}
-                alt={profile?.last_name}
-                variant="circular"
-                size="xxl"
-                className="rounded-full bg-kiiraText/50 border-2 md:border-4 border-kiiraBlue w-28 h-28 md:w-40 md:h-40"
-              />
-              <PenIcon className="z-10 absolute bottom-1.5 md:bottom-2 text-white right-1.5 md:right-4 p-1.5 bg-kiiraBlue w-7 h-7 flex items-center justify-center rounded-full" />
-            </ContentContainer> */}
+
             {isLoading ? (
               <ContentContainer className="flex animate-pulse flex-col items-center h-full justify-center gap-1 w-48">
                 <div className="w-3/4 bg-gray-300 h-3 rounded"></div>

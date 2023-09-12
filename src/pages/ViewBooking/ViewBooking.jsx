@@ -31,8 +31,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import { APP_URL } from 'src/utils/constants';
+import useAuth from 'src/hooks/useAuth';
 
 const ViewBooking = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const downloadRef = useRef(null);
@@ -295,7 +297,7 @@ const ViewBooking = () => {
                     className="flex flex-row 1tems-center gap-1"
                     alignItems="center">
                     <Avatar
-                      src={IMAGES?.dummyProfilePhoto}
+                      src={user?.profile_pic_url || IMAGES.dummyProfilePhoto}
                       alt=""
                       loading="lazy"
                       variant="circular"

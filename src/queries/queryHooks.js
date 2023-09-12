@@ -17,6 +17,7 @@ import {
   cancelUserSubscription,
   contactDoctor,
   deleteSavedCards,
+  editUserProfile,
   fetchSubscriptionHistory,
   fetchUserProfile,
   getPaymentMethods,
@@ -533,6 +534,15 @@ export const useUploadMediaFile = () => {
   const data = useMutation({
     mutationFn: (data) => {
       return uploadMediaFile(data);
+    }
+  });
+  return data;
+};
+
+export const useEditProfile = () => {
+  const data = useMutation({
+    mutationFn: (data) => {
+      return editUserProfile(data);
     }
   });
   return data;

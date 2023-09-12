@@ -36,7 +36,7 @@ const ReviewAppointment = () => {
   const location = useLocation();
   const { data: paymentMethodData } = usePaymentMethods();
   const paymentMethods = paymentMethodData?.data?.payment_methods;
-
+  const uploading = useLocalStore((state) => state.isLoading);
   const { data: fData, isLoading: loadingForms, error: bookingFormError } = useBookingForms();
   const formsData = fData?.data.forms;
 
@@ -75,10 +75,6 @@ const ReviewAppointment = () => {
 
   useEffect(() => {
     if (isEmpty(bookingData)) {
-      // Toast.fire({
-      //   icon: 'error',
-      //   title: 'No booking data found'
-      // });
 
       setTimeout(() => {
         navigate(ROUTES.INDEX, { replace: true });
@@ -406,7 +402,9 @@ const ReviewAppointment = () => {
                     />
 
                     <AppButton
-                      disabled={reserveBooking && isEmpty(selectedPaymentMethod)}
+                      disabled={
+                        (reserveBooking && isEmpty(selectedPaymentMethod)) || uploading?.isLoading
+                      }
                       className="text-xs mt-4"
                       onClick={handleInitialisePayment}>
                       {reserveBooking ? 'Reserve' : ' Confirm Booking'}

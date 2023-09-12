@@ -17,8 +17,10 @@ import {
 } from '@material-tailwind/react';
 import { truncate } from 'src/utils/truncate';
 import { INPUT_NAMES, INPUT_TYPES } from 'src/data';
-import { Empty } from '..';
+import { Empty, FileUpload } from '..';
 import { array, bool, func, object } from 'prop-types';
+import useAuth from 'src/hooks/useAuth';
+import useLocalStorage from 'src/hooks/useLocalStorage';
 
 const DynamicForms = ({
   appointmentFormIDs,
@@ -27,9 +29,7 @@ const DynamicForms = ({
   formsData,
   loadingForms
 }) => {
-  const { data: userProfile } = useProfile();
-  const profile = userProfile?.data?.user;
-  const [field, setField] = useState([]);
+  const [user] = useLocalStorage('user');
 
   const filteredFormData = formsData?.filter((elem) =>
     appointmentFormIDs?.find((id) => elem.id === id)
@@ -39,14 +39,10 @@ const DynamicForms = ({
     formdata.fields?.forEach((form) => {
       form.type === INPUT_TYPES.CHECKBOX
         ? (acc[form.id] = '')
-        : // : form.type === INPUT_TYPES.YESNO
-        // ? (acc[form.id] = false)
-        form.type === INPUT_TYPES.FILE
-        ? (acc[form.id] = [])
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.email
-        ? (acc[form.id] = profile?.email)
+        ? (acc[form.id] = user?.email)
         : form.type === INPUT_TYPES.TEXTBOX && form.name === INPUT_NAMES.full_name
-        ? (acc[form.id] = `${profile?.first_name} ${profile?.last_name}`)
+        ? (acc[form.id] = `${user?.first_name} ${user?.last_name}`)
         : (acc[form.id] = '');
     });
 
@@ -73,26 +69,29 @@ const DynamicForms = ({
       return;
     }
 
+    if (selectedInput?.type === INPUT_TYPES.FILE) {
+      setFieldValues({ ...fieldValues, [selectedInput?.id]: event });
+      return;
+    }
+
     event?.preventDefault();
 
     if (selectedInput?.type === INPUT_TYPES.CHECKBOX) {
       setFieldValues({ ...fieldValues, [event.target.name]: event.target.checked });
-    } else if (selectedInput?.type === INPUT_TYPES.FILE) {
-      setFieldValues({ ...fieldValues, [event.target.name]: event.target.files[0] });
     } else if (selectedInput?.type === INPUT_TYPES.DROPDOWN) {
       setFieldValues({ ...fieldValues, [event.target.name]: event.target.selected });
     } else {
       if (selectedInput?.name === INPUT_NAMES.full_name) {
         setFieldValues({
           ...fieldValues,
-          [event.target.name]: `${profile?.first_name} ${profile?.last_name}`
+          [event.target.name]: `${user?.first_name} ${user?.last_name}`
         });
         return;
       }
       if (selectedInput?.name === INPUT_NAMES.email) {
         setFieldValues({
           ...fieldValues,
-          [event.target.name]: profile?.email
+          [event.target.name]: user?.email
         });
         return;
       }
@@ -106,6 +105,8 @@ const DynamicForms = ({
     }
     setFormResult(fieldValues);
   }, [fieldValues]);
+
+  // useEffect(() => {}, [user]);
 
   return (
     <>
@@ -300,20 +301,19 @@ const DynamicForms = ({
                         return (
                           <ContentContainer
                             key={index?.toString()}
-                            className="flex flex-col gap-1"
+                            className="flex flex-col gap-0"
                             onClick={() => setSelectedInput(inputs)}>
+                            <ContentContainer className="flex-row gap-0">
+                              {fname}{' '}
+                              {required ? <span className="text-red-500 text-xs">*</span> : null}{' '}
+                            </ContentContainer>
                             <ContentContainer className="flex flex-row flex-nowrap items-center -ml-2.5">
-                              <Input
-                                variant="static"
-                                type="file"
-                                name={fid}
-                                required={required}
+                              <FileUpload
+                                usePhotoPicker={false}
                                 label={fname}
-                                labelProps={{
-                                  className: 'overflow-hidden truncate text-xs md:text-base'
-                                }}
-                                className="p-4 border-b-0"
-                                onChange={handleInputChange}
+                                setFileUrl={handleInputChange}
+                                required={required}
+                                acceptedFormat="application/pdf, image/*"
                               />
                             </ContentContainer>
                           </ContentContainer>
@@ -384,9 +384,9 @@ const DynamicForms = ({
                                 label={fname}
                                 value={
                                   inputs?.name === INPUT_NAMES.email
-                                    ? profile?.email
+                                    ? user?.email
                                     : inputs?.name === INPUT_NAMES.full_name
-                                    ? `${profile?.first_name} ${profile?.last_name}`
+                                    ? `${user?.first_name} ${user?.last_name}`
                                     : fieldValues[fid]
                                 }
                                 size="lg"
@@ -411,9 +411,9 @@ const DynamicForms = ({
                                 label={fname}
                                 value={
                                   inputs?.name === INPUT_NAMES.email
-                                    ? profile?.email
+                                    ? user?.email
                                     : inputs?.name === INPUT_NAMES.full_name
-                                    ? `${profile?.first_name} ${profile?.last_name}`
+                                    ? `${user?.first_name} ${user?.last_name}`
                                     : fieldValues[fid]
                                 }
                                 size="lg"
