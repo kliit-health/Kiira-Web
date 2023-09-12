@@ -16,7 +16,9 @@ const useStore = create(
       coupon: '',
       setCoupon: (data) => set(() => ({ coupon: data })),
       selectedPaymentMethod: {},
-      setSelectedPaymentMethod: (data) => set(() => ({ selectedPaymentMethod: data }))
+      setSelectedPaymentMethod: (data) => set(() => ({ selectedPaymentMethod: data })),
+      isLoading: false,
+      setIsLoading: (data) => set(() => ({ isLoading: data }))
     }),
     {
       name: 'local-store',

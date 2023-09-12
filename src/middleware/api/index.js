@@ -1,6 +1,5 @@
 import isEmpty from 'src/utils/isEmpty';
 import ApiHandler from './ApiHandler';
-import { data } from 'autoprefixer';
 
 const Api = {
   auth: {

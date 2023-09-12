@@ -46,7 +46,7 @@ const AuthProvider = ({ children }) => {
     getAuth();
   }, []);
 
-  useEffect(() => {}, [isAuthenticated]);
+  useEffect(() => {}, [isAuthenticated, user]);
 
   const value = {
     user,

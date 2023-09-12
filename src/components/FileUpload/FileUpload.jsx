@@ -14,6 +14,7 @@ import { useUploadMediaFile } from 'src/queries/queryHooks';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { ProfilePicture } from '..';
+import { useLocalStore } from 'src/store';
 
 export const FileUpload = ({
   defaultUrl,
@@ -29,7 +30,7 @@ export const FileUpload = ({
 }) => {
   const inputRef = useRef(null);
   const { mutate, isLoading } = useUploadMediaFile();
-  const user = Auth.getUser();
+  const setUploading = useLocalStore((state) => state.setIsLoading);
 
   const [file, setFile] = useState({});
   const [url, setUrl] = useState('');
@@ -43,6 +44,7 @@ export const FileUpload = ({
     setFileUrl('');
     setFile({});
     setIsUploaded(false);
+    setUploading({ isLoading: false });
   };
 
   const handleFileChange = (e) => {
@@ -60,7 +62,7 @@ export const FileUpload = ({
       });
       return;
     }
-
+    setUploading({ isLoading: true });
     const formData = new FormData();
     formData.append('name', usePhotoPicker ? file?.name : data?.name);
     formData.append('media', usePhotoPicker ? file : data);
@@ -74,7 +76,8 @@ export const FileUpload = ({
         setFileUrl(response?.data?.media?.url);
         setFile({});
         setIsUploaded(true);
-        onUploadSuccess(response?.data?.media?.url);
+        onUploadSuccess && onUploadSuccess(response?.data?.media?.url);
+        setUploading({ isLoading: false });
       },
       onError: (error) => {
         import.meta.env.DEV &&
@@ -92,6 +95,7 @@ export const FileUpload = ({
             url: error?.response?.config?.url
           }
         });
+        setUploading({ isLoading: false });
       }
     });
   };
@@ -161,7 +165,10 @@ export const FileUpload = ({
             onChange={handleFileChange}
             placeholder={label}
             accept={acceptedFormat}
-            disabled={disabled || isLoading}
+            disabled={
+              disabled
+              // || isLoading
+            }
             className={`border-none ${className}}`}
             required={required}
           />
@@ -173,9 +180,9 @@ export const FileUpload = ({
             </>
           ) : null}
 
-          {!isEmpty(url) && isUploaded ? (
+          {!isEmpty(url) || !isEmpty(file?.type) ? (
+            // && isUploaded
             <ContentContainer row className="gap-1">
-              <Avatar size="md" src={url} alt={label} variant="rounded" />{' '}
               <IconButton
                 variant="text"
                 size="sm"
@@ -183,6 +190,18 @@ export const FileUpload = ({
                 onClick={resetFileInput}>
                 <i title="remove" class="fa-solid fa-xmark text-red-900 text-sm"></i>
               </IconButton>
+            </ContentContainer>
+          ) : null}
+
+          {isLoading && !isEmpty(file) ? (
+            <ContentContainer row className="gap-1">
+              <Button
+                variant="text"
+                size="sm"
+                className="flex flex-row items-center gap-1 hover:bg-transparent opacity-100 text-xs"
+                onClick={resetFileInput}>
+                Cancel <i title="remove" class="fa-solid fa-xmark text-red-900 text-sm"></i>
+              </Button>{' '}
             </ContentContainer>
           ) : null}
 

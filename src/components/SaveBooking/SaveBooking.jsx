@@ -13,6 +13,7 @@ import { object } from 'prop-types';
 import { ThreeDots } from 'react-loader-spinner';
 import { APP_URL } from 'src/utils/constants';
 import useAuth from 'src/hooks/useAuth';
+import { IMAGES } from 'src/data';
 
 const SaveBooking = ({ booking }) => {
   const { user } = useAuth();
