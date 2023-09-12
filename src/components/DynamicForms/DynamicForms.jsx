@@ -50,6 +50,7 @@ const DynamicForms = ({
   }, {});
 
   const [fieldValues, setFieldValues] = useState(formValues);
+  console.log('\n 🚀 ~ file: DynamicForms.jsx:53 ~ fieldValues:', fieldValues);
 
   useEffect(() => {
     if (isEmpty(fieldValues) && !isEmpty(formValues)) {
@@ -73,6 +74,8 @@ const DynamicForms = ({
       setFieldValues({ ...fieldValues, [selectedInput?.id]: event });
       return;
     }
+    
+    if (!event) return;
 
     event?.preventDefault();
 
