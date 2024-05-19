@@ -24,18 +24,18 @@ const History = () => {
 
   useEffect(() => {
     if (searchText === 'canceled') {
-      const filteer = appointments?.filter((booking) => booking?.appointment?.canceled);
-      setFilteredAppointments(filteer);
+      const filter = appointments?.filter((booking) => booking?.appointment?.canceled);
+      setFilteredAppointments(filter);
       return;
     }
 
     if (searchText === 'payment_ticketed') {
-      const filteer = appointments?.filter(
+      const filter = appointments?.filter(
         (booking) => !booking?.appointment?.canceled && booking?.status === 'payment_ticketed'
       );
       import.meta.env.DEV &&
-        console.log('\n 🚀 ~ file: History.jsx:36 ~ useEffect ~ filteer:', filteer);
-      setFilteredAppointments(filteer);
+        console.log('\n 🚀 ~ file: History.jsx:36 ~ useEffect ~ filter:', filter);
+      setFilteredAppointments(filter);
       return;
     }
     // searchFilter(searchText, 'status', setSearchText, appointments, setFilteredAppointments);
@@ -99,7 +99,6 @@ const History = () => {
             </div>
           </ContentContainer>
           {filteredAppointments?.map((booking, index) => {
-            // console.log('\n 🚀 ~ file: History.jsx:40 ~ {appointments?.map ~ booking:', booking);
             if (booking?.status === 'pending' || booking?.status === 'payment_successful') return;
             return (
               <BookingCard

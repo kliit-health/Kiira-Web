@@ -20,7 +20,6 @@ const Profile = () => {
   const { mutate, isLoading: editProfileLoading } = useEditProfile();
 
   const handleEditProfile = (data) => {
-    console.log('\n 🚀 ~ file: Profile.jsx:27 ~ handleEditProfile ~ data:', data);
     const payload = {
       profile_pic_url: data
     };
