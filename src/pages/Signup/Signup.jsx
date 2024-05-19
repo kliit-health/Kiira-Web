@@ -240,9 +240,8 @@ const Signup = () => {
                   {...register('password', {
                     required: 'Password is required.',
                     validate: {
-                      checkLength: (value) => value.length >= 6
-                      // matchPattern: (value) =>
-                      //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                      checkLength: (value) => value.length >= 8,
+                      matchPattern: (value) => Validate.password(value)
                     }
                   })}
                   error={!isEmpty(errors.password)}
@@ -254,7 +253,7 @@ const Signup = () => {
                 )}
                 {errors?.password?.type === 'checkLength' && (
                   <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                    Password should be at least 6 characters.
+                    Password should be at least 8 characters.
                   </ContentContainer>
                 )}
                 {errors?.password?.type === 'matchPattern' && (
@@ -274,9 +273,8 @@ const Signup = () => {
                   {...register('confirm_password', {
                     required: 'Confirm Password is required.',
                     validate: {
-                      checkLength: (value) => value.length >= 6
-                      // matchPattern: (value) =>
-                      //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                      checkLength: (value) => value.length >= 8,
+                      matchPattern: (value) => Validate.password(value)
                     }
                   })}
                   error={!isEmpty(errors.confirm_password)}
@@ -288,7 +286,7 @@ const Signup = () => {
                 )}
                 {errors?.confirm_password?.type === 'checkLength' && (
                   <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                    Password should be at least 6 characters.
+                    Password should be at least 8 characters.
                   </ContentContainer>
                 )}
                 {errors?.confirm_password?.type === 'matchPattern' && (
