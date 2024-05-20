@@ -20,6 +20,7 @@ import { useLocalStore } from 'src/store';
 import { Toast } from 'src/utils';
 import isEmpty from 'src/utils/isEmpty';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const Signup = () => {
   const navigate = useNavigate();

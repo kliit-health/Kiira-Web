@@ -11,6 +11,7 @@ import { useResetPassword } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const ResetPassword = () => {
   const navigate = useNavigate();

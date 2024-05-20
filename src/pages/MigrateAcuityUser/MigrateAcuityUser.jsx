@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import Auth from 'src/middleware/storage';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const MigrateAcuityUser = () => {
   const navigate = useNavigate();

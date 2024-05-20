@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import { useChangePassword, useProfile } from 'src/queries/queryHooks';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
