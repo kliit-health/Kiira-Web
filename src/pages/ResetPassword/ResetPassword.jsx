@@ -11,6 +11,7 @@ import { useResetPassword } from 'src/queries/queryHooks';
 import isEmpty from 'src/utils/isEmpty';
 import { useLocalStore } from 'src/store';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -123,9 +124,8 @@ const ResetPassword = () => {
                 {...register('new_password', {
                   required: 'Password is required.',
                   validate: {
-                    checkLength: (value) => value.length >= 6
-                    // matchPattern: (value) =>
-                    //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                    checkLength: (value) => value.length >= 8,
+                    matchPattern: (value) => Validate.password(value)
                   }
                 })}
                 error={!isEmpty(errors.new_password)}
@@ -137,7 +137,7 @@ const ResetPassword = () => {
               )}
               {errors?.new_password?.type === 'checkLength' && (
                 <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                  Password should be at least 6 characters.
+                  Password should be at least 8 characters.
                 </ContentContainer>
               )}
               {errors?.new_password?.type === 'matchPattern' && (
@@ -157,9 +157,8 @@ const ResetPassword = () => {
                 {...register('confirm_new_password', {
                   required: 'Confirm Password is required.',
                   validate: {
-                    checkLength: (value) => value.length >= 6
-                    // matchPattern: (value) =>
-                    //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                    checkLength: (value) => value.length >= 8,
+                    matchPattern: (value) => Validate.password(value)
                   }
                 })}
                 error={!isEmpty(errors.confirm_new_password)}
@@ -171,7 +170,7 @@ const ResetPassword = () => {
               )}
               {errors?.confirm_new_password?.type === 'checkLength' && (
                 <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                  Password should be at least 6 characters.
+                  Password should be at least 8 characters.
                 </ContentContainer>
               )}
               {errors?.confirm_new_password?.type === 'matchPattern' && (

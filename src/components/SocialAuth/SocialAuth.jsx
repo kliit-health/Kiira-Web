@@ -44,10 +44,6 @@ const SocialAuth = ({
           logo_alignment="left"
           theme="filled_blue"
           onSuccess={(credentialResponse) => {
-            // console.log(
-            //   '\n 🚀 ~ file: SocialAuth.jsx:23 ~ SocialAuth ~ credentialResponse:',
-            //   credentialResponse?.credential
-            // );
             onGoogleAuthSuccess(credentialResponse?.credential);
           }}
           onError={(err) => {

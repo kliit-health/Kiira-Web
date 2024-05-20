@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { Toast } from 'src/utils';
 import { useChangePassword, useProfile } from 'src/queries/queryHooks';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
+import Validate from 'src/utils/validators';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -138,9 +139,7 @@ const ChangePassword = () => {
                   {...register('old_password', {
                     required: 'Password is required.',
                     validate: {
-                      checkLength: (value) => value.length >= 6
-                      // matchPattern: (value) =>
-                      //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                      checkLength: (value) => value.length >= 8
                     }
                   })}
                   error={!isEmpty(errors.old_password)}
@@ -152,7 +151,7 @@ const ChangePassword = () => {
                 )}
                 {errors?.old_password?.type === 'checkLength' && (
                   <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                    Password should be at least 6 characters.
+                    Password should be at least 8 characters.
                   </ContentContainer>
                 )}
                 {errors?.old_password?.type === 'matchPattern' && (
@@ -172,9 +171,8 @@ const ChangePassword = () => {
                   {...register('new_password', {
                     required: 'Password is required.',
                     validate: {
-                      checkLength: (value) => value.length >= 6
-                      // matchPattern: (value) =>
-                      //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                      checkLength: (value) => value.length >= 8,
+                      matchPattern: (value) => Validate.password(value)
                     }
                   })}
                   error={!isEmpty(errors.new_password)}
@@ -186,7 +184,7 @@ const ChangePassword = () => {
                 )}
                 {errors?.new_password?.type === 'checkLength' && (
                   <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                    Password should be at least 6 characters.
+                    Password should be at least 8 characters.
                   </ContentContainer>
                 )}
                 {errors?.new_password?.type === 'matchPattern' && (
@@ -206,9 +204,8 @@ const ChangePassword = () => {
                   {...register('confirm_new_password', {
                     required: 'Confirm Password is required.',
                     validate: {
-                      checkLength: (value) => value.length >= 6
-                      // matchPattern: (value) =>
-                      //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                      checkLength: (value) => value.length >= 8,
+                      matchPattern: (value) => Validate.password(value)
                     }
                   })}
                   error={!isEmpty(errors.confirm_new_password)}
@@ -220,7 +217,7 @@ const ChangePassword = () => {
                 )}
                 {errors?.confirm_new_password?.type === 'checkLength' && (
                   <ContentContainer className="text-kiiraBlue font-medium text-xs">
-                    Password should be at least 6 characters.
+                    Password should be at least 8 characters.
                   </ContentContainer>
                 )}
                 {errors?.confirm_new_password?.type === 'matchPattern' && (

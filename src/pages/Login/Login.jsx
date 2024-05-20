@@ -2,12 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Card, CardBody, Checkbox, Input } from '@material-tailwind/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppPasswordInput, Loader, SocialAuth } from 'src/components';
-import {
-  AppButton,
-  AppTypography,
-  ContentContainer,
-  Divider
-} from 'src/components/shared/styledComponents';
+import { AppButton, AppTypography, ContentContainer } from 'src/components/shared/styledComponents';
 import { AuthLayout } from 'src/layouts';
 import { ROUTES } from 'src/routes/Paths';
 import { useLogin, useSigninWithGoogle } from 'src/queries/queryHooks';
@@ -21,7 +16,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import KEYS from 'src/queries/queryKeys';
 import { Mixpanel } from 'src/utils/mixpanelUtil';
 import moment from 'moment-timezone';
-import mixpanel from 'mixpanel-browser';
+import Validate from 'src/utils/validators';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -147,7 +142,7 @@ const Login = () => {
                   trim: true,
                   required: 'Email is required.',
                   pattern: {
-                    value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                    value: Validate.email,
                     message: 'Email is not valid.'
                   }
                 })}
@@ -168,9 +163,8 @@ const Login = () => {
                 {...register('password', {
                   required: 'Password is required.',
                   validate: {
-                    checkLength: (value) => value.length >= 6
-                    // matchPattern: (value) =>
-                    //   /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
+                    checkLength: (value) => value.length >= 8,
+                    matchPattern: (value) => Validate.password(value)
                   }
                 })}
                 error={!isEmpty(errors.password)}
@@ -182,7 +176,7 @@ const Login = () => {
               )}
               {errors?.password?.type === 'checkLength' && (
                 <ContentContainer className="text-kiiraBlue font-medium text-xs -mt-4 mb-2">
-                  Password should be at least 6 characters.
+                  Password should be at least 8 characters.
                 </ContentContainer>
               )}
               {errors?.password?.type === 'matchPattern' && (

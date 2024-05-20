@@ -73,6 +73,8 @@ const DynamicForms = ({
       setFieldValues({ ...fieldValues, [selectedInput?.id]: event });
       return;
     }
+    
+    if (!event) return;
 
     event?.preventDefault();
 
